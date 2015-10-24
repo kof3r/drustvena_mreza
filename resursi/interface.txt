@@ -19,7 +19,7 @@ interface v1.01
 		{...} editProfile.js {first_name, last_name, city, ...}
 
 		-	vraća profilne podatke korisnika vezanog za user_id
-		<!>	što ako pošalje user_id nepostojećeg korisnika?
+		<!>	nepostojeći user_id -> {err_message}
 		{...} getProfileInfo.js {user_id}
 
 
@@ -29,7 +29,8 @@ interface v1.01
 		{username, ime, prezime, slika} search.js {search_string}
 
 		-	vraća popis kontakata korisnika vezanog za user_id
-		<!>	da li je moguće zatražiti listu kontakata nekoga tko nije moj prijatelj?
+		<!>	ako vlasnik session-a niej prijatelj osobe user_id
+			-> {}, HTTP error code 401 Unauthorized
 		{list{ime, prezime, slika}} getContacts.js {user_id}
 		
 	profile.partial.html
