@@ -5,3 +5,7 @@
 GET /isUsernameAvailable
 	expects: { username: }
 	returns: { boolean available: }
+	
+GET /isEmailAvailable
+	expects: { email: }
+	returns: { boolean available: }

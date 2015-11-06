@@ -84,6 +84,12 @@ module.exports=function(app,passport){
             res.json({available:(model ? false : true)});
         });
     });
+    
+    app.get("/isEmailAvailable", function(req, res, next) {
+        new User({email: req.query.email}).fetch().then(function(model) {
+            res.json({available:(model ? false : true)});
+        });
+    });
 
 // logout
 // GET
