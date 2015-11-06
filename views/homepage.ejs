@@ -1,12 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
-   <head>
-      <title><%= title %></title>
-   </head>
-   <body>
-      <p>
-         Welcome <strong><%= user.username %></strong>
-         <a href="/signout" title="sign out">sign out</a>
-      </p>
-   </body>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><%= title %></title>
+
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" crossorigin="anonymous">
+
+
+    <!-- Main style -->
+    <link rel="stylesheet" type="text/css" href="static/main.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js" crossorigin="anonymous"></script>
+
+    <style>
+
+        .form-inline label {
+            display: block;
+        }
+
+        legend {
+            background: white;
+            padding: 5px 20px;
+            border-radius: 15px;
+            border-bottom: 3px solid orange;
+        }
+        .logo {
+            align-self: center;
+            width: 181px;
+            height: 198px;
+            background: url(/image/bubbles-logo.png) no-repeat center center;
+        }
+
+    </style>
+
+</head>
+<body>
+
+    <nav class="navbar navbar-default navbar-static-top" id="navbar-main">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Bubbles</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active">
+                        <a href="#">
+                            <span class="glyphicon glyphicon-home"></span> <span class="menu-item-text">Homepage</span> <span class="sr-only">(current)</span>
+                        </a></li>
+                    <li><a href="#">
+                        <span class="glyphicon glyphicon-envelope"></span> <span class="menu-item-text">Messages</span> <span class="badge">5</span>
+                        </a>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="glyphicon glyphicon-envelope"></span> <span class="menu-item-text">Submenu</span> <span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Unread</a></li>
+                                <li><a href="#">Inbox</a></li>
+                                <li><a href="#">Contacts</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">Separated link</a></li>
+                                <li role="separator" class="divider"></li>
+                                <li><a href="#">One more separated link</a></li>
+                            </ul>
+                    </li>
+                    <li><a href="#"><span class="glyphicon glyphicon-user"></span> <span class="menu-item-text">Contacts</span></a></li>
+                </ul>
+                <form class="navbar-form navbar-left contact-search" role="search">
+                    <div class="input-group">
+                        <input type="text" class="form-control" placeholder="Search contacts" name="srch-term" id="srch-term">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+                        </div>
+                    </div>
+                </form>
+                <ul class="nav navbar-nav navbar-right">
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle username" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                            <span class="caret"></span> <em><%= user.username %></em>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="/view-profile">View profile</a></li>
+                            <li><a href="/edit-profile">Edit profile</a></li>
+                            <li><a href="/manage-account">Manage account</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="/sign-out"><span class="glyphicon glyphicon-off"></span> Sign out</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div><!-- /.navbar-collapse -->
+        </div><!-- /.container-fluid -->
+    </nav>
+
+</body>
 </html>
