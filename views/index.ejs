@@ -47,7 +47,22 @@
             border-bottom: 1px solid darkorange;
         }
 
+        .logo-container {
+            display: flex;
+            justify-content: center;
+        }
+
+        @media only screen and (min-width: 768px) and (max-width: 992px) {
+            .logo-container {
+                height: 350px;
+            }
+        }
+
         .logo {
+            align-self: center;
+            width: 181px;
+            height: 198px;
+            background: url(/image/bubbles-logo.png) no-repeat center center;
         }
 
         h1 {
@@ -75,8 +90,8 @@
     <div class="container">
         <!-- Login part of the page -->
         <div class="col-md-4 col-xs-12 login">
-            <div class="col-md-12 col-sm-4 col-xs-12 logo">
-                <img alt="Bubbles Social Network logotype" src="bubbles-logo.png" class="" />
+            <div class="col-md-12 col-sm-4 col-xs-12 logo-container">
+                <div class="logo"></div>
             </div>
             <div class="col-md-12 col-sm-8 col-xs-12">
                 <h3 class="text-orange text-center">Have an account?</h3>
@@ -192,8 +207,8 @@
         </div>
     </div>
 
-    <script src="utility.js"></script>
-    <script src="registrationPage.js"></script>
+    <script src="/static/utility.js"></script>
+    <script src="/static/registrationPage.js"></script>
     <script>
         $("#login-button").click(login);
         $("#username").blur(checkUsernameDelayed);
