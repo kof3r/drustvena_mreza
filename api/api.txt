@@ -1,0 +1,4 @@
+
+GET /isUsernameAvailable
+	expects: { String username: }
+	returns: { boolean available: }

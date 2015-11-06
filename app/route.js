@@ -78,6 +78,12 @@ module.exports=function(app,passport){
          }
       });
    });
+    
+    app.get("/isUsernameAvailable", function(req, res, next) {
+        new User({username: req.query.username}).fetch().then(function(model) {
+            res.json({available:(model ? false : true)});
+        });
+    });
 
 // logout
 // GET
