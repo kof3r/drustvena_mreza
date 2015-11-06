@@ -1,4 +1,7 @@
 
+\\	Ako ispred polja objekta nije naveden tip podatka podrazumijeva se string, kao kod /isUsernameAvailable
+\\	podatak username je tipa String
+
 GET /isUsernameAvailable
-	expects: { String username: }
+	expects: { username: }
 	returns: { boolean available: }
