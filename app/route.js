@@ -81,7 +81,7 @@ module.exports=function(app,passport){
 
 // logout
 // GET
-   app.get('/signout', function(req, res, next) {
+   app.get('/sign-out', function(req, res, next) {
       if(!req.isAuthenticated()) {
          notFound404(req, res, next);
       } else {
