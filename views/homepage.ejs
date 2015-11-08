@@ -7,13 +7,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title><%= title %></title>
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="static/css/bootstrap.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="static/css/bootstrap.css">
+    <!-- Google font -->
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <link href='https://fonts.googleapis.com/css?family=Comfortaa&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <!-- Main style -->
     <link rel="stylesheet" type="text/css" href="static/css/main.css">
 </head>
 <body>
 
-    <nav class="navbar navbar-default navbar-static-top" id="navbar-main">
+    <nav class="navbar navbar-default navbar-fixed-top" id="navbar-main">
         <div class="container">
             <!-- Brand and toggle get grouped for better mobile display -->
             <div class="navbar-header">
@@ -23,7 +26,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="/">Bubbles</a>
+                <div class="btn-group">
+                    <a href="/" class="navbar-brand dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Bubbles</a>
+                    <ul class="dropdown-menu">
+                        <li><a href="#">Home</a></li>
+                        <li><a href="#">Work</a></li>
+                        <li><a href="#">Lovers</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-plus-sign"></span> Create new</a></li>
+                    </ul>
+                </div>
             </div>
 
             <!-- Collect the nav links, forms, and other content for toggling -->
@@ -32,22 +44,24 @@
                     <li class="active">
                         <a href="#">
                             <span class="glyphicon glyphicon-home"></span> <span class="menu-item-text">Homepage</span> <span class="sr-only">(current)</span>
-                        </a></li>
+                        </a>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                            <span class="glyphicon glyphicon-plus-sign"></span> <span class="menu-item-text">New</span> <span class="caret"></span></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="#"><span class="glyphicon glyphicon-font"></span> Text</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-picture"></span> Picture</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-music"></span> Music</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-facetime-video"></span> Video</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-file"></span> Document</a></li>
-                                <li><a href="#"><span class="glyphicon glyphicon-map-marker"></span> Place</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#">Separated link</a></li>
-                                <li role="separator" class="divider"></li>
-                                <li><a href="#">One more separated link</a></li>
-                            </ul>
+                            <span class="glyphicon glyphicon-plus-sign"></span> <span class="menu-item-text">New</span> <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="#"><span class="glyphicon glyphicon-font"></span> Text</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-picture"></span> Picture</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-music"></span> Music</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-facetime-video"></span> Video</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-file"></span> Document</a></li>
+                            <li><a href="#"><span class="glyphicon glyphicon-map-marker"></span> Place</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">One link</a></li>
+                        </ul>
                     </li>
                     <li>
                         <a href="/messages">
@@ -56,7 +70,7 @@
                     </li>
                     <li><a href="/contacts"><span class="glyphicon glyphicon-user"></span> <span class="menu-item-text">Contacts</span></a></li>
                 </ul>
-                <form action="/search" method="get" class="navbar-form navbar-left contact-search" role="search">
+                <form action="/search" method="get" class="navbar-form navbar-left search" role="search">
                     <div class="input-group">
                         <input type="text" class="form-control" placeholder="Search..." name="term" id="search-term">
                         <div class="input-group-btn">
@@ -82,13 +96,13 @@
         </div><!-- /.container-fluid -->
     </nav>
 
-    <div class="container-fluid">
+    <div id="main-content" class="container-fluid posts">
 
-        <div class="post col-lg-3 col-md-5 col-sm-10">
+        <div class="post col-md-6 col-sm-12">
             <div class="header">
                 <a class="author" href="/view-profile?username=">
-					<img width="64" height="64" src="image/avatar.jpg" />
-					<span class="glyphicon glyphicon-user"></span> mislav
+                    <img width="64" height="64" src="image/avatar.jpg" />
+                    <span class="glyphicon glyphicon-user"></span> mislav
                 </a>
                 <span class="date-time"><span class="glyphicon glyphicon-time"></span> 5.11.2015. 12:50</span>
             </div>
@@ -104,10 +118,10 @@
             </ul>
         </div>
 
-        <div class="post col-md-5 col-sm-10">
+        <div class="post col-md-6 col-sm-12">
             <div class="header">
-				<a class="author" href="/view-profile?username=">
-				<img width="64" height="64" src="image/avatar.jpg" /><span class="glyphicon glyphicon-user"></span> andrija
+                <a class="author" href="/view-profile?username=">
+                    <img width="64" height="64" src="image/avatar.jpg" /><span class="glyphicon glyphicon-user"></span> andrija
                 </a>
                 <span class="date-time"><span class="glyphicon glyphicon-time"></span> 2.11.2015. 23:00</span>
             </div>
@@ -121,11 +135,11 @@
             </ul>
         </div>
 
-        <div class="post col-md-5 col-sm-10">
+        <div class="post col-md-6 col-sm-12">
             <div class="header">
                 <a class="author" href="/view-profile?username=">
-					<img width="64" height="64" src="image/avatar.jpg" />
-					<span class="glyphicon glyphicon-user"></span> katarina
+                    <img width="64" height="64" src="image/avatar.jpg" />
+                    <span class="glyphicon glyphicon-user"></span> katarina
                 </a>
                 <span class="date-time"><span class="glyphicon glyphicon-time"></span> 1.11.2015. 13:50</span>
             </div>
@@ -139,11 +153,11 @@
             </ul>
         </div>
 
-        <div class="post col-md-5 col-sm-10">
+        <div class="post col-md-6 col-sm-12">
             <div class="header">
-				<a class="author" href="/view-profile?username=">
-					<img width="64" height="64" src="image/avatar.jpg" />
-					<span class="glyphicon glyphicon-user"></span> mate
+                <a class="author" href="/view-profile?username=">
+                    <img width="64" height="64" src="image/avatar.jpg" />
+                    <span class="glyphicon glyphicon-user"></span> mate
                 </a>
                 <span class="date-time"><span class="glyphicon glyphicon-time"></span> 25.10.2015. 11:20</span>
             </div>
@@ -157,11 +171,11 @@
             </ul>
         </div>
 
-        <div class="post col-md-5 col-sm-10">
+        <div class="post col-md-6 col-sm-12">
             <div class="header">
                 <a class="author" href="/view-profile?username=">
-					<img width="64" height="64" src="image/avatar.jpg" />
-					<span class="glyphicon glyphicon-user"></span> domagoj
+                    <img width="64" height="64" src="image/avatar.jpg" />
+                    <span class="glyphicon glyphicon-user"></span> domagoj
                 </a>
                 <span class="date-time"><span class="glyphicon glyphicon-time"></span> 5.11.2015. 12:50</span>
             </div>
@@ -169,6 +183,7 @@
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eu pulvinar erat. Nullam consequat rutrum orci in molestie. Aliquam volutpat enim non arcu pretium tempor. Curabitur eget tempor nulla. Aliquam sit amet sem ipsum. Nam sed congue nibh, et suscipit arcu. Cras non risus eu elit elementum tempor maximus id diam. Nam sit amet volutpat odio, quis fermentum nibh.
 
                 Sed faucibus consequat scelerisque. Mauris elementum aliquam risus a laoreet. Integer a lacus at nisi aliquam accumsan. Cras in vulputate velit. Etiam augue quam, ullamcorper et iaculis vel, luctus eu nisl. Morbi finibus dignissim ante, quis faucibus justo. Nullam nec tellus vestibulum, tempus magna non, ultrices lectus.
+                <img src="image/512px-Capitol_Building_Side2.jpg" />
             </div>
             <ul class="actions">
                 <li><a href="#" class="like"><span class="glyphicon glyphicon-check"></span> Like</li></a>
@@ -183,6 +198,6 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 
     <!-- Latest compiled and minified JavaScript -->
-    <script src="static/js/bootstrap.js" crossorigin="anonymous"></script>
+    <script src="static/js/bootstrap.js"></script>
 </body>
 </html>
