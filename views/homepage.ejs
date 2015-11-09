@@ -11,6 +11,8 @@
     <!-- Google font -->
     <link href='https://fonts.googleapis.com/css?family=Open+Sans&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Comfortaa&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+    <!-- Editor -->
+    <link rel="stylesheet" href="static/css/wbbtheme.css" />
     <!-- Main style -->
     <link rel="stylesheet" type="text/css" href="static/css/main.css">
 </head>
@@ -42,7 +44,7 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li class="active">
-                        <a href="#">
+                        <a href="#feed">
                             <span class="glyphicon glyphicon-home"></span> <span class="menu-item-text">Homepage</span> <span class="sr-only">(current)</span>
                         </a>
                     </li>
@@ -51,7 +53,7 @@
                             <span class="glyphicon glyphicon-plus-sign"></span> <span class="menu-item-text">New</span> <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#"><span class="glyphicon glyphicon-font"></span> Text</a></li>
+                            <li><a href="#new-post" id="new-text"><span class="glyphicon glyphicon-font"></span> Post</a></li>
                             <li><a href="#"><span class="glyphicon glyphicon-picture"></span> Picture</a></li>
                             <li><a href="#"><span class="glyphicon glyphicon-music"></span> Music</a></li>
                             <li><a href="#"><span class="glyphicon glyphicon-facetime-video"></span> Video</a></li>
@@ -65,7 +67,7 @@
                     </li>
                     <li>
                         <a href="/messages">
-                            <span class="glyphicon glyphicon-envelope"></span> <span class="menu-item-text">Messages</span> <span class="badge">x</span>
+                            <span class="glyphicon glyphicon-envelope"></span> <span class="menu-item-text">Messages</span> <span class="badge">2</span>
                         </a>
                     </li>
                     <li><a href="/contacts"><span class="glyphicon glyphicon-user"></span> <span class="menu-item-text">Contacts</span></a></li>
@@ -95,102 +97,10 @@
             </div><!-- /.navbar-collapse -->
         </div><!-- /.container-fluid -->
     </nav>
-
+    
     <div id="main-content" class="container-fluid posts">
-
-        <div class="post col-md-6 col-sm-12">
-            <div class="header">
-                <a class="author" href="/view-profile?username=">
-                    <img width="64" height="64" src="image/avatar.jpg" />
-                    <span class="glyphicon glyphicon-user"></span> mislav
-                </a>
-                <span class="date-time"><span class="glyphicon glyphicon-time"></span> 5.11.2015. 12:50</span>
-            </div>
-            <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eu pulvinar erat. Nullam consequat rutrum orci in molestie. Aliquam volutpat enim non arcu pretium tempor. Curabitur eget tempor nulla. Aliquam sit amet sem ipsum. Nam sed congue nibh, et suscipit arcu. Cras non risus eu elit elementum tempor maximus id diam. Nam sit amet volutpat odio, quis fermentum nibh.
-
-                Sed faucibus consequat scelerisque. Mauris elementum aliquam risus a laoreet. Integer a lacus at nisi aliquam accumsan. Cras in vulputate velit. Etiam augue quam, ullamcorper et iaculis vel, luctus eu nisl. Morbi finibus dignissim ante, quis faucibus justo. Nullam nec tellus vestibulum, tempus magna non, ultrices lectus.
-            </div>
-            <ul class="actions">
-                <li><a href="#" class="like"><span class="glyphicon glyphicon-check"></span> Like</li></a>
-                <li><a href="#" class="remove"><span class="glyphicon glyphicon-trash"></span> Remove</li></a>
-                <li><a href="#" class="comment"><span class="glyphicon glyphicon-comment"></span> Comment</li></a>
-            </ul>
-        </div>
-
-        <div class="post col-md-6 col-sm-12">
-            <div class="header">
-                <a class="author" href="/view-profile?username=">
-                    <img width="64" height="64" src="image/avatar.jpg" /><span class="glyphicon glyphicon-user"></span> andrija
-                </a>
-                <span class="date-time"><span class="glyphicon glyphicon-time"></span> 2.11.2015. 23:00</span>
-            </div>
-            <div class="content">
-                Sed faucibus consequat scelerisque. Mauris elementum aliquam risus a laoreet. Integer a lacus at nisi aliquam accumsan. Cras in vulputate velit. Etiam augue quam, ullamcorper et iaculis vel, luctus eu nisl. Morbi finibus dignissim ante, quis faucibus justo. Nullam nec tellus vestibulum, tempus magna non, ultrices lectus.
-            </div>
-            <ul class="actions">
-                <li><a href="#" class="like"><span class="glyphicon glyphicon-check"></span> Like</li></a>
-                <li><a href="#" class="remove"><span class="glyphicon glyphicon-trash"></span> Remove</li></a>
-                <li><a href="#" class="comment"><span class="glyphicon glyphicon-comment"></span> Comment</li></a>
-            </ul>
-        </div>
-
-        <div class="post col-md-6 col-sm-12">
-            <div class="header">
-                <a class="author" href="/view-profile?username=">
-                    <img width="64" height="64" src="image/avatar.jpg" />
-                    <span class="glyphicon glyphicon-user"></span> katarina
-                </a>
-                <span class="date-time"><span class="glyphicon glyphicon-time"></span> 1.11.2015. 13:50</span>
-            </div>
-            <div class="content">
-                Sed faucibus consequat scelerisque. Nullam nec tellus vestibulum, tempus magna non, ultrices lectus.
-            </div>
-            <ul class="actions">
-                <li><a href="#" class="like"><span class="glyphicon glyphicon-check"></span> Like</li></a>
-                <li><a href="#" class="remove"><span class="glyphicon glyphicon-trash"></span> Remove</li></a>
-                <li><a href="#" class="comment"><span class="glyphicon glyphicon-comment"></span> Comment</li></a>
-            </ul>
-        </div>
-
-        <div class="post col-md-6 col-sm-12">
-            <div class="header">
-                <a class="author" href="/view-profile?username=">
-                    <img width="64" height="64" src="image/avatar.jpg" />
-                    <span class="glyphicon glyphicon-user"></span> mate
-                </a>
-                <span class="date-time"><span class="glyphicon glyphicon-time"></span> 25.10.2015. 11:20</span>
-            </div>
-            <div class="content">
-                Integer a lacus at nisi aliquam accumsan. Cras in vulputate velit. Etiam augue quam, ullamcorper et iaculis vel, luctus eu nisl. Morbi finibus dignissim ante, quis faucibus justo.
-            </div>
-            <ul class="actions">
-                <li><a href="#" class="like"><span class="glyphicon glyphicon-check"></span> Like</li></a>
-                <li><a href="#" class="remove"><span class="glyphicon glyphicon-trash"></span> Remove</li></a>
-                <li><a href="#" class="comment"><span class="glyphicon glyphicon-comment"></span> Comment</li></a>
-            </ul>
-        </div>
-
-        <div class="post col-md-6 col-sm-12">
-            <div class="header">
-                <a class="author" href="/view-profile?username=">
-                    <img width="64" height="64" src="image/avatar.jpg" />
-                    <span class="glyphicon glyphicon-user"></span> domagoj
-                </a>
-                <span class="date-time"><span class="glyphicon glyphicon-time"></span> 5.11.2015. 12:50</span>
-            </div>
-            <div class="content">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Praesent eu pulvinar erat. Nullam consequat rutrum orci in molestie. Aliquam volutpat enim non arcu pretium tempor. Curabitur eget tempor nulla. Aliquam sit amet sem ipsum. Nam sed congue nibh, et suscipit arcu. Cras non risus eu elit elementum tempor maximus id diam. Nam sit amet volutpat odio, quis fermentum nibh.
-
-                Sed faucibus consequat scelerisque. Mauris elementum aliquam risus a laoreet. Integer a lacus at nisi aliquam accumsan. Cras in vulputate velit. Etiam augue quam, ullamcorper et iaculis vel, luctus eu nisl. Morbi finibus dignissim ante, quis faucibus justo. Nullam nec tellus vestibulum, tempus magna non, ultrices lectus.
-                <img src="image/512px-Capitol_Building_Side2.jpg" />
-            </div>
-            <ul class="actions">
-                <li><a href="#" class="like"><span class="glyphicon glyphicon-check"></span> Like</li></a>
-                <li><a href="#" class="remove"><span class="glyphicon glyphicon-trash"></span> Remove</li></a>
-                <li><a href="#" class="comment"><span class="glyphicon glyphicon-comment"></span> Comment</li></a>
-            </ul>
-        </div>
+        
+        <% include feed.partial.ejs %>
 
     </div>
 
@@ -199,5 +109,34 @@
 
     <!-- Latest compiled and minified JavaScript -->
     <script src="static/js/bootstrap.js"></script>
+
+    <!-- Editor -->
+    <script src="static/js/jquery.wysibb.min.js"></script>
+
+    <script>
+        
+        function loadPage() {
+            var newHash = location.hash;
+            if (newHash != null) {
+                var pages = ['#new-post', '#feed'];
+                if ($.inArray(newHash, pages) != -1) {
+                    $('#main-content').load('partial/' + newHash.substring(1));
+                }
+                else {
+                    //$('#main-content').html('bad request');
+                }
+            }
+        }
+        
+        function chechHash() {
+            if (location.hash != '') {
+                loadPage();
+            }
+        }
+        
+        $(window).on('hashchange', loadPage);
+        $(document).ready(chechHash);
+        
+    </script>
 </body>
 </html>
