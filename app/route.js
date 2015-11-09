@@ -9,7 +9,7 @@ module.exports=function(app,passport){
    // GET
    app.get('/homepage', function(req, res, next) {
       if(!req.isAuthenticated()) {
-         res.redirect('/index');
+         res.redirect('/');
       } else {
          var user = req.user;
          if(user !== undefined) {
@@ -21,7 +21,7 @@ module.exports=function(app,passport){
 
 // signin
 // GET
-   app.get('/index', function(req, res, next) {
+   app.get('/', function(req, res, next) {
      if(req.isAuthenticated()) res.redirect('/homepage');
       res.render('index.ejs');
    });
@@ -29,17 +29,17 @@ module.exports=function(app,passport){
 // POST  
    app.post('/login.js', function(req, res, next) {
       passport.authenticate('local', { successRedirect: '/homepage',
-                          failureRedirect: '/index'}, function(err, user, info) {
+                          failureRedirect: '/'}, function(err, user, info) {
          if(err) {
-            return res.redirect('/index');
+            return res.redirect('/');
          } 
 
          if(!user) {
-            return res.redirect('/index');
+            return res.redirect('/');
          }
          return req.logIn(user, function(err) {
             if(err) {
-               return res.redirect('/index');
+               return res.redirect('/');
             } else {
                return res.redirect('/homepage');
             }
@@ -73,20 +73,32 @@ module.exports=function(app,passport){
             });
 
             newUser.save().then(function(model) {
-               res.redirect('/index');
+               res.redirect('/');
             });
          }
       });
    });
+    
+    app.get("/isUsernameAvailable", function(req, res, next) {
+        new User({username: req.query.username}).fetch().then(function(model) {
+            res.json({available:(model ? false : true)});
+        });
+    });
+    
+    app.get("/isEmailAvailable", function(req, res, next) {
+        new User({email: req.query.email}).fetch().then(function(model) {
+            res.json({available:(model ? false : true)});
+        });
+    });
 
 // logout
 // GET
-   app.get('/signout', function(req, res, next) {
+   app.get('/sign-out', function(req, res, next) {
       if(!req.isAuthenticated()) {
          notFound404(req, res, next);
       } else {
          req.logout();
-         res.redirect('/index');
+         res.redirect('/');
       }
    });
 
