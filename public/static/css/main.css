@@ -1,7 +1,9 @@
 #navbar-main {
   background-color: #ffa500;
-  border-color: #ffffff;
+/*  border-color: #ffffff; */
   font-family: 'Open Sans', sans-serif;
+  border: 0;
+  font-weight: bold;
 }
 #navbar-main .navbar-brand {
   color: #ffffff;
