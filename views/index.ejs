@@ -204,10 +204,10 @@
     <script src="/static/js/registrationPage.js"></script>
     <script>
         $("#login-button").click(login);
-        $("#username").blur(checkUsernameDelayed);
-        $("#password").blur(checkPassword);
-        $("#retypePassword").blur(comparePasswords);
-        $("#email").blur(checkEmail);
+        $("#username").change(checkUsernameDelayed);
+        $("#password").change(checkPassword);
+        $("#retypePassword").change(comparePasswords);
+        $("#email").change(checkEmail);
         $("#register-button").click(register);
     </script>
 </body>

@@ -3,11 +3,12 @@
     Tells whether the popover of the given element(which must be a tag with a popover registered on it) 
     is visible(showing);
 */
+
 function isPopoverVisible(elementID) {
 	try {
-		var isVisible = $('#'+elementID).data('bs.popover').tip().hasClass('in');
+		var isVisible = $('#' + elementID).data('bs.popover').tip().hasClass('in');
 		//this error is likely to occur because the popover doesn't exist
-	}catch(err) {
+	} catch (err) {
 		return false;
 	}
 
@@ -23,13 +24,13 @@ function isPopoverVisible(elementID) {
 */
 function showPopoverIfInvisible(elementID) {
 	if(!isPopoverVisible(elementID)) {
-		$('#'+elementID).popover("show");
+		$('#' + elementID).popover("show");
 	}
 }
 
 function isPopoverInitialized(elementID) {
 	try {
-		var isVisible = $('#'+elementID).data('bs.popover').tip().hasClass('in');
+		var isVisible = $('#' + elementID).data('bs.popover').tip().hasClass('in');
 		//this error is likely to occur because the popover doesn't exist
 	}catch(err) {
 		return false;
@@ -45,13 +46,13 @@ function isPopoverInitialized(elementID) {
 */
 function fillContentAndshowPopover(elementID, popoverContentMessage, popoverTitle) {
 	if(isPopoverInitialized(elementID)) {
-		setTimeout(function(){
-			var popover = $("#"+elementID).data('bs.popover');
+		setTimeout(function() {
+			var popover = $("#" + elementID).data('bs.popover');
 			popover.options.content = popoverContentMessage;
 			popover.tip().find('.popover-content').html(popoverContentMessage);
 			popover.options.title = popoverTitle;
 			popover.tip().find('.popover-title').html(popoverTitle);
-			$('#'+elementID).popover("show");
+			$('#' + elementID).popover("show");
 		},0);
 
 		//        //if this is a new popover it has to be initialized
@@ -79,7 +80,7 @@ function fillContentAndshowPopover(elementID, popoverContentMessage, popoverTitl
 
 function hidePopover(elementID) {
 	if(isPopoverVisible(elementID)) {
-		$('#'+elementID).popover("hide");
+		$('#' + elementID).popover("hide");
 	}
 }
 
@@ -97,7 +98,7 @@ function hidePopover(elementID) {
     The callback function will be called with the 
     data returned by the server.
 */
-function submitForm(form, callbackFunction){
+function submitForm(form, callbackFunction) {
 	var url = form.attr("action");
 	var formData = {};
 	$(form).find("input[name]").each(function (index, node) {
@@ -116,7 +117,7 @@ function submitForm(form, callbackFunction){
     This method will return true only if the given value is undefined or "true".
 */
 function isValid(value) {
-	if(value ==undefined) {
+	if (value ==undefined) {
 		return true;
 	}
 	if(value.trim()=="true") {
@@ -246,14 +247,7 @@ function checkUsernameDelayed() {
 			//check if the username is valid with ajax
 		} else {
 			if(!usernameTimeoutStarted) {
-				setTimeout(function(){
-					var jsonUsername = {"username":username};
-					$.post("/checkUsernameAvailable.js",jsonUsername, doUsernameAvailabilityResponse);
-					//test
-					//doUsernameAvailabilityResponse();
-
-					usernameTimeoutStarted = false;
-				}, 600);
+				$.get("/isUsernameAvailable", {"username":username}, doUsernameAvailabilityResponse);
 			}
 
 			return true;
@@ -265,22 +259,17 @@ function checkUsernameDelayed() {
 }
 
 function doUsernameAvailabilityResponse(jsonResponse) {
-	//test1 username unavailable
-	//jsonResponse = {"username":"Username invalid"};
-	//test username available
-	jsonResponse = {"username":"true"};
-	//test2 username available
-	//jsonResponse = {};
 
-
-	if(isValid(jsonResponse.username)) {
+	if(jsonResponse.available == true) {
 		hidePopover("username");
 		usernameAvailable = true;
 		console.log(usernameAvailable);
 	} else {
 		usernameAvailable = false;
+		console.log(usernameAvailable);
 		fillContentAndshowPopover("username", popoverUsernameWarningNotAvailable, popoverHeaderWarning);
 	}
+	
 };
 
 function login() {
