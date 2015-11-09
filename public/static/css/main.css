@@ -150,6 +150,17 @@
 
 /* POST */
 
+#controls {
+    margin: 50px 0;
+    background-color: black;
+}
+
+#new-post {
+    display: none;
+    min-width: 256px;
+    min-height: 256px;
+}
+
 .posts {
     margin: 12px auto;
 }
