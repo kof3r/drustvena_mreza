@@ -2,38 +2,45 @@
 	baza v1.0
 
 		user
-		-	user_id 					(INT)	PK
-		-	user_name 					(?)		UNIQUE
+		-	id 					(INT)	PK
+		-	username 					(?)		UNIQUE
 		-	password_hash				(INT)	
 		-	email						(?)		UNIQUE
 		-	profile_id					(INT)	FK(profile)
 		-	registration_date			(DATE)
 	
 		profile
-		-	profile_id					(INT)	PK
+		-	id					(INT)	PK
 		-	first_name					(?)
 		-	last_name					(?)
-		-	image_id					(INT)
+		-	profile_image_id			(INT)
 		-	relationship_status_id		(INT) 	FK(relationship_status)
-		-	country_id					(INT) 	FK(country)
+		-	country						(VARCHAR)
 		-	city						(?)
 		-	address						(?)
 		-	job							(?)
 		
 		relationship_status
-		-	relationship_status_id		(INT) 	PK
-		-	relationship_status			(?)	{Single, Complicated, In a relationship, Doomed}
+		-	id		(INT) 	PK
+		-	description		(?)	{Single, Complicated, In a relationship, Doomed}
 	
 		relationship_type
-		-	relationship_type_id		(INT) 	PK
-		-	relationship_type			(?) {friends, colleagues, }
+		-	id		(INT) 	PK
+		-	description			(?) {friends, colleagues, }
 		
+		//Mate - moramo odlučit želimo li da sve veze budu asinkrone
+	//ako želimo, onda  to možemo možda napravit na način da nam je veza 
+	//definirana od usr1 prema usr2
+	//npr., usr1 može staviti da mu je usr2 prijatelj, a da usr2 ne stavi da 
+	// mu je usr1 prijatelj?
 		relationship
-		-	relationship_id				(INT)	PK
+		-	id				(INT)	PK
 		-	user_id1					(INT)	FK(user)
 		-	user_id2					(INT)	FK(user)
 		-	relationship_type_id		(INT)	FK(relationship_type)
-	
+		
+		
+		//Mate - mslm da nam ovo ne treba
 		country	(?)
 		-	country_id					(INT)	PK
 		-	country						(?)
