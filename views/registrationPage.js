@@ -268,7 +268,7 @@ function doUsernameAvailabilityResponse(jsonResponse) {
 	//test1 username unavailable
 	//jsonResponse = {"username":"Username invalid"};
 	//test username available
-	jsonResponse = {"username":"true"};
+	//jsonResponse = {"username":"true"};
 	//test2 username available
 	//jsonResponse = {};
 
@@ -301,7 +301,7 @@ function doLoginResponse(jsonResponse) {
 	//test username available
 	//jsonResponse = {"username":"true"};
 	//test2 username available
-	jsonResponse = {};
+	//jsonResponse = {};
 
 	if(isValid(jsonResponse.username) && isValid(jsonResponse.password)) {
 		window.location.href = homepage;
