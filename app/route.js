@@ -145,7 +145,7 @@ function sendVerificationEmail(email,link){
       service: 'Gmail',
       auth: {
           user: 'bubbles.mislav', //dodati svoj mail
-          pass: 'harvard123'   //dodati svoju sifru
+          pass: 'nekasifra'   //dodati svoju sifru
       }
   });
   var mailOptions = {
