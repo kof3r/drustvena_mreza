@@ -25,7 +25,6 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
-
 require('./app/route')(app, passport);
 
 app.listen(app.get('port'));

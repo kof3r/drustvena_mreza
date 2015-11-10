@@ -6,11 +6,12 @@ var config = {
    password: 'root', // your database password
    database: 'drustvena_mreza',
    charset: 'utf8',
-	port: '3306'
+   port: '3306'
 };
 
 var DB = Bookshelf.initialize({
    client: 'mysql', 
+   debug:true,
    connection: config
 });
 

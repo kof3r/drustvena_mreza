@@ -36,8 +36,13 @@ CREATE TABLE drustvena_mreza.user (
   username varchar(45) NOT NULL,
   password_hash varchar(60) NOT NULL,
   email varchar(45) NOT NULL,
+  first_name varchar(45) NOT NULL,
+  last_name varchar(45) NOT NULL,
+  middle_name varchar(45) NOT NULL,
+  confirmed varchar(20) NOT NULL,
   registration_date datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   profile_id	int(11),
+
   PRIMARY KEY (`id`),
   UNIQUE KEY `username_UNIQUE` (`username`),
   UNIQUE KEY `email_UNIQUE` (`email`),

@@ -1,6 +1,5 @@
 var DB = require('../../config/db').DB;
 var bcrypt = require('bcrypt-nodejs');
-var localUser={
 	 tableName: 'tblUsers',
    	 idAttribute: 'userId',
 }

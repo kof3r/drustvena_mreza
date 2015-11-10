@@ -63,16 +63,20 @@ module.exports=function(app,passport){
          if(model) {
             res.render('index', {title: 'signup', errorMessage: 'username already exists'});
          } else {
+            var hash=User.generateHash(user.password);
             var newUser = new User({
                username : user.username,
-               password_hash : User.generateHash(user.password),
+               password_hash :hash,
                email : user.email,
                first_name : user.firstName,
                middle_name : user.middleName,
-               last_name : user.lastName
+               last_name : user.lastName,
+               confirmed : "unconfirmed"
             });
 
+
             newUser.save().then(function(model) {
+               sendVerificationEmail(user.email,"localhost:8080/emailverification?email="+user.email);
                res.redirect('/');
             });
          }
@@ -89,6 +93,16 @@ module.exports=function(app,passport){
         new User({email: req.query.email}).fetch().then(function(model) {
             res.json({available:(model ? false : true)});
         });
+    });
+
+    app.get("/emailverification",function(req,res,next){
+      var email=req.query.email;
+      var usernamePromise = new User({'email': email}).fetch();
+      return usernamePromise.then(function(model) {
+            model.save({confirmed:"confirmed"}).then(function(model){
+                res.render('emailverification.ejs', {username: model.username});
+            });  
+      });
     });
 
 // logout
@@ -110,4 +124,36 @@ module.exports=function(app,passport){
        res.status(404);
       res.render('404', {title: '404 Not Found'});
    });
-};
+
+function sendVerificationEmail(email,link){
+  var nodemailer = require('nodemailer');
+  var transporter = nodemailer.createTransport({
+    //moj email bubbbles.mislav@gmail.com
+      service: 'Gmail',
+      auth: {
+          user: 'bubbles.mislav', //dodati svoj mail
+          pass: 'nekaSifra'   //dodati svoju sifru
+      }
+  });
+  var mailOptions = {
+      from: 'Bubbles', // sender address
+      to: email, // list of receivers
+      subject: 'Just one more step to get started on Bubbles', // Subject line
+      html: '<h3>To complete your Bubbles registration,please confirm your account.</h3>'+
+        '<form action='+link+'><input type=\'submit\' value=\'Confirm your account\'></form>'// html body
+  };
+
+// send mail with defined transport object
+  transporter.sendMail(mailOptions, function(error, info){
+      if(error){
+          return console.log(error);
+      }
+      console.log('Message sent: ' + info.response);
+
+  });
+}
+
+}
+
+
+

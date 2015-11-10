@@ -14,10 +14,14 @@ module.exports=function(passport){
             return done(null, false, {message: 'Invalid username or password'});
          } else {
             user = data.toJSON();
+            console.log(user);
             if(!User.validPassword(password,user.password_hash)) {
                return done(null, false, {message: 'Invalid username or password'});
-            } else {
+            } else if(user.confirmed==="confirmed"){
                return done(null, user);
+            }
+            else{
+               return done(null,false,{message:'You should verify your email'});
             }
          }
       });
