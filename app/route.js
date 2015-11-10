@@ -76,7 +76,7 @@ module.exports=function(app,passport){
 
 
             newUser.save().then(function(model) {
-               sendVerificationEmail(user.email,"localhost:8080/emailverification?email="+user.email);
+               sendVerificationEmail(user.email,"localhost:8080/emailverification?id="+model.id+"&hash="+hash);
                res.redirect('/');
             });
          }
@@ -96,12 +96,15 @@ module.exports=function(app,passport){
     });
 
     app.get("/emailverification",function(req,res,next){
-      var email=req.query.email;
-      var usernamePromise = new User({'email': email}).fetch();
+      var id=req.query.id;
+      var hash=req.query.hash;
+      var usernamePromise = new User({'id': id}).fetch();
       return usernamePromise.then(function(model) {
+        if(model.toJSON().password_hash===hash){
             model.save({confirmed:"confirmed"}).then(function(model){
                 res.render('emailverification.ejs', {username: model.username});
             });  
+          }
       });
     });
 
@@ -132,7 +135,7 @@ function sendVerificationEmail(email,link){
       service: 'Gmail',
       auth: {
           user: 'bubbles.mislav', //dodati svoj mail
-          pass: 'nekaSifra'   //dodati svoju sifru
+          pass: 'harvard123'   //dodati svoju sifru
       }
   });
   var mailOptions = {
