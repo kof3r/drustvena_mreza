@@ -117,7 +117,17 @@ module.exports=function(app,passport){
    });
 
 /********************************/
-
+// Partial HTML views
+// GET
+	app.get('/partial/new-post', function(req, res, next) {
+		res.render('new-post.partial.ejs');
+	});
+	app.get('/partial/feed', function(req, res, next) {
+		res.render('feed.partial.ejs');
+	});
+	app.get('/partial/view-profile', function(req, res, next) {
+		res.render('view-profile.partial.ejs');
+	});
 /********************************/
 // 404 not found
    app.use(function(req, res, next) {

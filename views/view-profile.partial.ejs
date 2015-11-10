@@ -1,0 +1,108 @@
+<style>
+	
+	.jumbotron {
+		background: url("image/bubbles-profile.jpg") center center; 
+		background-size: cover;
+		overflow: hidden;
+		height: 270px;
+		z-index: 0;
+	}
+	
+	.image-profile {
+		height:200px;
+		width:200px;
+		margin-right: 3%;
+		border-bottom: groove;
+	}
+	
+	.avatar {
+		margin: -160px 10px 20px 0px;
+		z-index: 9;
+	}
+	
+	.profile-name {
+		color: white;
+		padding: 25px;
+		text-shadow: 3px 3px 4px #000000;
+	}
+	
+	.profile-name > h1 {
+		font-size: 40px;
+		font-weight: bold;
+	}
+    
+   .profile-tabs {
+        color: black;
+        font-size: 14px;
+        font-weight: 200;
+    }
+    
+    .nav-pills > li.active > a {
+        background-color: red;
+    }
+    
+    .nav-pills > li.active > a:focus {
+        background-color: orangered;
+    }
+    
+    /*
+    .nav-pills > li.active > a:hover {
+        background-color: red;
+    }
+    
+    .nav-pills a, .nav-pills a:hover, .nav-pills a:focus {
+        outline: 0;
+    } 
+    .nav-pills a {
+		color: #ffffff
+	} 
+
+	.nav-pills a:hover {
+		color: #560000;
+		border-radius: 0px;
+	}
+
+	.nav-pills .active a:hover {
+		color: #560000;
+		border-radius: 0px;
+	}
+	
+	.nav>li>a:hover,
+	.nav>li>a:focus {
+		text-decoration: none;
+		background-color: #560000;
+	}
+	*/
+</style>
+
+<div class="jumbotron">
+</div>
+<div class="container">
+	<div class="avatar">
+		<img align="left" class="image-profile img-circle" src="image/profile.jpg" alt="Profile image"/>
+		<div class="profile-name">
+			<h1>mrbean223</h1>
+			<h4>Mirko Mirić</h4>
+		</div>
+	</div>
+    <ul class="nav nav-pills profile-tabs">
+        <li role="presentation" class="active"><a data-toggle="pill" href="#profile-account_info">Account information</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#profile-bubbles">Bubbles</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#profile-posts">Posts</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#profile-friends">Friends</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#profile-gallery">Gallery</a></li>   
+    </ul>
+    
+    <div class="tab-content">
+        <div class="tab-pane fade in active" id="profile-account_info">
+        </div>
+        <div class="tab-pane fade" id="profile-bubbles">
+        </div>
+        <div class="tab-pane fade" id="profile-posts">
+        </div>
+        <div class="tab-pane fade" id="profile-friends">
+        </div>
+        <div class="tab-pane fade" id="profile-gallery">
+        </div>
+    </div>
+</div>

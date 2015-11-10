@@ -1,7 +1,9 @@
 #navbar-main {
   background-color: #ffa500;
-  border-color: #ffffff;
+/*  border-color: #ffffff; */
   font-family: 'Open Sans', sans-serif;
+  border: 0;
+  font-weight: bold;
 }
 #navbar-main .navbar-brand {
   color: #ffffff;
@@ -149,6 +151,17 @@
 }
 
 /* POST */
+
+#controls {
+    margin: 50px 0;
+    background-color: black;
+}
+
+#new-post {
+    display: none;
+    min-width: 256px;
+    min-height: 256px;
+}
 
 .posts {
     margin: 12px auto;
