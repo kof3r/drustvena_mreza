@@ -32,7 +32,7 @@
             border-bottom: 3px solid orange;
         }
 
-        .login label, .col-md-4 label {
+        #login label, .col-md-4 label {
             border-bottom: 1px solid darkorange;
         }
 
@@ -60,14 +60,22 @@
             text-transform: uppercase;
         }
 
-        .login {
+        #login {
             margin-bottom: 25px;
             z-index: 20;
         }
+        
+        #login:hover {
+			opacity: 1 !important;
+		}
 
-        .register {
+        #register {
             max-width: 600px;
         }
+        
+        #register:hover {
+			opacity: 1 !important;
+		}
 
         .popover {
             position: fixed;
@@ -79,7 +87,7 @@
 <body>
     <div class="container">
         <!-- Login part of the page -->
-        <div class="col-md-4 col-xs-12 login">
+        <div class="col-md-4 col-xs-12" id="login">
             <div class="col-md-12 col-sm-4 col-xs-12 logo-container">
                 <div class="logo"></div>
             </div>
@@ -108,7 +116,7 @@
             </div>
         </div>
 
-        <div class="col-md-8 col-xs-12 register">
+        <div class="col-md-8 col-xs-12" id="register">
             <!-- registration part of the page -->
             <h3 class="text-orange text-center">Don't have an account?<br/><strong>Sign up</strong>, it's free!</h3>
 
@@ -231,6 +239,16 @@
         $("#retypePassword").change(comparePasswords);
         $("#email").change(checkEmail);
         $("#register-button").click(register);
+        
+        $("#register").click(function() {
+			$("#login").css("opacity", "0.25");
+			$("#register").css("opacity", "1");
+		});
+        $("#login").click(function() {
+			$("#register").css("opacity", "0.25");
+			$("#login").css("opacity", "1");
+		});
+        
     </script>
 </body>
 </html>
