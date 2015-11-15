@@ -87,7 +87,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li><a href="#view-profile">View profile</a></li>
-                            <li><a href="/edit-profile">Edit profile</a></li>
+                            <li><a href="#edit-profile">Edit profile</a></li>
                             <li><a href="/manage-account">Manage account</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="/sign-out"><span class="glyphicon glyphicon-off"></span> Sign out</a></li>
@@ -118,7 +118,7 @@
         function loadPage() {
             var newHash = location.hash;
             if (newHash != null) {
-                var pages = ['#new-post', '#feed', '#view-profile'];
+                var pages = ['#new-post', '#feed', '#view-profile', '#edit-profile'];
                 if ($.inArray(newHash, pages) != -1) {
                     $('#main-content').load('partial/' + newHash.substring(1));
                 }
