@@ -16,9 +16,42 @@ CREATE TABLE drustvena_mreza.relationship_type(
 	primary key(`id`)
 );
 
+CREATE TABLE drustvena_mreza.content_info(
+	id int(11) NOT NULL AUTO_INCREMENT,
+    title varchar(200),
+    description text,
+    mime_type	varchar(50),
+    
+    primary key(`id`)
+);
+
+CREATE TABLE drustvena_mreza.bubble(
+	id	int(11) NOT NULL AUTO_INCREMENT,
+    user_id	int(11) NOT NULL,
+    content_info_id	int(11),
+    
+	primary key(`id`),
+	foreign key(`content_info_id`) 
+		references drustvena_mreza.content_info(`id`)
+);
+
+CREATE TABLE drustvena_mreza.picture(
+	id	int(11) NOT NULL AUTO_INCREMENT,
+    bubble_id	int(11) NOT NULL,
+    content_info_id	int(11),
+    embed_src	varchar(1000) NOT NULL,
+    
+	primary key(`id`),
+	foreign key(`bubble_id`) 
+		references drustvena_mreza.bubble(`id`),
+	foreign key(`content_info_id`) 
+		references drustvena_mreza.content_info(`id`)
+);
+
 CREATE TABLE drustvena_mreza.profile (
   id int(11) NOT NULL AUTO_INCREMENT,
   first_name varchar(45),
+  middle_name varchar(45),
   last_name varchar(45),
   profile_image_id	int(11),
   relationship_status_id	int(4),
@@ -28,7 +61,8 @@ CREATE TABLE drustvena_mreza.profile (
   job	varchar(45),
   
   PRIMARY KEY (`id`),
-  foreign key(`relationship_status_id`) references drustvena_mreza.relationship_status(`id`)
+  foreign key(`relationship_status_id`) references drustvena_mreza.relationship_status(`id`),
+  foreign key(`profile_image_id`) references drustvena_mreza.picture(`id`)
 );
 
 CREATE TABLE drustvena_mreza.user (
@@ -65,39 +99,6 @@ CREATE TABLE drustvena_mreza.relationship(
 		references drustvena_mreza.user(`id`)
 );
 
-CREATE TABLE drustvena_mreza.content_info(
-	id int(11) NOT NULL AUTO_INCREMENT,
-    title varchar(200),
-    description text,
-    mime_type	varchar(50),
-    
-    primary key(`id`)
-);
-
-CREATE TABLE drustvena_mreza.bubble(
-	id	int(11) NOT NULL AUTO_INCREMENT,
-    user_id	int(11) NOT NULL,
-    content_info_id	int(11),
-    
-	primary key(`id`),
-	foreign key(`user_id`) 
-		references drustvena_mreza.user(`id`),
-	foreign key(`content_info_id`) 
-		references drustvena_mreza.content_info(`id`)
-);
-
-CREATE TABLE drustvena_mreza.picture(
-	id	int(11) NOT NULL AUTO_INCREMENT,
-    bubble_id	int(11) NOT NULL,
-    content_info_id	int(11),
-    embed_src	varchar(1000) NOT NULL,
-    
-	primary key(`id`),
-	foreign key(`bubble_id`) 
-		references drustvena_mreza.bubble(`id`),
-	foreign key(`content_info_id`) 
-		references drustvena_mreza.content_info(`id`)
-);
 
 CREATE TABLE drustvena_mreza.video(
 	id	int(11) NOT NULL AUTO_INCREMENT,
@@ -124,6 +125,10 @@ CREATE TABLE drustvena_mreza.post(
 		references drustvena_mreza.content_info(`id`)
 );
 
+
+alter table drustvena_mreza.bubble	
+	add constraint foreign key(`user_id`) 
+		references drustvena_mreza.user(`id`);
 
 
 insert into drustvena_mreza.relationship_status(`description`)

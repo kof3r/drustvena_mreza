@@ -6,14 +6,19 @@
 		-	username 					(?)		UNIQUE
 		-	password_hash				(INT)	
 		-	email						(?)		UNIQUE
+		-	first_name					(?)
+		-	middle_name							
+		-	last_name					(?)
 		-	profile_id					(INT)	FK(profile)
 		-	registration_date			(DATE)
+		-	confirmed
 	
 		profile
 		-	id					(INT)	PK
 		-	first_name					(?)
+		-	middle_name							
 		-	last_name					(?)
-		-	profile_image_id			(INT)
+		-	profile_image_id			(INT)	FK(picture)
 		-	relationship_status_id		(INT) 	FK(relationship_status)
 		-	country						(VARCHAR)
 		-	city						(?)
