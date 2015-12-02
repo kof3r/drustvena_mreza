@@ -309,7 +309,7 @@ function register() {
 		return;
 	}
 
-	submitForm($("#registerForm"), doRegisterResponse);
+	/* NESREÆA submitForm($("#registerForm"), doRegisterResponse); */
 }
 
 function doRegisterResponse(jsonResponse) {
