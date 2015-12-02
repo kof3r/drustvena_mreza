@@ -140,7 +140,7 @@ function showAlert(alertID) {
 
 //actual page code
 //urls
-var homepage = "/homepage";
+var homepage = "/home/homepage";
 
 var usernameAvailable = false;
 var usernameTimeoutStarted = false;
@@ -279,7 +279,7 @@ function login() {
 	//    console.log(username);
 	//    console.log(password);
 
-	submitForm($("#loginForm"), doLoginResponse);
+	/* NESREÆA submitForm($("#loginForm"), doLoginResponse); */
 	//test
 	//doLoginResponse();
 }
@@ -293,7 +293,7 @@ function doLoginResponse(jsonResponse) {
 	jsonResponse = {};
 
 	if(isValid(jsonResponse.username) && isValid(jsonResponse.password)) {
-		window.location.href = homepage;
+		//window.location.href = homepage;
 	} else {
 		showAlert("loginAlert");
 	}
@@ -318,5 +318,5 @@ function doRegisterResponse(jsonResponse) {
 	//if the page was accessed illegaly without frontend, then 
 	//this will make sure no registration occurs
 
-	window.location.href = homepage;
+	//window.location.href = homepage;
 }
