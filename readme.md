@@ -1,4 +1,4 @@
-LOKALNA INSTALACIJA:
+LOKALNA INSTALACIJA (za development granu - update 2.12.2015: 5. i 6. korak!):
 
 1. preuzeti i instalirati Node.js
     preporučeno msi installer za Windowse
@@ -12,6 +12,8 @@ LOKALNA INSTALACIJA:
 
 4. Provjeriti odgovara li port MySQL servera onome u config/db.js, ako ne, promijeniti taj parametar
 
-5. U direktoriju gdje je smješten repozitorij otvoriti Command Prompt / Terminal i naredbom "node server.js" pokrenuti
+5. U public/javascripts/mail.js dodati svoj gmail username i pass
 
-6. U web pregledniku upisati "localhost:8080/index"
+5. U direktoriju gdje je smješten repozitorij otvoriti Command Prompt / Terminal i naredbom "node bin/www.js" pokrenuti
+
+6. U web pregledniku upisati "localhost:8080/"
