@@ -92,7 +92,7 @@ module.exports = function(passport){
         return usernamePromise.then(function(model) {
             if(model.toJSON().password_hash===hash){
                 model.save({confirmed:"confirmed"}).then(function(model){
-                    res.render('emailverification.ejs', {username: model.username});
+                    res.render('emailverification.ejs', {username: model.toJSON().username});
                 });
             }
         });
