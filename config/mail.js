@@ -5,8 +5,8 @@ module.exports={
             //moj email bubbbles.mislav@gmail.com
             service: 'Gmail',
             auth: {
-                user: 'bubbles.notification', //dodati svoj mail
-                pass: 'Dr(!*Ezk@R48'   //dodati svoju sifru
+                user: 'mate.simovic.orange@gmail.com', //dodati svoj mail
+                pass: 'drustvena-mreza'   //dodati svoju sifru
             }
         });
         var mailOptions = {
