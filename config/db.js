@@ -1,18 +1,17 @@
-var Bookshelf = require('bookshelf');
-
-var config = {
-   host: 'localhost',  // your host
-   user: 'root', // your database user
-   password: 'root', // your database password
-   database: 'drustvena_mreza',
+var con = {
+   host: 'localhost',  
+   user: 'root', 
+   password: 'root',
+   database: 'dajpliz',
    charset: 'utf8',
    port: '3306'
 };
 
-var DB = Bookshelf.initialize({
-   client: 'mysql', 
-   debug:true,
-   connection: config
+var knex=require('knex')({
+   client: 'mysql',
+   debug:false,
+   connection: con
 });
+var DB = require('bookshelf')(knex);
 
 module.exports.DB = DB;
