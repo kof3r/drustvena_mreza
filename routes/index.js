@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/user');
-var Mail=require('../public/javascripts/mail')
+var Mail=require('../config/mail')
 
 
 module.exports = function(passport){

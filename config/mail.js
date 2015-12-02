@@ -5,15 +5,15 @@ module.exports={
             //moj email bubbbles.mislav@gmail.com
             service: 'Gmail',
             auth: {
-                user: 'bubbles.mislav', //dodati svoj mail
-                pass: 'neka_sifra'   //dodati svoju sifru
+                user: 'bubbles.notification', //dodati svoj mail
+                pass: 'Dr(!*Ezk@R48'   //dodati svoju sifru
             }
         });
         var mailOptions = {
-            from: 'Bubbles', // sender address
+            from: 'Bubbles Notification', // sender address
             to: email, // list of receivers
             subject: 'Just one more step to get started on Bubbles', // Subject line
-            html: '<h3>To complete your Bubbles registration,please confirm your account.</h3>'+
+            html: '<h3>To complete your Bubbles registration, please confirm your account by following the link</h3>'+
             '<a href='+link.to+'>'+link+'</a>'// html body
         };
 
