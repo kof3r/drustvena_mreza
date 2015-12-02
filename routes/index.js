@@ -17,7 +17,7 @@ module.exports = function(passport){
             res.redirect('/home/homepage');
         }
         else {
-            res.render('index.ejs');
+            res.render('index.ejs', {loginError:'', registerError:''});
         }
     });
 
@@ -25,15 +25,16 @@ module.exports = function(passport){
     router.post('/login.js', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
             if(err) {
-                return res.redirect('/');
+                return res.render('index.ejs', {loginError:'An error occoured.', registerError:''});
             }
 
             if(!user) {
-                return res.redirect('/');
+                return res.render('index.ejs', {loginError:'Invalid login attempt.', registerError:''});
             }
+            
             return req.logIn(user, function(err) {
                 if(err) {
-                    return res.redirect('/');
+                    return res.render('index', {loginError:'An error occoured.', registerError:''});
                 } else {
                     return res.redirect('/home/homepage');
                 }
@@ -55,7 +56,7 @@ module.exports = function(passport){
         var usernamePromise = new User({'username': user.username}).fetch();
         return usernamePromise.then(function(model) {
             if(model) {
-                res.render('index', {title: 'signup', errorMessage: 'username already exists'});
+                res.render('index', {title: 'Sign up', loginError:'', registerError: 'username already taken.'});
             } else {
                 var hash=User.generateHash(user.password);
                 var newUser = new User({
@@ -69,7 +70,7 @@ module.exports = function(passport){
                 });
                 newUser.save().then(function(model) {
                     Mail.sendVerificationEmail(user.email,"localhost:8080/emailverification?id="+model.id+"&hash="+hash);
-                    res.redirect('/');
+                    res.redirect('/#successful-sign-up');
                 });
             }
         });
