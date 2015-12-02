@@ -7,11 +7,14 @@ var Mail=require('../config/mail')
 
 module.exports = function(passport){
 
+    router.use('/api', require('./api'));
+    router.use('/home', require('./home'));
+
 // signin
 // GET
     router.get('/', function(req, res, next) {
         if(req.isAuthenticated()){
-            res.redirect('/homepage');
+            res.redirect('/home/homepage');
         }
         else {
             res.render('index.ejs');
@@ -20,8 +23,7 @@ module.exports = function(passport){
 
 // POST
     router.post('/login.js', function(req, res, next) {
-        passport.authenticate('local', { successRedirect: '/homepage',
-            failureRedirect: '/'}, function(err, user, info) {
+        passport.authenticate('local', function(err, user, info) {
             if(err) {
                 return res.redirect('/');
             }
@@ -33,7 +35,7 @@ module.exports = function(passport){
                 if(err) {
                     return res.redirect('/');
                 } else {
-                    return res.redirect('/homepage');
+                    return res.redirect('/home/homepage');
                 }
             });
         })(req, res, next);

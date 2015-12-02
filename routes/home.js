@@ -24,7 +24,7 @@ router.get('/homepage', function(req, res, next) {
         if(user !== undefined) {
             user = user.toJSON();
         }
-        res.render('homepage', {title: 'Home', user: user});
+        res.render('homepage.ejs', {title: 'Home', user: user});
     }
 });
 module.exports=router;
