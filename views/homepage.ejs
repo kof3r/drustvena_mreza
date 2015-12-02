@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -85,12 +85,13 @@
                         <a href="#" class="dropdown-toggle username" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                             <span class="caret"></span> <em><%= user.username %></em>
                         </a>
+                        <form id="sign-out-form" method="post" action="/sign-out"></form>
                         <ul class="dropdown-menu">
                             <li><a href="#view-profile">View profile</a></li>
                             <li><a href="#edit-profile">Edit profile</a></li>
                             <li><a href="/manage-account">Manage account</a></li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="/sign-out"><span class="glyphicon glyphicon-off"></span> Sign out</a></li>
+                            <li><a href="#sign-out"><span class="glyphicon glyphicon-off"></span> Sign out</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -121,6 +122,10 @@
                 var pages = ['#new-post', '#feed', '#view-profile', '#edit-profile'];
                 if ($.inArray(newHash, pages) != -1) {
                     $('#main-content').load('partial/' + newHash.substring(1));
+                }
+                else if (newHash == '#sign-out')
+                {
+                    document.forms['sign-out-form'].submit();
                 }
                 else {
                     //$('#main-content').html('bad request');

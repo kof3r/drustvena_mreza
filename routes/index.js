@@ -101,8 +101,8 @@ module.exports = function(passport){
     });
 
 // logout
-// GET
-    router.get('/sign-out', function(req, res, next) {
+// POST
+    router.post('/sign-out', function(req, res, next) {
         if(!req.isAuthenticated()) {
             notFound404(req, res, next);
         } else {
