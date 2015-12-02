@@ -2,7 +2,7 @@ var con = {
    host: 'localhost',  
    user: 'root', 
    password: 'root',
-   database: 'dajpliz',
+   database: 'drustvena_mreza',
    charset: 'utf8',
    port: '3306'
 };

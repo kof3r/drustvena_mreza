@@ -6,7 +6,7 @@ module.exports={
             service: 'Gmail',
             auth: {
                 user: 'bubbles.mislav', //dodati svoj mail
-                pass: 'harvard123'   //dodati svoju sifru
+                pass: 'neka_sifra'   //dodati svoju sifru
             }
         });
         var mailOptions = {
