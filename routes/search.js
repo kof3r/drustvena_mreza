@@ -54,6 +54,7 @@ router.get('/', function(req, res, next) {
 
             for (var i = from; i < size; i++) {
                 var item = collection.at(i);
+                console.log(item.attributes);
                 results.users.push({
                     username: item.attributes.username,
                     first_name: item.attributes.first_name,
