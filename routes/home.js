@@ -15,6 +15,9 @@ router.get('/partial/feed', function(req, res, next) {
 router.get('/partial/view-profile', function(req, res, next) {
     res.render('view-profile.partial.ejs');
 });
+router.get('/partial/edit-profile', function(req, res, next) {
+    res.render('edit-profile.partial.ejs');
+});
 // GET
 router.get('/homepage', function(req, res, next) {
     if(!req.isAuthenticated()) {
