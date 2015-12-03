@@ -1,0 +1,144 @@
+
+    <style>
+        body {
+            margin: 20px auto;
+        }
+
+        .text_orange {
+            color: darkorange;
+            font-family: "Times New Roman";
+            font-size: 25px;
+        }
+        .text_other {
+            color: green;
+            font-family: "Times New Roman";
+            font-size: 18px;
+        }
+
+        .text_center {
+            text-align: center;
+        }
+        
+    </style>
+ 
+    
+    
+    <div class="container">
+        <form action="/editProfile.js" method="post" id="loginForm" class="form-inline">
+         <div class="col-md-3">
+            <div class="well">
+                <label class= "text_orange"> PERSONAL INFORMATION</label>
+             </div>   
+             <div class="form-group">
+                <a class ="btn btn-default" role="button" href="/">DECLINE</a>
+             </div>
+             <div class="form-group">
+               
+                    <a class ="btn btn-default" role="button">SAVE</a> 
+          
+             </div>     
+        </div>
+             
+
+        <div class="col-md-4 col-sm-6">
+            <div class="well">
+            
+              
+                   
+                         <div class="control-group">
+                            <label class = "text_other control-label">FIRST NAME</label>
+                            <div class="controls">
+                            <input type="text" id="firstName" name="firstName" placeholder="" class="form-control" />
+                             </div>
+                             </div>
+                          <div class="control-group">
+                             <label class = "text_other control-label">MIDDLE NAME</label>
+                              <div class="controls">
+                                <input type="text" id="middleName" name="middleName" placeholder="" class="form-control" />
+                              </div>
+                         </div>
+                              
+                          <div class="control-group">
+                             <label class = "text_other control-label">LAST NAME</label>
+                             <div class="controls">
+                              <input type="text" id="lastName" name="lasttName" placeholder="" class="form-control" />
+                              </div>
+                        </div>
+             
+        
+                
+                        <div class="control-group">
+                            <label for="count" class = "text_other">COUNTRY</label>
+                            
+                             <div class="controls">
+                            <input type="text" id="count" name="country" placeholder="" class="form-control" />
+                            </div>
+                        </div>    
+                                
+                        <div class="control-group">
+                            <label for = "cit" class = "text_other">CITY</label>
+                             <div class="controls">
+                                <input type="text" id="cit" name="city" placeholder="" class="form-control">
+                            </div>
+                        </div>        
+                        <div class="control-group">
+                    
+                            <label for = "add" class = "text_other">ADDRESS</label>
+                             <div class="controls">
+                                 <input type="text" id="add" name="address" placeholder="" class="form-control">
+                            </div>
+                        </div>
+                         
+                         
+                     
+            
+
+                    
+                    
+            </div>
+        
+        </div>
+        
+        <div class="col-md-4 col-sm-6">
+            <div class="well">
+                
+                <div class="control-group">
+                    <label class = "text_other">RELATIONSHIP</label>
+                        <br>
+                        <input type="radio" name="relationship" value="complicated" checked>complicated
+                        <br>
+                        <input type="radio" name="relationship" value="single">single
+                        <br>
+                        <input type="radio" name="relationship" value="dating">dating
+                        <br>
+                        <input type="radio" name="relationship" value="married">married
+                        <br>
+                        <input type="radio" name="relationship" value="other">other
+                </div>
+                  
+                    
+                 <div class="control-group">
+                    <label class = "text_other">GENDER</label>
+                     <br>
+                    <input type="radio" name="sex" value="male" checked>Male
+                    <br>
+                    <input type="radio" name="sex" value="female">Female
+                    <br>
+                    <input type="radio" name="sex" value="other">Other
+                 </div>
+                
+                     
+                    <div class="control-group">
+                        <label for="date" class = "text_other">DATE OF BIRTH</label>
+                        <input type="date" class="form-control" id="date">
+                    </div>
+                                
+           
+
+            </div>     
+        </div>    
+        
+     </form>    
+      
+</div> 
+        
