@@ -72,14 +72,25 @@
                     </li>
                     <li><a href="/contacts"><span class="glyphicon glyphicon-user"></span> <span class="menu-item-text">Contacts</span></a></li>
                 </ul>
-                <form action="/search" method="get" class="navbar-form navbar-left search" role="search">
-                    <div class="input-group">
-                        <input type="text" class="form-control" placeholder="Search..." name="query" id="search-term">
-                        <div class="input-group-btn">
-                            <button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
-                        </div>
-                    </div>
-                </form>
+                <ul class="nav navbar-nav">
+					<li class="dropdown open">
+						<form method="get" class="navbar-form navbar-left search" role="search" id="search-form">
+							<div class="input-group">
+								<input type="text" class="form-control" placeholder="Search..." name="query" id="search-term">
+								<div class="input-group-btn">
+									<button class="btn btn-default" type="submit"><span class="glyphicon glyphicon-search"></span></button>
+								</div>
+							</div>
+						</form>
+						<ul class="dropdown-menu" id="search-results">
+							<li class="dropdown-header"><span class="glyphicon glyphicon-user"> Contacts<li>
+                            <li role="separator" class="divider"></li>
+							<li><a href="/profile?username=kolinda">Kolinda Kitarovich</a></li>
+							<li><a href="/profile?username=melinda">Melinda Grabbargh</a></li>
+						</ul>
+					</li>
+                </ul>
+                </ul>
                 <ul class="nav navbar-nav navbar-right">
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle username" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -138,7 +149,15 @@
                 loadPage();
             }
         }
-        
+    
+        $('#search-form').on('submit', function(event){
+			event.preventDefault();
+			$.get("search?query="+document.getElementById('search-term').value, search(data, status) {
+				
+				alert();
+			});
+			return false;
+		});
         $(window).on('hashchange', loadPage);
         $(document).ready(chechHash);
         
