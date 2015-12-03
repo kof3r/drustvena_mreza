@@ -2,13 +2,14 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/user');
-var Mail=require('../config/mail')
+var Mail=require('../config/mail');
 
 
 module.exports = function(passport){
 
     router.use('/api', require('./api'));
     router.use('/home', require('./home'));
+    router.use('/search', require('./search'));
 
 // signin
 // GET
@@ -111,6 +112,8 @@ module.exports = function(passport){
         }
     });
 
+
+
     /********************************/
 // 404 not found
     router.use(function(req, res, next) {
@@ -119,5 +122,3 @@ module.exports = function(passport){
     });
     return router;
 };
-
-
