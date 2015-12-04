@@ -152,7 +152,7 @@
     
         $('#search-form').on('submit', function(event){
           event.preventDefault();
-          $.get('/search?query='+document.getElementById('search-term'),
+          $.get('/search?query='+document.getElementById('search-term').value,
             function search (data, status){
               $('#searc-results').show();
               $('#search-results').html('sipak!');
