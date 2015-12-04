@@ -4,4 +4,4 @@ var knex = require('knex')(config['development']);
 
 var DB = require('bookshelf')(knex);
 
-module.exports.DB = DB;
+module.exports = DB;

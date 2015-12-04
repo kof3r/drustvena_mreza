@@ -3,14 +3,13 @@
  */
 
 var db = require('../config/db');
-
-var User = require('./user');
+db.plugin('registry');
 
 var Country = db.Model.extend({
     tableName : 'country',
     users : function() {
-        return this.hasMany(User);
+        return this.hasMany('User');
     }
 });
 
-module.exports = Country;
+module.exports = db.model('Country', Country);

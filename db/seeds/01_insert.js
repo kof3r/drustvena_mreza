@@ -31,6 +31,17 @@ exports.seed = function(knex, Promise) {
         last_name : 'Horvat',
         city : 'Zagreb'
       })
+      
+      knex('user').insert({
+        username : 'kolinda',
+        password_hash : bcrypt.hashSync('hrvatska3'),
+        email : 'kolinda@hdz.hr',
+        confirmed : true,
+        first_name : 'Kolinda',
+        last_name : 'Grabar-Kitaroviæ',
+        city : 'Grad Zagreb',
+        country : 1
+      })
 
   );
 };

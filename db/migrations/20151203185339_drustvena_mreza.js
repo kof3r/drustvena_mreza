@@ -19,7 +19,7 @@ exports.up = function(knex, Promise) {
             t.string('password_hash', 60).notNullable();
             t.string('email', 254).notNullable().unique();
             t.boolean('confirmed').notNullable().defaultsTo(false);
-            t.timestamp('created_at').notNullable().defaultsTo(knex.fn.now());
+            t.timestamps();
             t.string('first_name');
             t.string('last_name');
             t.string('middle_name');
