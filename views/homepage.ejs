@@ -136,7 +136,7 @@
                 }
                 else if (newHash == '#sign-out')
                 {
-                    document.forms['sign-out-form'].submit();
+                    document.getElementById('sign-out-form').submit();
                 }
                 else {
                     //$('#main-content').html('bad request');
@@ -151,13 +151,14 @@
         }
     
         $('#search-form').on('submit', function(event){
-			event.preventDefault();
-			$.get("search?query="+document.getElementById('search-term').value, search(data, status) {
-				
-				alert();
-			});
-			return false;
-		});
+          event.preventDefault();
+          $.get('/search?query='+document.getElementById('search-term'),
+            function search (data, status){
+              $('#searc-results').show();
+              $('#search-results').html('sipak!');
+            });
+        });
+        
         $(window).on('hashchange', loadPage);
         $(document).ready(chechHash);
         
