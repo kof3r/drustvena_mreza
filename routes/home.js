@@ -1,6 +1,8 @@
 /**
  * Created by Mislav on 11/27/2015.
  */
+var Country = require('../models/relationship_status')
+
 var express = require('express');
 var router = express.Router();
 /********************************/
@@ -30,4 +32,5 @@ router.get('/homepage', function(req, res, next) {
         res.render('homepage.ejs', {title: 'Home', user: user});
     }
 });
+
 module.exports=router;

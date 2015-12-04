@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
     return Promise.all([
 
         knex.schema.createTable('country', function(t){
-            t.increments().primary();
+            t.string('id', 2).primary();
             t.string('name').notNullable().unique();
         }),
 
@@ -19,11 +19,11 @@ exports.up = function(knex, Promise) {
             t.string('password_hash', 60).notNullable();
             t.string('email', 254).notNullable().unique();
             t.boolean('confirmed').notNullable().defaultsTo(false);
-            t.timestamp('created_at').notNullable().defaultsTo(knex.fn.now());
+            t.timestamps();
             t.string('first_name');
             t.string('last_name');
             t.string('middle_name');
-            t.integer('country_id').unsigned().references('id').inTable('country');
+            t.string('country_id', 2).references('id').inTable('country');
             t.string('city');
             t.string('address');
             t.integer('relationship_status_id').unsigned().references('id').inTable('relationship_status');
