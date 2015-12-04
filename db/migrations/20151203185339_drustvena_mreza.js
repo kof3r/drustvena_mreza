@@ -55,6 +55,7 @@ exports.up = function(knex, Promise) {
             t.timestamps();
             t.string('title');
             t.text('content').notNullable();
+            t.string('description');
         })
 
     ]);
