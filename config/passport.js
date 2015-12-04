@@ -15,7 +15,7 @@ module.exports=function(passport){
                 user = data.toJSON();
                 if(!User.validPassword(password,user.password_hash)) {
                    return done(null, false, {message: 'Invalid username or password'});
-                } else if(user.confirmed==='confirmed' ){
+                } else if(user.confirmed===1 ){
                    return done(null, user);
                 }
                 else{

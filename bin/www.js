@@ -8,6 +8,8 @@ var app = require('../app');
 var debug = require('debug')('drustvena_mreza:server');
 var http = require('http');
 
+migrate();
+
 /**
  * Get port from environment and store in Express.
  */
@@ -87,4 +89,26 @@ function onListening() {
     ? 'pipe ' + addr
     : 'port ' + addr.port;
   debug('Listening on ' + bind);
+}
+
+function migrate() {
+  var config = require('../knexfile');
+  var knex = require('knex')(config['development']);
+
+
+
+  knex.migrate.currentVersion([config]).then(function (currentVersion) {
+
+    knex.migrate.latest([config]).then( function() {
+
+      knex.migrate.currentVersion([config]).then(function (newVersion) {
+        if(currentVersion !== newVersion) {
+          knex.seed.run();
+        }
+        console.log(currentVersion + '---' + newVersion);
+      })
+
+    });
+
+  });
 }

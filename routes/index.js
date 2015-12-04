@@ -62,12 +62,11 @@ module.exports = function(passport){
                 var hash=User.generateHash(user.password);
                 var newUser = new User({
                     username : user.username,
-                    password_hash :hash,
+                    password_hash : hash,
                     email : user.email,
                     first_name : user.firstName,
                     middle_name : user.middleName,
-                    last_name : user.lastName,
-                    confirmed : "unconfirmed"
+                    last_name : user.lastName
                 });
                 newUser.save().then(function(model) {
                     Mail.sendVerificationEmail(user.email,"localhost:8080/emailverification?id="+model.id+"&hash="+hash);
@@ -95,7 +94,7 @@ module.exports = function(passport){
         var usernamePromise = new User({'id': id}).fetch();
         return usernamePromise.then(function(model) {
             if(model.toJSON().password_hash===hash){
-                model.save({confirmed:"confirmed"}).then(function(model){
+                model.save({confirmed : 1}).then(function(model){
                     res.render('emailverification.ejs', {username: model.toJSON().username});
                 });
             }
