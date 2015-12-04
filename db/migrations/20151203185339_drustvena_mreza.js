@@ -4,7 +4,7 @@ exports.up = function(knex, Promise) {
     return Promise.all([
 
         knex.schema.createTable('country', function(t){
-            t.increments().primary();
+            t.string('id', 2).primary();
             t.string('name').notNullable().unique();
         }),
 
@@ -23,7 +23,7 @@ exports.up = function(knex, Promise) {
             t.string('first_name');
             t.string('last_name');
             t.string('middle_name');
-            t.integer('country_id').unsigned().references('id').inTable('country');
+            t.string('country_id', 2).references('id').inTable('country');
             t.string('city');
             t.string('address');
             t.integer('relationship_status_id').unsigned().references('id').inTable('relationship_status');

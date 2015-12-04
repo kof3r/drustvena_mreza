@@ -1,6 +1,9 @@
 
 var db = require('../config/db');
-db.plugin('registry');
+
+require('./country');
+require('./relationship_status');
+require('./bubble');
 
 var bcrypt = require('bcrypt-nodejs');
 

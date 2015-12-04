@@ -3,7 +3,8 @@
  */
 
 var db = require('../config/db');
-db.plugin('registry');
+
+require('./bubble');
 
 var BubbleType = db.Model.extend({
     tableName : 'bubble_type',

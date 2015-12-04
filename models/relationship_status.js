@@ -3,7 +3,8 @@
  */
 
 var db = require('../config/db');
-db.plugin('registry');
+
+require('./user');
 
 var RelationshipStatus = db.Model.extended({
     tableName : 'relationship_status',

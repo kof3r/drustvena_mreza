@@ -3,7 +3,9 @@
  */
 
 var db = require('../config/db');
-db.plugin('registry');
+
+require('./bubble');
+require('./content_type');
 
 var Content = db.Model.extend({
     tableName : 'content',

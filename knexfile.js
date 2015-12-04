@@ -3,7 +3,7 @@
 module.exports = {
   development: {
       client: 'mysql',
-      debug:true,
+      debug:false,
       connection: {
           filename: './dev.mysql',
           host: 'localhost',

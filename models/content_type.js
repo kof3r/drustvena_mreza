@@ -3,7 +3,8 @@
  */
 
 var db = require('../config/db');
-db.plugin('registry');
+
+require('./content');
 
 var ContentType = db.Model.extend({
     tableName : 'content_type',
