@@ -54,25 +54,23 @@ module.exports = function(passport){
 // POST
     router.post('/registration.js', function(req, res, next) {
         var user = req.body;
-        var usernamePromise = new User({'username': user.username}).fetch();
-        return usernamePromise.then(function(model) {
-            if(model) {
-                res.render('index', {title: 'Sign up', loginError:'', registerError: 'username already taken.'});
-            } else {
-                var hash=User.generateHash(user.password);
-                var newUser = new User({
-                    username : user.username,
-                    password_hash : hash,
-                    email : user.email,
-                    first_name : user.firstName,
-                    middle_name : user.middleName,
-                    last_name : user.lastName
-                });
-                newUser.save().then(function(model) {
-                    Mail.sendVerificationEmail(user.email,"localhost:8080/emailverification?id="+model.id+"&hash="+hash);
-                    res.redirect('/#successful-sign-up');
-                });
-            }
+        if (user.username.length < 3) {
+            res.render('index', {title: 'Sign up', loginError: '', registerError: 'username too short.'});
+        }
+        var hash = User.generateHash(user.password);
+        var newUser = new User({
+            username: user.username,
+            password_hash: hash,
+            email: user.email,
+            first_name: user.firstName,
+            middle_name: user.middleName,
+            last_name: user.lastName
+        });
+        newUser.save().then(function (model) {
+            Mail.sendVerificationEmail(user.email, "localhost:8080/emailverification?id=" + model.id + "&hash=" + hash);
+            res.redirect('/#successful-sign-up');
+        }).catch(function (err) {
+            res.render('index', {title: 'Sign up', loginError: '', registerError: 'Database error.'});
         });
     });
 
