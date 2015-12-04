@@ -210,7 +210,7 @@
                         <div class="control-group col-md-4">
                             <!-- Country -->
                             <label class="control-label" for="country">Country</label>
-                            <input type="text" id="country" name="country" placeholder="" class="form-control">
+                            <input type="text" id="country" name="country" list="countries" placeholder="" class="form-control">
                         </div>
                         
                     </div>
@@ -241,22 +241,34 @@
     <script src="/javascripts/bootstrap.js" crossorigin="anonymous"></script>
     <script src="/javascripts/registrationPage.js"></script>
     <script>
-        $("#login-button").click(login);
-        $("#username").change(checkUsernameDelayed);
-        $("#password").change(checkPassword);
-        $("#retypePassword").change(comparePasswords);
-        $("#email").change(checkEmail);
-        $("#register-button").click(register);
+      $("#login-button").click(login);
+      $("#username").change(checkUsernameDelayed);
+      $("#password").change(checkPassword);
+      $("#retypePassword").change(comparePasswords);
+      $("#email").change(checkEmail);
+      $("#register-button").click(register);
         
-        $("#register").click(function() {
-			$("#login").css("opacity", "0.25");
-			$("#register").css("opacity", "1");
-		});
-        $("#login").click(function() {
-			$("#register").css("opacity", "0.25");
-			$("#login").css("opacity", "1");
-		});
+      $("#register").click(function() {
+        $("#login").css("opacity", "0.25");
+        $("#register").css("opacity", "1");
+      });
+        
+      $("#login").click(function() {
+        $("#register").css("opacity", "0.25");
+        $("#login").css("opacity", "1");
+      });
+		
+      $(document).ready(function(){
+        $.get('http://ip-api.com/json', function(data) {
+          if (data.status == 'success') {
+            if(data.address) document.getElementById('address').value = data.address;
+            if(data.city) document.getElementById('city').value = data.city;
+            if(data.country) document.getElementById('country').value = data.country;
+          }
+        });
+      });
         
     </script>
+    <% include countries-datalist.partial.ejs %>
 </body>
 </html>
