@@ -1,4 +1,3 @@
-
     <style>
         body {
             margin: 20px auto;
@@ -24,17 +23,17 @@
     
     
     <div class="container">
-        <form action="/editProfile.js" method="post" id="loginForm" class="form-inline">
+        <form action="/profile/edit" method="post" id="loginForm" class="form-inline">
          <div class="col-md-3">
             <div class="well">
                 <label class= "text_orange"> PERSONAL INFORMATION</label>
              </div>   
              <div class="form-group">
-                <a class ="btn btn-default" role="button" href="/">DECLINE</a>
+                <a class ="btn btn-danger" role="button" href="/">DECLINE</a>
              </div>
              <div class="form-group">
                
-                    <a class ="btn btn-default" role="button">SAVE</a> 
+                    <input type="submit" class ="btn btn-info" role="button" value="SAVE" />
           
              </div>     
         </div>
@@ -46,29 +45,29 @@
               
                    
                          <div class="control-group">
-                            <label class = "text_other control-label">FIRST NAME</label>
+                            <label class = "text_other control-label" for="firstName">FIRST NAME</label>
                             <div class="controls">
                             <input type="text" id="firstName" name="firstName" placeholder="" class="form-control" />
                              </div>
                              </div>
                           <div class="control-group">
-                             <label class = "text_other control-label">MIDDLE NAME</label>
+                             <label class = "text_other control-label" for="middleName">MIDDLE NAME</label>
                               <div class="controls">
                                 <input type="text" id="middleName" name="middleName" placeholder="" class="form-control" />
                               </div>
                          </div>
                               
                           <div class="control-group">
-                             <label class = "text_other control-label">LAST NAME</label>
+                             <label class = "text_other control-label" for="lastName">LAST NAME</label>
                              <div class="controls">
-                              <input type="text" id="lastName" name="lasttName" placeholder="" class="form-control" />
+                              <input type="text" id="lastName" name="lastName" placeholder="" class="form-control" />
                               </div>
                         </div>
              
         
                 
                         <div class="control-group">
-                            <label for="count" class = "text_other">COUNTRY</label>
+                            <label for="count" class = "text_other" for="country">COUNTRY</label>
                             
                              <div class="controls">
                             <input type="text" id="count" name="country" placeholder="" class="form-control" />
@@ -76,24 +75,18 @@
                         </div>    
                                 
                         <div class="control-group">
-                            <label for = "cit" class = "text_other">CITY</label>
+                            <label for = "cit" class = "text_other" for="city">CITY</label>
                              <div class="controls">
-                                <input type="text" id="cit" name="city" placeholder="" class="form-control">
+                                <input type="text" id="cit" name="city" placeholder="" class="form-control" />
                             </div>
                         </div>        
                         <div class="control-group">
                     
-                            <label for = "add" class = "text_other">ADDRESS</label>
+                            <label class = "text_other" for="address">ADDRESS</label>
                              <div class="controls">
-                                 <input type="text" id="add" name="address" placeholder="" class="form-control">
+                                 <input type="text" id="address" name="address" placeholder="" class="form-control" />
                             </div>
                         </div>
-                         
-                         
-                     
-            
-
-                    
                     
             </div>
         
@@ -104,33 +97,33 @@
                 
                 <div class="control-group">
                     <label class = "text_other">RELATIONSHIP</label>
-                        <br>
-                        <input type="radio" name="relationship" value="complicated" checked>complicated
-                        <br>
-                        <input type="radio" name="relationship" value="single">single
-                        <br>
-                        <input type="radio" name="relationship" value="dating">dating
-                        <br>
-                        <input type="radio" name="relationship" value="married">married
-                        <br>
-                        <input type="radio" name="relationship" value="other">other
+                        <br />
+                          <label><input type="radio" name="relationship" value="complicated" checked="checked" />complicated</label>
+                        <br />
+                          <label><input type="radio" name="relationship" value="single" />single</label>
+                        <br />
+                          <label><input type="radio" name="relationship" value="dating" />dating</label>
+                        <br />
+                          <label><input type="radio" name="relationship" value="married" />married</label>
+                        <br />
+                          <label><input type="radio" name="relationship" value="other" />other</label>
                 </div>
                   
                     
                  <div class="control-group">
                     <label class = "text_other">GENDER</label>
-                     <br>
-                    <input type="radio" name="sex" value="male" checked>Male
-                    <br>
-                    <input type="radio" name="sex" value="female">Female
-                    <br>
-                    <input type="radio" name="sex" value="other">Other
+                     <br />
+                       <label><input type="radio" name="sex" value="male" checked="checked" />Male</label>
+                    <br />
+                      <label><input type="radio" name="sex" value="female" />Female</label>
+                    <br />
+                      <label><input type="radio" name="sex" value="other" />Other</label>
                  </div>
                 
                      
                     <div class="control-group">
-                        <label for="date" class = "text_other">DATE OF BIRTH</label>
-                        <input type="date" class="form-control" id="date">
+                        <label for="date" class = "text_other" for="date">DATE OF BIRTH</label>
+                        <input type="date" class="form-control" id="date" />
                     </div>
                                 
            

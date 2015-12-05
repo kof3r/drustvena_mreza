@@ -61,8 +61,12 @@ router.get('/', function(req, res, next) {
                     last_name: item.attributes.last_name
                 });
             }
-
-            res.json(results);
+            
+            if(req.query.html == 1) {
+                res.render('search-results.partial.ejs', {results: JSON.stringify(results)});
+            } else {
+                res.json(results);
+            }
         });
 
 });
