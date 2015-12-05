@@ -80,14 +80,13 @@ module.exports = function(passport){
                 return Promise.resolve('');
             })
         ]).then(function(errorMessages) {
-            var error = '<ul>';
+            var error = [];
             errorMessages.forEach(function (message) {
                 if(message !== '') {
-                    error += '<li>' + message + '</li>';
+                    error.push(message);
                 }
             })
-            error += '</ul>';
-            if(error === '<ul></ul>') {
+            if(error.length === 0) {
                 var hash = User.generateHash(user.password);
                 User.forge({
                     username : user.username,
