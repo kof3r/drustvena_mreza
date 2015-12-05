@@ -65,56 +65,48 @@ module.exports = function(passport){
     });
 // POST
     router.post('/sign-up', function(req, res, next) {
-        var user = req.body;
+        var form = req.body;
         var country_id;
         Promise.all([
-            Promise.resolve(!/^[a-z][a-z0-9_-]{2,15}$/.test(user.username) ? 'Username must begin with an alphabetic character, be between 3 and 8 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
-            Promise.resolve(!/^[a-z0-9_-]{8,18}$/.test(user.password) ? 'Password must be between 8 and 18 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
-            Promise.resolve(!/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(user.email) ? 'invalid email' : ''),
-            User.where({username: user.username}).fetch().then(function (user) {
-                if(user) {
-                    return Promise.resolve('Username already exists');
-                }
-                return Promise.resolve('');
+            Promise.resolve(!/^[a-zA-Z][a-zA-Z0-9_-]{2,30}$/.test(form.username) ? 'Username must begin with an alphabetic character, be between 3 and 8 characters in length, contain only alphanumerics, underscores and hyphens' : null),
+            Promise.resolve(!/^[A-Za-z0-9_-]{8,30}$/.test(form.password) ? 'Password must be between 8 and 18 characters in length, contain only alphanumerics, underscores and hyphens' : null),
+            Promise.resolve(!/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(form.email) ? 'invalid email' : null),
+            User.where({username: form.username}).fetch().then(function (user) {
+                return Promise.resolve(user ? 'Username already exists' : null);
             }),
-            User.where({email: user.email}).fetch().then(function (user) {
-                if(user) {
-                    return Promise.resolve('E-mail already exists');
-                }
-                return Promise.resolve('');
+            User.where({email: form.email}).fetch().then(function (user) {
+                return Promise.resolve(user ? 'E-mail already exists' : null);
             }),
-            Country.where({name: user.country}).fetch().then(function (country) {
-                if(!country && user.country !== '') {
-                    return Promise.resolve('Country does not exist');
-                }
-                country_id = country === null ? null : country.id;
-                return Promise.resolve('');
+            Country.where({name: form.country}).fetch().then(function (country) {
+                coutry_id = country ? country.id : null;
+                return Promise.resolve(form.country ? (country ? null : 'Country does not exist') : null);
             })
         ]).then(function(errorMessages) {
             var error = [];
             errorMessages.forEach(function (message) {
-                if(message !== '') {
+                if(message) {
                     error.push(message);
                 }
-            })
+            });
             if(error.length === 0) {
-                var hash = User.generateHash(user.password);
+                var hash = User.generateHash(form.password);
                 User.forge({
-                    username : user.username,
-                    email : user.email,
+                    username : form.username,
+                    email : form.email,
                     password_hash : hash,
-                    first_name : user.firstName === '' ? null : user.firstName,
-                    middle_name : user.middleName === '' ? null : user.middleName,
-                    last_name : user.lastName === '' ? null : user.lastName,
-                    address : user.address === '' ? null : user.address,
-                    city : user.city === '' ? null : user.city,
+                    confirmed : false,
+                    first_name : form.firstName || null,
+                    last_name : form.lastName || null,
+                    middle_name : form.middleName || null,
+                    address : form.address || null,
+                    city : form.city || null,
                     country_id : country_id
-                }).save().then(function (model) {
-                    Mail.sendVerificationEmail(user.email, "localhost:8080/emailverification?id=" + model.id + "&hash=" + hash);
-                    res.render('sign-up-successful.ejs', {title: 'Confirm account', data: user});
+                }).save().then(function (user) {
+                    Mail.sendVerificationEmail(form.email, "localhost:8080/emailverification?id=" + user.id + "&hash=" + hash);
+                    res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
                 })
             } else {
-                res.render('index', {title: 'Sign up', signUp: true, registerError: error, registrationInput: user});
+                res.render('index', {title: 'Sign up', signUp: true, registerError: error, registrationInput: form});
             }
         }).catch(function (err) {
             console.log(err);
