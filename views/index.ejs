@@ -126,13 +126,16 @@
 
                 <fieldset class="well">
                     <legend>Account information</legend>
-                    <em>All input fields are required</em>
                     
-					<% if(registerError) { %>
-					<div id="registerAlert" class="alert alert-danger controls">
-						<%= registerError %>
-					</div>
-					<% } %>
+                    <% if (registerError.length) { %>
+                      <ul id="registerAlert" class="alert alert-danger controls">
+                        <% registerError.forEach(function(name){ %>
+                          <li><%= name %></li>
+                        <% }) %>
+                      </ul>
+                    <% } %>
+                    
+                    <em>All input fields are required</em>
 					
                     <div class="control-group">
                         <!-- Username -->

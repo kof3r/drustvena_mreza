@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var bcrypt = require('bcrypt-nodejs');
 var User = require('../models/user');
+var Country = require('../models/country');
 var Mail=require('../config/mail');
 
 
@@ -54,23 +55,58 @@ module.exports = function(passport){
 // POST
     router.post('/registration.js', function(req, res, next) {
         var user = req.body;
-        if (user.username.length < 3) {
-            res.render('index', {title: 'Sign up', loginError: '', registerError: 'username too short.'});
-        }
-        var hash = User.generateHash(user.password);
-        var newUser = new User({
-            username: user.username,
-            password_hash: hash,
-            email: user.email,
-            first_name: user.firstName,
-            middle_name: user.middleName,
-            last_name: user.lastName
-        });
-        newUser.save().then(function (model) {
-            Mail.sendVerificationEmail(user.email, "localhost:8080/emailverification?id=" + model.id + "&hash=" + hash);
-            res.redirect('/#successful-sign-up');
+        var country_id;
+        Promise.all([
+            Promise.resolve(!/^[a-z][a-z0-9_-]{2,15}$/.test(user.username) ? 'username must begin with an alphabetic character, be between 3 and 8 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
+            Promise.resolve(!/^[a-z0-9_-]{8,18}$/.test(user.password) ? 'password must be between 8 and 18 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
+            Promise.resolve(!/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(user.email) ? 'invalid email' : ''),
+            User.where({username: user.username}).fetch().then(function (user) {
+                if(user) {
+                    return Promise.resolve('username already exists');
+                }
+                return Promise.resolve('');
+            }),
+            User.where({email: user.email}).fetch().then(function (user) {
+                if(user) {
+                    return Promise.resolve('email already exists');
+                }
+                return Promise.resolve('');
+            }),
+            Country.where({name: user.country}).fetch().then(function (country) {
+                if(!country && user.country !== '') {
+                    return Promise.resolve('country does not exist');
+                }
+                country_id = country === null ? null : country.id;
+                return Promise.resolve('');
+            })
+        ]).then(function(errorMessages) {
+            var error = [];
+            errorMessages.forEach(function (message) {
+                if(message !== '') {
+                    error.push(message);
+                }
+            })
+            if(error.length === 0) {
+                var hash = User.generateHash(user.password);
+                User.forge({
+                    username : user.username,
+                    email : user.email,
+                    password_hash : hash,
+                    first_name : user.firstName === '' ? null : user.firstName,
+                    middle_name : user.middleName === '' ? null : user.middleName,
+                    last_name : user.lastName === '' ? null : user.lastName,
+                    address : user.address === '' ? null : user.address,
+                    city : user.city === '' ? null : user.city,
+                    country_id : country_id
+                }).save().then(function (model) {
+                    Mail.sendVerificationEmail(user.email, "localhost:8080/emailverification?id=" + model.id + "&hash=" + hash);
+                    res.redirect('/#successful-sign-up');
+                })
+            } else {
+                res.render('index', {title: 'Sign up', loginError: '', registerError: error});
+            }
         }).catch(function (err) {
-            res.render('index', {title: 'Sign up', loginError: '', registerError: 'Database error.'});
+            console.log(err);
         });
     });
 
