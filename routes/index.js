@@ -73,10 +73,10 @@ module.exports = function(passport){
                 return Promise.resolve('');
             }),
             Country.where({name: user.country}).fetch().then(function (country) {
-                if(!country) {
+                if(!country && user.country !== '') {
                     return Promise.resolve('country does not exist');
                 }
-                country_id = country.id;
+                country_id = country === null ? null : country.id;
                 return Promise.resolve('');
             })
         ]).then(function(errorMessages) {
