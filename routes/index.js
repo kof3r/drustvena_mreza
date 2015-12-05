@@ -12,69 +12,79 @@ module.exports = function(passport){
     router.use('/home', require('./home'));
     router.use('/search', require('./search'));
 
-// signin
+// index - sign in and sign up
 // GET
     router.get('/', function(req, res, next) {
         if(req.isAuthenticated()){
             res.redirect('/home/homepage');
         }
         else {
-            res.render('index.ejs', {loginError:'', registerError:''});
+            res.render('index.ejs');
         }
     });
-
+// GET
+    router.get('/sign-in', function(req, res, next){
+        if(req.isAuthenticated()){
+            res.redirect('/home/homepage');
+        }
+        else {
+            res.render('index.ejs', {title: 'Sign in', signIn: true});
+        }
+    });
 // POST
-    router.post('/login.js', function(req, res, next) {
+    router.post('/sign-in', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
             if(err) {
-                return res.render('index.ejs', {loginError:'An error occoured.', registerError:''});
+                return res.render('index.ejs', {loginError:'An error occoured.'});
             }
 
             if(!user) {
-                return res.render('index.ejs', {loginError:'Invalid login attempt.', registerError:''});
+                return res.render('index.ejs', {loginError:'Invalid login attempt.'});
             }
             
             return req.logIn(user, function(err) {
                 if(err) {
-                    return res.render('index', {loginError:'An error occoured.', registerError:''});
+                    return res.render('index', {title: 'Sign in', loginError:'An error occoured.'});
                 } else {
                     return res.redirect('/home/homepage');
                 }
             });
         })(req, res, next);
     });
-// signup
+    
+// sign up
 // GET
-    router.get('/signup', function(req, res, next) {
-        if(req.isAuthenticated()) {
-            res.redirect('/');
-        } else {
-            res.render('signup', {title: 'Sign Up'});
+    router.get('/sign-up', function(req, res, next) {
+        if(req.isAuthenticated()){
+            res.redirect('/home/homepage');
+        }
+        else {
+            res.render('index.ejs', {title: 'Sign up', signUp: true});
         }
     });
 // POST
-    router.post('/registration.js', function(req, res, next) {
+    router.post('/sign-up', function(req, res, next) {
         var user = req.body;
         var country_id;
         Promise.all([
-            Promise.resolve(!/^[a-z][a-z0-9_-]{2,15}$/.test(user.username) ? 'username must begin with an alphabetic character, be between 3 and 8 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
-            Promise.resolve(!/^[a-z0-9_-]{8,18}$/.test(user.password) ? 'password must be between 8 and 18 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
+            Promise.resolve(!/^[a-z][a-z0-9_-]{2,15}$/.test(user.username) ? 'Username must begin with an alphabetic character, be between 3 and 8 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
+            Promise.resolve(!/^[a-z0-9_-]{8,18}$/.test(user.password) ? 'Password must be between 8 and 18 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
             Promise.resolve(!/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(user.email) ? 'invalid email' : ''),
             User.where({username: user.username}).fetch().then(function (user) {
                 if(user) {
-                    return Promise.resolve('username already exists');
+                    return Promise.resolve('Username already exists');
                 }
                 return Promise.resolve('');
             }),
             User.where({email: user.email}).fetch().then(function (user) {
                 if(user) {
-                    return Promise.resolve('email already exists');
+                    return Promise.resolve('E-mail already exists');
                 }
                 return Promise.resolve('');
             }),
             Country.where({name: user.country}).fetch().then(function (country) {
                 if(!country && user.country !== '') {
-                    return Promise.resolve('country does not exist');
+                    return Promise.resolve('Country does not exist');
                 }
                 country_id = country === null ? null : country.id;
                 return Promise.resolve('');
@@ -100,10 +110,10 @@ module.exports = function(passport){
                     country_id : country_id
                 }).save().then(function (model) {
                     Mail.sendVerificationEmail(user.email, "localhost:8080/emailverification?id=" + model.id + "&hash=" + hash);
-                    res.redirect('/#successful-sign-up');
+                    res.render('sign-up-successful.ejs', {title: 'Confirm account', data: user});
                 })
             } else {
-                res.render('index', {title: 'Sign up', loginError: '', registerError: error});
+                res.render('index', {title: 'Sign up', signUp: true, registerError: error, registrationInput: user});
             }
         }).catch(function (err) {
             console.log(err);
@@ -135,7 +145,7 @@ module.exports = function(passport){
         });
     });
 
-// logout
+// sign out
 // POST
     router.post('/sign-out', function(req, res, next) {
         if(!req.isAuthenticated()) {

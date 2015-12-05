@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bubbles</title>
+    <title><% if(locals.title) { %><%= title %> - <% } %>Bubbles</title>
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="/stylesheets/bootstrap.css">
     <style>
@@ -93,10 +93,10 @@
             </div>
             <div class="">
                 <h3 class="text-orange text-center">Have an account?</h3>
-                <form action="/login.js" method="post" id="loginForm" class="form-inline">
+                <form action="/sign-in" method="post" id="loginForm" class="form-inline">
                     <fieldset class="well">
                         <legend>Sign in</legend>
-                        <% if(loginError) { %>
+                        <% if(locals.loginError) { %>
                         <div id="loginAlert" class="alert alert-danger controls">
                             <%= loginError %>
                         </div>
@@ -122,12 +122,12 @@
             <!-- registration part of the page -->
             <h3 class="text-orange text-center">Don't have an account?<br/><strong>Sign up</strong>, it's free!</h3>
 
-            <form action="/registration.js" method="post" id="registrationForm" class="form-horizontal">
+            <form action="/sign-up" method="post" id="registrationForm" class="form-horizontal">
 
                 <fieldset class="well">
                     <legend>Account information</legend>
                     
-                    <% if (registerError.length) { %>
+                    <% if (locals.registerError) { %>
                       <ul id="registerAlert" class="alert alert-danger controls">
                         <% registerError.forEach(function(name){ %>
                           <li><%= name %></li>
@@ -141,7 +141,7 @@
                         <!-- Username -->
                         <label class="control-label col-sm-2" for="username">Username</label>
                         <div class="controls col-sm-10">
-                            <input type="text" id="username" name="username" placeholder="" class="form-control" data-toggle="popover" data-trigger = "manual">
+                            <input type="text" id="username" name="username" <% if(locals.registrationInput) { %>value="<%= registrationInput.username %>"<% } %> class="form-control" data-toggle="popover" data-trigger = "manual">
                             <p class="help-block">Username can contain any letters or numbers, without spaces</p>
                         </div>
                     </div>
@@ -150,7 +150,7 @@
                         <!-- E-mail -->
                         <label class="control-label col-sm-2" for="email">E-mail</label>
                         <div class="controls col-sm-10">
-                            <input type="email" id="email" name="email" placeholder="" class="form-control" data-toggle="popover" data-trigger = "manual">
+                            <input type="email" id="email" name="email" <% if(locals.registrationInput) { %>value="<%= registrationInput.email %>"<% } %> class="form-control" data-toggle="popover" data-trigger = "manual">
                             <p class="help-block">Please provide your e-mail for password reset purposes</p>
                         </div>
                     </div>
@@ -181,19 +181,19 @@
                     <div class="control-group col-md-4">
                         <!-- First Name -->
                         <label class="control-label" for="firstName">First name</label>
-                        <input type="text" id="firstName" name="firstName" placeholder="" class="form-control">
+                        <input type="text" id="firstName" name="firstName" <% if(locals.registrationInput) { %>value="<%= registrationInput.firstName %>"<% } %> class="form-control">
                     </div>
 
                     <div class="control-group col-md-4">
                         <!-- Middle Name -->
                             <label class="control-label" for="middleName">Middle name</label>
-                            <input type="text" id="middleName" name="middleName" placeholder="" class="form-control">
+                            <input type="text" id="middleName" name="middleName" <% if(locals.registrationInput) { %>value="<%= registrationInput.middleName %>"<% } %> class="form-control">
                     </div>
 
                     <div class="control-group col-md-4">
                         <!-- Last Name -->
                         <label class="control-label" for="lastName">Last name</label>
-                        <input type="text" id="lastName" name="lastName" placeholder="" class="form-control">
+                        <input type="text" id="lastName" name="lastName" <% if(locals.registrationInput) { %>value="<%= registrationInput.lastName %>"<% } %> class="form-control">
                     </div>
                     
                     <div class="location">
@@ -201,19 +201,19 @@
                         <div class="control-group col-md-4">
                             <!-- Address -->
                             <label class="control-label" for="address">Address</label>
-                            <input type="text" id="address" name="address" placeholder="" class="form-control">
+                            <input type="text" id="address" name="address" <% if(locals.registrationInput) { %>value="<%= registrationInput.address %>"<% } %> class="form-control">
                         </div>
 
                         <div class="control-group col-md-4">
                             <!-- City -->
                             <label class="control-label" for="city">City</label>
-                            <input type="text" id="city" name="city" placeholder="" class="form-control">
+                            <input type="text" id="city" name="city" <% if(locals.registrationInput) { %>value="<%= registrationInput.city %>"<% } %> class="form-control">
                         </div>
 
                         <div class="control-group col-md-4">
                             <!-- Country -->
                             <label class="control-label" for="country">Country</label>
-                            <input type="text" id="country" name="country" list="countries" placeholder="" class="form-control">
+                            <input type="text" id="country" name="country" list="countries" <% if(locals.registrationInput) { %>value="<%= registrationInput.country %>"<% } %> class="form-control">
                         </div>
                         
                     </div>
