@@ -19,6 +19,7 @@ var general = require('../utils/general');
 router.post('/post', function(req, res, next) {
 
     // user submitted values
+    console.log(req.body.bubble_id);
     var bubbleId = req.body.bubble_id;
     var content = parseContent(req.body.content, 1);
     var title = req.body.title;
@@ -27,14 +28,13 @@ router.post('/post', function(req, res, next) {
     // inferred values
     var typeId = 1;
     var createdAt = convert.dateToSqlFormat(new Date());
-    var updatedAt = null;
 
     Bubble.where({id: bubbleId}).fetch().then(function (bubble){
         if (!bubble){
             general.sendMessage(res, "This bubble doesn't exist or it was deleted!", 404);
         } else {
 
-            if (bubble.attributes.user_id != req.user.id){
+            if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
                 return general.sendMessage(res, "You don't have permission to post in this bubble!", 403)
             }
 
@@ -45,10 +45,9 @@ router.post('/post', function(req, res, next) {
                 description: description,
                 content_type_id: typeId,
                 created_at: createdAt,
-                updated_at: updatedAt
             }).save().then(function(saved){
-                res.json(saved);
-                return res.status(200);
+                res.status(200);
+                return res.json(saved);
             })
         }
     })
@@ -90,36 +89,36 @@ router.get('/post', function(req, res, next) {
                 .fetchAll()
                 .then(function(collection){
                     arrays.rangeCopy(collection.models, results.posts, context.from, context.size);
+                    res.status(200);
                     return res.send(results);
                 })
         }
     })
 });
 
-router.post('/edit', function(req, res, next){
+router.post('/edit/:id', function(req, res, next){
 
-    var contentId = req.body.id;
+    var contentId = req.params.id;
     var newTitle = req.body.title;
     var newDescription = req.body.description;
-    var newContent = parseContent(req.body.content, req.body.content_type_id);
 
     Content.where({id: contentId}).fetch().then(function(content){
         if(!content){
             general.sendMessage(res, "This post doesn't exist or it was deleted!", 404);
         } else {
-            Bubble.where({id: content.bubble_id}).fetch().then(function(bubble){
-                if (bubble.attributes.user_id != req.user.id){
-                    return general.sendMessage(res, "You don't have permission to edit this post!", 403)
+            Bubble.where({id: content.attributes.bubble_id}).fetch().then(function(bubble){
+                if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
+                    return general.sendMessage(res, "You don't have permission to edit this content!", 403)
                 } else {
+                    var newContent = parseContent(req.body.content, content.attributes.content_type_id);
                     Content.forge({
                         id: contentId,
                         title: newTitle,
                         description: newDescription,
-                        content: newContent,
-                        updated_at: convert.dateToSqlFormat(new Date())
+                        content: newContent
                     }).save().then(function(saved){
-                        res.json(saved);
-                        return res.status(200);
+                        res.status(200);
+                        return res.json(saved);
                     });
                 }
             })
@@ -127,7 +126,27 @@ router.post('/edit', function(req, res, next){
     })
 })
 
-router.post('/delete')
+router.post('/delete/:id', function(req, res, next){
+    var contentId = req.params.id;
+
+    Content.where({id: contentId}).fetch().then(function(content){
+        if(!content){
+            general.sendMessage(res, "This post doesn't exist or it was deleted!", 404);
+        } else {
+            Bubble.where({id: content.attributes.bubble_id}).fetch().then(function(bubble){
+                if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
+                    return general.sendMessage(res, "You don't have permission to delete this content!", 403)
+                } else {
+                    Content.where({id: contentId}).destroy().then(function(destroyed){
+                        res.status(200);
+                        return res.json(destroyed);
+                    })
+                }
+            })
+        }
+    })
+
+})
 
 function parseContent(content, type){
     if (type == 1){
