@@ -11,6 +11,7 @@ module.exports = function(passport){
     router.use('/api', require('./api'));
     router.use('/home', require('./home'));
     router.use('/search', require('./search'));
+    router.use('/content', require('./content'));
 
 // signin
 // GET
