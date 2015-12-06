@@ -1,3 +1,9 @@
+<script>
+    
+    
+</script>
+
+
 <div id="main-content" class="container-fluid posts">
   <div class="post col-md-6 col-sm-12">
     <div class="header">
@@ -128,24 +134,79 @@
     </ul>
   </div>
 
+
+<!-- debug -->
+<% var posts = [{authorUsername : "orange", dateUpdated : new Date(), text : '[center][size=200]Welcome To WysiBB[/size][b]Easy to Use & Powerful [color=#ff0000]Wysiwyg BBCode editor[/color][/b][/center]WysiBB very simple and functional Open Source [b]WYSIWYG BBCode editor[/b] based on jQuery. WysiBB has the ability to convert HTML textarea fields to editor instances. As a result, the WysiBB returns clean and correct bbcode.[size=50] [/size][color=#980000][size=50]Some random article:[/size][/color][size=150][b]Using jQuery UI ThemeRoller[/b][/size][img]http:\/\/learn.jquery.com\/resources\/jquery-ui\/themeroller-logo.png[/img]About ThemeRollerThemeRoller is a web app that offers a fun and intuitive interface for designing and downloading custom themes for jQuery UI. You can find ThemeRoller in the "Themes" section of the jQuery UI site, or by following this link: [url=http://jqueryui.com/themeroller]jQuery UI ThemeRoller[/url]Press button [b][BBCODE][/b] to view result bbcode.', numOfLikes : 5, numOfComments : 6, authorProfilePicSrc : "String"}]; %>
+     
     
-//debug
-<% posts= [{authorUsername : "orange", dateUpdated : new Date(), text : "Kako je ovo super!", numOfLikes : 5, numOfComments : 6,  authorProfilePicSrc : "String"}] %>
+<!-- script -->
+<%  
+    //credits to http://ufku.com/personal/bbc2html
+    //licensed under GPL(general public license)
+    /**
+        Converts BBC code to HTML code.
+    */
+    function BBC2HTML(S) {
+        if (S.indexOf('[') < 0) return S;
+
+        function X(p, f) {return new RegExp(p, f)}
+        function D(s) {return rD.exec(s)}
+        function R(s) {return s.replace(rB, P)}
+        function A(s, p) {for (var i in p) s = s.replace(X(i, 'g'), p[i]); return s;}
+
+        function P($0, $1, $2, $3) {
+          if ($3 && $3.indexOf('[') > -1) $3 = R($3);
+          switch ($1) {
+            case 'url':case 'anchor':case 'email': return '<a '+ L[$1] + ($2||$3) +'">'+ $3 +'</a>';
+            case 'img': var d = D($2); return '<img src="'+ $3 +'"'+ (d ? ' width="'+ d[1] +'" height="'+ d[2] +'"' : '') +' alt="'+ (d ? '' : $2) +'" />';
+            case 'flash':case 'youtube': var d = D($2)||[0, 425, 366]; return '<object type="application/x-shockwave-flash" data="'+ Y[$1] + $3 +'" width="'+ d[1] +'" height="'+ d[2] +'"><param name="movie" value="'+ Y[$1] + $3 +'" /></object>';
+            case 'float': return '<span style="float: '+ $2 +'">'+ $3 +'</span>';
+            case 'left':case 'right':case 'center':case 'justify': return '<div style="text-align: '+ $1 +'">'+ $3 +'</div>';
+            case 'google':case 'wikipedia': return '<a href="'+ G[$1] + $3 +'">'+ $3 +'</a>';
+            case 'b':case 'i':case 'u':case 's':case 'sup':case 'sub':case 'h1':case 'h2':case 'h3':case 'h4':case 'h5':case 'h6':case 'table':case 'tr':case 'th':case 'td': return '<'+ $1 +'>'+ $3 +'</'+ $1 +'>';
+            case 'row': case 'r':case 'header':case 'head':case 'h':case 'col':case 'c': return '<'+ T[$1] +'>'+ $3 +'</'+ T[$1] +'>';
+            case 'acronym':case 'abbr': return '<'+ $1 +' title="'+ $2 +'">'+ $3 +'</'+ $1 +'>';
+          }
+          return '['+ $1 + ($2 ? '='+ $2 : '') +']'+ $3 +'[/'+ $1 +']';
+        }
+
+        var rB = X('\\[([a-z][a-z0-9]*)(?:=([^\\]]+))?]((?:.|[\r\n])*?)\\[/\\1]', 'g'), rD = X('^(\\d+)x(\\d+)$');
+        var L = {url: 'href="', 'anchor': 'name="', email: 'href="mailto: '};
+        var G = {google: 'http://www.google.com/search?q=', wikipedia: 'http://www.wikipedia.org/wiki/'};
+        var Y = {youtube: 'http://www.youtube.com/v/', flash: ''};
+        var T = {row: 'tr', r: 'tr', header: 'th', head: 'th', h: 'th', col: 'td', c: 'td'};
+        var C = {notag: [{'\\[': '&#91;', ']': '&#93;'}, '', ''], code: [{'<': '&lt;'}, '<code><pre>', '</pre></code>']};
+        C.php = [C.code[0], C.code[1]+ '&lt;?php ', '?>'+ C.code[2]];
+        var F = {font: 'font-family:$1', size: 'font-size:$1px', color: 'color:$1'};
+        var U = {c: 'circle', d: 'disc', s: 'square', '1': 'decimal', a: 'lower-alpha', A: 'upper-alpha', i: 'lower-roman', I: 'upper-roman'};
+        var I = {}, B = {};
+
+        for (var i in C) I['\\[('+ i +')]((?:.|[\r\n])*?)\\[/\\1]'] = function($0, $1, $2) {return C[$1][1] + A($2, C[$1][0]) + C[$1][2]};
+        for (var i in F) {B['\\['+ i +'=([^\\]]+)]'] = '<span style="'+ F[i] +'">'; B['\\[/'+ i +']'] = '</span>';}
+        B['\\[list]'] = '<ul>'; B['\\[list=(\\w)]'] = function($0, $1) {return '<ul style="list-style-type: '+ (U[$1]||'disc') +'">'}; B['\\[/list]'] = '</ul>'; B['\\[\\*]'] = '<li>';
+        B['\\[quote(?:=([^\\]]+))?]'] = function($0, $1) {return '<div class="bb-quote">'+ ($1 ? $1 +' wrote' : 'Quote') +':<blockquote>'}; B['\\[/quote]'] = '</blockquote></div>';
+        B['\\[(hr|br)]'] = '<$1 />'; B['\\[sp]'] = '&nbsp;';
+        return R(A(A(S, I), B));
+        }
     
-<% if(posts.length != 0) { %>
-    <% posts.forEach(function(post)){ %>
+%>
+    
+<% if(posts.length) { %>
+    <% posts.forEach(function(post){ %>
+        <!--  parsing text for image and video links  -->
+    
           <div class="post col-md-6 col-sm-12">
             <div class="header">
               <a class="author" href="/view-profile?username=">
                 <img width="64" height="64" src="/images/avatar.jpg" />
-                <span class="glyphicon glyphicon-user"></span> <% post.authorUsername %>
+                <span class="glyphicon glyphicon-user"></span> <%= post.authorUsername %>
               </a>
               <span class="date-time">
-                <span class="glyphicon glyphicon-time"></span> <% post.dateUpdated %>
+                <span class="glyphicon glyphicon-time"></span> <%= post.dateUpdated.toLocaleString() %>
               </span>
             </div>
             <div class="content">
-                <% post.text %>
+                <%= BBC2HTML(post.text) %>                
               <img src="/images/512px-Capitol_Building_Side2.jpg" />
             </div>
             <ul class="actions">
@@ -166,10 +227,9 @@
               </li>
             </ul>
           </div>
-    <% } %>
+    <% }) %>
 <% } %>
     
     
     
-   
- <%></div>
+</div>
