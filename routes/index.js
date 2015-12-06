@@ -69,8 +69,8 @@ module.exports = function(passport){
         var form = req.body;
         var country_id;
         Promise.all([
-            Promise.resolve(!/^[a-zA-Z][a-zA-Z0-9_-]{2,30}$/.test(form.username) ? 'Username must begin with an alphabetic character, be between 3 and 8 characters in length, contain only alphanumerics, underscores and hyphens' : null),
-            Promise.resolve(!/^[A-Za-z0-9_-]{8,30}$/.test(form.password) ? 'Password must be between 8 and 18 characters in length, contain only alphanumerics, underscores and hyphens' : null),
+            Promise.resolve(!/^[a-zA-Z][a-zA-Z0-9_-]{2,29}$/.test(form.username) ? 'Username must begin with an alphabetic character, be between 3 and 30 characters in length, contain only alphanumerics, underscores and hyphens' : null),
+            Promise.resolve(!/^[A-Za-z0-9_-]{8,30}$/.test(form.password) ? 'Password must be between 8 and 30 characters in length, contain only alphanumerics, underscores and hyphens' : null),
             Promise.resolve(!/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(form.email) ? 'invalid email' : null),
             User.where({username: form.username}).fetch().then(function (user) {
                 return Promise.resolve(user ? 'Username already exists' : null);
