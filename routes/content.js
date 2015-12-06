@@ -31,9 +31,12 @@ router.post('/post', function(req, res, next) {
 
     Bubble.where({id: bubbleId}).fetch().then(function (bubble){
         if (!bubble){
-            general.sendMessage("This bubble doesn't exist or it was deleted!", 404);
+            general.sendMessage(res, "This bubble doesn't exist or it was deleted!", 404);
         } else {
 
+            if (bubble.attributes.user_id != req.user.id){
+                return general.sendMessage(res, "You don't have permission to post in this bubble!", 403)
+            }
 
             Content.forge({
                 bubble_id: bubbleId,
@@ -58,11 +61,11 @@ router.post('/post', function(req, res, next) {
 // GET
 router.get('/post', function(req, res, next) {
 
-    var bubbleId = req.body.bubble_id;
+    var bubbleId = req.query.bubble_id;
     var typeId = 1;
     var context = {
-        size: req.body.size,
-        from: req.body.from,
+        size: req.query.size,
+        from: req.query.from,
         res: res
     }
 
@@ -72,19 +75,18 @@ router.get('/post', function(req, res, next) {
 
     Bubble.where({id: bubbleId}).fetch().then(function (bubble){
         if (!bubble){
-            general.sendMessage("This bubble doesn't exist or it was deleted!", 404);
+            general.sendMessage(res, "This bubble doesn't exist or it was deleted!", 404);
         } else {
+
             var results = {
                 posts: []
             }
 
-            if (bubble.user_id != req.user.id){
-                return general.sendMessage("You don't have permission to post in this bubble!", 403)
-            }
-
             Content
                 .where({bubble_id: bubbleId, content_type_id:typeId})
-                .orderBy('created_at', 'DESC')
+                .query(function(qb){
+                    qb.orderBy('created_at','DESC');
+                })
                 .fetchAll()
                 .then(function(collection){
                     arrays.rangeCopy(collection.models, results.posts, context.from, context.size);
@@ -103,11 +105,11 @@ router.post('/edit', function(req, res, next){
 
     Content.where({id: contentId}).fetch().then(function(content){
         if(!content){
-            general.sendMessage("This post doesn't exist or it was deleted!", 404);
+            general.sendMessage(res, "This post doesn't exist or it was deleted!", 404);
         } else {
             Bubble.where({id: content.bubble_id}).fetch().then(function(bubble){
-                if (bubble.user_id != req.user.id){
-                    return general.sendMessage("You don't have permission to edit this post!", 403)
+                if (bubble.attributes.user_id != req.user.id){
+                    return general.sendMessage(res, "You don't have permission to edit this post!", 403)
                 } else {
                     Content.forge({
                         id: contentId,

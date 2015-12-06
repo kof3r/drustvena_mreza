@@ -5,7 +5,7 @@ function rangeCopy(source, target, from, size){
 
     var working = source.slice(from, from + size);
     working.forEach(function(entry){
-        target.push(entry);
+        target.push(entry.attributes);
     });
 }
 
