@@ -305,7 +305,6 @@ function register() {
 	console.log(valid);
 	if(!valid) {
 		console.log(1);
-		showAlert("registerAlert");
 		return;
 	}
 
