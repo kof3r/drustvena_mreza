@@ -72,8 +72,8 @@ router.get('/', function(req, res, next) {
 });
 
 function sendErr(res){
-    res.json({});
-    return res.status(404);
+    res.status(404);
+    return res.json({});
 }
 
 module.exports = router;
