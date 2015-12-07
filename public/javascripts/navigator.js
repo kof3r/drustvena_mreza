@@ -1,19 +1,25 @@
 
 function loadPage() {
     var newHash = location.hash;
-    if (newHash != null) {
-        var pages = ['#new-post', '#feed', '#view-profile', '#edit-profile', '#manage-account'];
-        if ($.inArray(newHash, pages) != -1) {
-            $('#main-content').load('/partial/' + newHash.substring(1));
-        }
-        else if (newHash == '#sign-out')
-        {
-            document.getElementById('sign-out-form').submit();
-        }
-        else {
-            //$('#main-content').html('bad request');
-        }
-    }
+	var pages = ['#new-post', '#view-profile', '#edit-profile', '#manage-account'];
+	
+	if ($.inArray(newHash, pages) != -1) {
+		$('#main-content').load('/partial/' + newHash.substring(1));
+	}
+	else if (newHash == '' || newHash == null || newHash == '#feed') {
+		var users = document.getElementById('users-template').innerHTML;
+		var names = ['loki', 'tobi', 'jane', 'sido'];
+		var html = ejs.render(users, { names: names });
+		alert(names + ' ;;; ' + html);
+		document.getElementById('main-content').innerHTML = html;
+	}
+	else if (newHash == '#sign-out')
+	{
+		document.getElementById('sign-out-form').submit();
+	}
+	else {
+		//$('#main-content').html('bad request');
+	}
 }
 
 function chechHash() {
