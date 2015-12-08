@@ -1,40 +1,25 @@
 /**
- * Created by Željko on 5/11/2015.
+ * Created by ï¿½eljko on 5/11/2015.
  */
 
 var express = require('express');
 var router = express.Router();
 var User = require('../models/user');
-/********************************/
 
-// view
-// GET
-router.get('/view', function(req, res, next) {
-    if(req.isAuthenticated()) {
-        var user = req.user;
-        if(user !== undefined) {
-            user = user.toJSON();
-        }
-        res.render('view-profile.ejs', {user: user});
-    }
-    else {
+router.all('*' , function (req, res, next) {
+    if(!req.isAuthenticated()) {
         res.redirect('/');
+    } else {
+        next();
     }
 });
 
-// edit
-// GET
+router.get('/view', function(req, res, next) {
+    res.render('view-profile.ejs', {user: req.user});
+});
+
 router.post('/edit', function(req, res, next) {
-    if(req.isAuthenticated()) {
-        var user = req.user;
-        if(user !== undefined) {
-            user = user.toJSON();
-        }
-        res.render('edit-profile.ejs', {user: user});
-    }
-    else {
-        res.redirect('/');
-    }
+    res.render('edit-profile.ejs', {user: req.user});
 });
 
 module.exports=router;
