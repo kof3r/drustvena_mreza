@@ -5,7 +5,7 @@ var Promise = require('bluebird');
 
 var Country = require('./country');
 require('./relationship_status');
-require('./bubble');
+var Bubble = require('./bubble');
 
 var bcrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
 
@@ -17,6 +17,7 @@ var User = db.Model.extend({
     bubbles : function() { return this.hasMany('Bubble');},
 
     initialize : function() {
+        this.on('created', this.onCreated, this);
         this.on('saving', this.onSaving, this);
     },
 
@@ -40,6 +41,14 @@ var User = db.Model.extend({
         }).then(Promise.method(function (hash) {
             model.attributes.password_hash = hash;
         }));
+    },
+
+    onCreated: function() {
+        var user = this;
+        return Promise.all([
+            Bubble.forge({user_id: user.get('id'), bubble_type_id: 1}).save(),
+            Bubble.forge({user_id: user.get('id'), bubble_type_id: 2}).save()
+        ]);
     }
 });
 
