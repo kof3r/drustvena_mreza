@@ -3,10 +3,13 @@
  */
 var express = require('express');
 var router = express.Router();
+
 var User = require('../models/user');
 
-// search
-// GET
+var requireAuthentication = require('../utils/authentication');
+
+router.all('*', requireAuthentication);
+
 router.get('/', function(req, res, next) {
     var query = '%' + req.query.query + '%';
     var size = req.query.size;
