@@ -12,11 +12,11 @@ var requireAuthentication = require('../utils/authentication');
 router.all('*' , requireAuthentication);
 
 router.get('/view', function(req, res, next) {
-    res.render('view-profile.ejs', {user: req.user});
+    res.render('view-profile.ejs', {user: req.user.toJSON()});
 });
 
 router.post('/edit', function(req, res, next) {
-    res.render('edit-profile.ejs', {user: req.user});
+    res.render('edit-profile.ejs', {user: req.user.toJSON()});
 });
 
 module.exports=router;

@@ -6,13 +6,19 @@
  */
 var express = require('express');
 var router = express.Router();
+
 var Content = require('../models/content');
 var Bubble = require('../models/bubble');
 var User = require('../models/user');
+
 var convert = require('../utils/convert');
 var arrays = require('../utils/arrays');
 var params = require('../utils/params');
 var general = require('../utils/general');
+
+var requireAuhentication = require('../utils/authentication');
+
+router.all("*", requireAuhentication);
 
 // post post with post :P
 // POST
