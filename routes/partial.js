@@ -17,7 +17,7 @@ router.get('/view-profile', function(req, res, next) {
     res.render('view-profile.partial.ejs');
 });
 router.get('/edit-profile', function(req, res, next) {
-    res.render('edit-profile.partial.ejs');
+    res.render('edit-profile.partial.ejs', {user: req.user.toJSON()});
 });
 router.get('/magange-account', function(req, res, next) {
     res.render('manage-account.partial.ejs');

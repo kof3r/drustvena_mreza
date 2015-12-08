@@ -19,4 +19,8 @@ router.get('/edit', function(req, res, next) {
     res.render('edit-profile.ejs', {user: req.user.toJSON()});
 });
 
+router.post('/edit', function(req, res, next) {
+    res.render('edit-profile.ejs', {user: req.user.toJSON()});
+});
+
 module.exports=router;
