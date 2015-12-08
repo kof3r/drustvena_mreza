@@ -67,10 +67,11 @@
         
                 
                         <div class="control-group">
-                            <label for="count" class = "text_other" for="country">COUNTRY</label>
+                            <label for="country" class = "text_other">COUNTRY</label>
                             
                              <div class="controls">
-                            <input type="text" id="count" name="country" placeholder="" class="form-control" />
+                            <input type="text" id="country" name="country" placeholder="" class="form-control" list="countries" />
+                            <% include countries-datalist.partial.ejs %>
                             </div>
                         </div>    
                                 
@@ -113,11 +114,11 @@
                  <div class="control-group">
                     <label class = "text_other">GENDER</label>
                      <br />
-                       <label><input type="radio" name="sex" value="male" checked="checked" />Male</label>
+                       <label><input type="radio" name="gender" value="male" checked="checked" />Male</label>
                     <br />
-                      <label><input type="radio" name="sex" value="female" />Female</label>
+                      <label><input type="radio" name="gender" value="female" />Female</label>
                     <br />
-                      <label><input type="radio" name="sex" value="other" />Other</label>
+                      <label><input type="radio" name="gender" value="other" />Other</label>
                  </div>
                 
                      
