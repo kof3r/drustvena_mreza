@@ -6,11 +6,11 @@ function loadPage() {
 		var main = document.getElementById('main-content');
 		main.innerHTML = '';
 		
-		$.get('content/post', {bubble_id: 1}, function(data) {
+		$.get('/content/timeline', function(data, status) {
 			// provjeriti status
-			if (1) {
+			if (data.posts.length) {
 				
-				$.each(data, function() {
+				$.each(data.posts, function() {
 					var post = document.createElement('div');
 					post.className = 'post col-md-6 col-sm-12';
 					
@@ -30,7 +30,7 @@ function loadPage() {
 							var username = document.createElement('span');
 							username.className = 'glyphicon glyphicon-user';
 							link.appendChild(username);
-							link.innerHTML += ' ' + this;
+							link.innerHTML += ' ' + this.username
 							
 							header.appendChild(link);
 							
@@ -41,14 +41,14 @@ function loadPage() {
 							dticon.className = 'glyphicon glyphicon-time';
 							datetime.appendChild(dticon);
 							
-						datetime.innerHTML += ' 5.11.2015. 12:00';
+						datetime.innerHTML += ' ' + this.created_at;
 						
 						header.appendChild(datetime);
 						
 					/* CONTENT */
 					var content = document.createElement('div');
 					content.className = 'content';
-					content.innerHTML = 'blablalblas js;df ';
+					content.innerHTML = this.content;
 					
 							
 					
@@ -84,7 +84,12 @@ function loadPage() {
 				});
 				
 			}
-			else {alert('ne valja status');}
+			else {
+				var msg = document.createElement('div');
+				msg.className = 'alert alert-info alert-dismissible';
+				msg.innerHTML = 'There are no posts to show';
+				main.appendChild(msg);
+			}
 		});
 		
 	}

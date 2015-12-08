@@ -1,12 +1,53 @@
-<textarea id="editor"></textarea>
+<style>
+#editor {
+	width: 100%;
+	heigth: 50%;
+	background: black;
+}
+</style>
+
+<form name="post-form" id="post-form">
+
+	<div class="form-group col-sm-7 col-xs-8">
+		<label for="post-title">Title</label>
+			<input type="text" id="post-title" name="post-title" class="form-control" />
+	</div>
+	
+	<div class="form-group col-sm-2 col-xs-4">
+		<label>Bubble</label>
+		<select id="bubble-to-post-in" name="bubble-to-post-in" class="form-control" disabled="disabled">
+			<option>Abc</option>
+		</select>
+	</div>
+	
+	<div class="form-group col-sm-3 col-xs-6">
+		<label>Actions</label>
+		<div>
+			<input type="submit" class="btn btn-primary " value="Publish" />
+			<button class="btn btn-danger ">Discard</button>
+		</div>
+	</div>
+
+	<div class="form-group col-md-12">
+			<textarea id="editor" class="form-control"></textarea>
+	</div>
+</form>
 
 <script>
 
-$(document).ready(function() {
+function renderEditor() {
     var wbbOpt = {
     buttons: "bold,italic,underline,strike,mark,|,left,text-center,right,|,link,img,video,|,table,qoute,code|"
     }
-    $("#editor").wysibb();
+    $("#editor").wysibb(wbbOpt);
+}
+
+$('#post-form').on('submit', function(event) {
+	event.preventDefault();
+	alert('posting');
+	return false;
 });
+
+$(document).ready(renderEditor);
 
 </script>
