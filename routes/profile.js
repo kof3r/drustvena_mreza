@@ -4,15 +4,12 @@
 
 var express = require('express');
 var router = express.Router();
+
 var User = require('../models/user');
 
-router.all('*' , function (req, res, next) {
-    if(!req.isAuthenticated()) {
-        res.redirect('/');
-    } else {
-        next();
-    }
-});
+var requireAuthentication = require('../utils/authentication');
+
+router.all('*' , requireAuthentication);
 
 router.get('/view', function(req, res, next) {
     res.render('view-profile.ejs', {user: req.user});
