@@ -22,9 +22,12 @@ var User = db.Model.extend({
 
     onSaving : function() {
         var user = this;
-        var checkIt = new Checkit(getRules(this));
+        var passwordChanged = user.hasChanged('password_hash');
+        var checkIt = Checkit(getRules(this)).maybe(passwordRules, function () {
+            return passwordChanged;
+        });
         return checkIt.run(this.attributes).then(Promise.method(function () {
-            if(user.hasChanged('password_hash')) {
+            if(passwordChanged) {
                 return user.hash();
             }
         }));
@@ -49,6 +52,27 @@ User.generateHash = function(password) {
 };
 
 module.exports=db.model('User', User);
+
+var passwordRules = {
+    password_hash: [
+        {
+            rule: 'required',
+            message: 'Password is required'
+        },
+        {
+            rule: 'minLength:8',
+            message: 'Password must be at least 8 characters in length.'
+        },
+        {
+            rule: 'maxLength:30',
+            message: 'Password must be at most 30 characters in length.'
+        },
+        {
+            rule: 'alphaDash',
+            message: 'Password must consist of alphanumerics, dashes and underscores.'
+        }
+    ]
+};
 
 function getRules(user) {
     var rules = {
@@ -80,24 +104,6 @@ function getRules(user) {
             }
 
         ],
-        password_hash: [
-            {
-                rule: 'required',
-                message: 'Password is required'
-            },
-            {
-                rule: 'minLength:8',
-                message: 'Password must be at least 8 characters in length.'
-            },
-            {
-                rule: 'maxLength:30',
-                message: 'Password must be at most 30 characters in length.'
-            },
-            {
-                rule: 'alphaDash',
-                message: 'Password must consist of alphanumerics, dashes and underscores.'
-            }
-        ],
         email: [
             {
                 rule: 'required',
@@ -119,15 +125,17 @@ function getRules(user) {
 
         ],
         country_id: [
-            Promise.method(function (country_id) {
-                if (country_id) {
-                    Country.where({id: country_id}).fetch().then(function (country) {
-                        if (!country) {
-                            throw new Error('Country does not exist.');
-                        }
-                    });
-                }
-            })
+            {
+                rule: Promise.method(function (country_id) {
+                    if (country_id) {
+                        Country.where({id: country_id}).fetch().then(function (country) {
+                            if (!country) {
+                                throw new Error('Country does not exist.');
+                            }
+                        });
+                    }
+                })
+            }
         ]
     };
 
