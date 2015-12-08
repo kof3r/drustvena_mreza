@@ -1,8 +1,10 @@
 
 var express = require('express');
 var router = express.Router();
+
 var Mail=require('../config/mail');
-var checkit = require('checkit');
+var Checkit = require('checkit');
+var Promise = require('bluebird');
 
 var User = require('../models/user');
 var Country = require('../models/country');
@@ -72,7 +74,7 @@ module.exports = function(passport){
         Country.where({name: form.country}).fetch().then(function (country) {
             country_id = country ? country.id : null;
         }).then(function() {
-            var user = User.forge({
+            return User.forge({
                 username : form.username,
                 email : form.email,
                 password_hash : form.password,
@@ -86,8 +88,14 @@ module.exports = function(passport){
                 Mail.sendVerificationEmail(form.email, "localhost:8080/emailverification?id=" + user.id + "&hash=" + user.password_hash);
                 res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
             })
-        }).catch(checkit.Error, function(err) {
-            console.log(err);
+        }).catch(Checkit.Error, function(err) {
+            var error = [];
+            err.forEach(function (val, key) {
+                val.forEach(function(message) {
+                    error.push(message);
+                })
+            });
+            res.render('index', {title: 'Sign up', signUp: true, registerError: error, registrationInput: form});
         });
     });
 
