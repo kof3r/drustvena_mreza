@@ -26,6 +26,24 @@ exports.seed = function(knex, Promise) {
           bubble_id : 1,
           content_type_id : 1,
           content : 'Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Ut sed fringilla magna. Curabitur sed nunc nulla. Aliquam metus metus, maximus eu felis non, rhoncus ornare ipsum. Nam egestas, libero non dapibus faucibus, ex dui scelerisque ipsum, vehicula luctus justo nibh vel mauris. Donec porttitor interdum urna vitae sodales. Sed vulputate, est in volutpat laoreet, sapien ligula viverra erat, pulvinar mollis ex turpis posuere nisl. Sed justo purus, placerat eget tristique non, dictum sit amet elit.'
+      }).save(),
+
+      Content.forge({
+          bubble_id : 3,
+          content_type_id : 1,
+          content : 'NAPRIJED RVACKA!!!!'
+      }).save(),
+
+      Content.forge({
+          bubble_id : 3,
+          content_type_id : 1,
+          content : 'Upisala i ja faks!!! #studosh4life'
+      }).save(),
+
+      Content.forge({
+          bubble_id : 3,
+          content_type_id : 1,
+          content : 'Nosi mi se plava boja...'
       }).save()
 
 
