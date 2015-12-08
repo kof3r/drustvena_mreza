@@ -85,7 +85,10 @@ module.exports = function(passport){
                 city : form.city || null,
                 country_id : country_id
             }).save().then(function (user) {
-                Mail.sendVerificationEmail(form.email, "localhost:8080/emailverification?id=" + user.id + "&hash=" + user.password_hash);
+                var email = user.get('email');
+                var id = user.get('id');
+                var hash = user.get('password_hash');
+                Mail.sendVerificationEmail(email, "localhost:8080/emailverification?id=" + id + "&hash=" + hash);
                 res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
             })
         }).catch(Checkit.Error, function(err) {
