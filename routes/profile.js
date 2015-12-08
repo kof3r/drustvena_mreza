@@ -1,5 +1,5 @@
 /**
- * Created by �eljko on 5/11/2015.
+ * Created by Zeljko on 5/11/2015.
  */
 
 var express = require('express');
@@ -15,7 +15,7 @@ router.get('/view', function(req, res, next) {
     res.render('view-profile.ejs', {user: req.user.toJSON()});
 });
 
-router.post('/edit', function(req, res, next) {
+router.get('/edit', function(req, res, next) {
     res.render('edit-profile.ejs', {user: req.user.toJSON()});
 });
 

@@ -15,6 +15,7 @@ module.exports = function(passport){
     router.use('/home', require('./home'));
     router.use('/search', require('./search'));
     router.use('/content', require('./content'));
+    router.use('/partial', require('./partial'));
     router.use('/profile', require('./profile'));
 
 // index - sign in and sign up
@@ -152,23 +153,6 @@ module.exports = function(passport){
         res.end();
     });
     
-// Partial HTML views
-// GET
-router.get('/partial/new-post', function(req, res, next) {
-    res.render('new-post.partial.ejs');
-});
-router.get('/partial/feed', function(req, res, next) {
-    res.render('feed.partial.ejs');
-});
-router.get('/partial/view-profile', function(req, res, next) {
-    res.render('view-profile.partial.ejs');
-});
-router.get('/partial/edit-profile', function(req, res, next) {
-    res.render('edit-profile.partial.ejs');
-});
-router.get('/partial/magange-account', function(req, res, next) {
-    res.render('manage-account.partial.ejs');
-});
 
     /********************************/
 // 404 not found
