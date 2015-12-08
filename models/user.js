@@ -123,19 +123,6 @@ function getRules(user) {
                 }
             }
 
-        ],
-        country_id: [
-            {
-                rule: Promise.method(function (country_id) {
-                    if (country_id) {
-                        Country.where({id: country_id}).fetch().then(function (country) {
-                            if (!country) {
-                                throw new Error('Country does not exist.');
-                            }
-                        });
-                    }
-                })
-            }
         ]
     };
 
