@@ -1,9 +1,19 @@
 <style>
 #editor {
-	width: 100%;
-	heigth: 50%;
-	background: black;
 }
+.wysibb {
+	width: 100%;
+	-webkit-box-sizing: content-box !important;
+    -moz-box-sizing: content-box !important;
+    box-sizing: content-box !important;
+    float: left;
+
+}
+.wysibb-text-editor, .wysibb-texarea {
+	min-height: 150px !important;
+	padding: 15px; 
+}
+#main-content { box-sizing: border-box }
 </style>
 
 <form name="post-form" id="post-form">
@@ -28,10 +38,15 @@
 		</div>
 	</div>
 
-	<div class="form-group col-md-12">
-			<textarea id="editor" class="form-control"></textarea>
-	</div>
 </form>
+
+	<div class="col-md-12 editor">
+			<textarea id="editor"></textarea>
+	</div>
+	
+
+<!-- Editor -->
+<script src="/javascripts/jquery.wysibb.min.js"></script>
 
 <script>
 
@@ -44,7 +59,22 @@ function renderEditor() {
 
 $('#post-form').on('submit', function(event) {
 	event.preventDefault();
-	alert('posting');
+	
+	var title = document.getElementById('post-title').value;
+	var content = $("#editor").bbcode();
+	var postData = {bubble_id: 2, /* OVO PROMIJENITI */
+					content: content,
+					title: title,
+					description: ''};
+	
+	if (title == '')	{ $('#post-title').focus(); alert('no title'); }
+	else if (content == '') { $('#editor').focus(); alert('no content'); }
+					
+	else {
+		$.post('/content/post', postData, function(success) {
+			alert(success);
+		});
+	}
 	return false;
 });
 

@@ -30,7 +30,7 @@ function loadPage() {
 							var username = document.createElement('span');
 							username.className = 'glyphicon glyphicon-user';
 							link.appendChild(username);
-							link.innerHTML += ' ' + this.username
+							link.innerHTML += ' ' + this.username;
 							
 							header.appendChild(link);
 							
@@ -42,8 +42,13 @@ function loadPage() {
 							datetime.appendChild(dticon);
 							
 						datetime.innerHTML += ' ' + this.created_at;
-						
+					
 						header.appendChild(datetime);
+						
+						var title = document.createElement('h4');
+						title.className = 'title';
+						title.innerHTML += this.title;
+						header.appendChild(title);
 						
 					/* CONTENT */
 					var content = document.createElement('div');

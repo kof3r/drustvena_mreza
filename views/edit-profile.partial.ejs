@@ -6,12 +6,12 @@
         .text_orange {
             color: darkorange;
             font-family: "Times New Roman";
-            font-size: 25px;
+            font-size: 1.5em;
         }
         .text_other {
             color: green;
             font-family: "Times New Roman";
-            font-size: 18px;
+            font-size: 1.2em;
         }
 
         .text_center {
@@ -47,7 +47,7 @@
                          <div class="control-group">
                             <label class = "text_other control-label" for="firstName">FIRST NAME</label>
                             <div class="controls">
-                            <input type="text" id="firstName" name="firstName" placeholder="" class="form-control" />
+                            <input type="text" id="firstName" name="firstName" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.first_name %>"<% } %> />
                              </div>
                              </div>
                           <div class="control-group">
@@ -76,9 +76,9 @@
                         </div>    
                                 
                         <div class="control-group">
-                            <label for = "cit" class = "text_other" for="city">CITY</label>
+                            <label for = "city" class = "text_other">CITY</label>
                              <div class="controls">
-                                <input type="text" id="cit" name="city" placeholder="" class="form-control" />
+                                <input type="text" id="city" name="city" placeholder="" class="form-control" />
                             </div>
                         </div>        
                         <div class="control-group">
@@ -123,8 +123,10 @@
                 
                      
                     <div class="control-group">
-                        <label for="date" class = "text_other" for="date">DATE OF BIRTH</label>
-                        <input type="date" class="form-control" id="date" />
+                        <label for="date" class = "text_other">DATE OF BIRTH</label>
+                        <div class="controls">
+							<input type="date" class="form-control" id="date" />
+                        </div>
                     </div>
                                 
            
