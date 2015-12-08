@@ -1,25 +1,109 @@
 
 function loadPage() {
     var newHash = location.hash;
-    if (newHash != null) {
-        var pages = ['#new-post', '#feed', '#view-profile', '#edit-profile', '#manage-account'];
-        if ($.inArray(newHash, pages) != -1) {
-            $('#main-content').load('/partial/' + newHash.substring(1));
-        }
-        else if (newHash == '#sign-out')
-        {
-            document.getElementById('sign-out-form').submit();
-        }
-        else {
-            //$('#main-content').html('bad request');
-        }
-    }
+	var pages = ['#new-post', '#view-profile', '#edit-profile', '#manage-account'];
+	if (newHash == null || newHash == '' && newHash != '#' || newHash == '#feed') {
+		var main = document.getElementById('main-content');
+		main.innerHTML = '';
+		
+		$.get('content/post', {bubble_id: 1}, function(data) {
+			// provjeriti status
+			if (1) {
+				
+				$.each(data, function() {
+					var post = document.createElement('div');
+					post.className = 'post col-md-6 col-sm-12';
+					
+					/* HEADER */
+					var header = document.createElement('div');
+					header.className = 'header';
+					
+						var link = document.createElement('a');
+						link.className = 'author';
+						link.href = '/profile/username';
+						
+							var img = document.createElement('img');
+							img.src = '/images/avatar.jpg';
+							img.alt = '';
+							link.appendChild(img);
+							
+							var username = document.createElement('span');
+							username.className = 'glyphicon glyphicon-user';
+							link.appendChild(username);
+							link.innerHTML += ' ' + this;
+							
+							header.appendChild(link);
+							
+						var datetime = document.createElement('span');
+						datetime.className = 'date-time';
+							
+							var dticon = document.createElement('span');
+							dticon.className = 'glyphicon glyphicon-time';
+							datetime.appendChild(dticon);
+							
+						datetime.innerHTML += ' 5.11.2015. 12:00';
+						
+						header.appendChild(datetime);
+						
+					/* CONTENT */
+					var content = document.createElement('div');
+					content.className = 'content';
+					content.innerHTML = 'blablalblas js;df ';
+					
+							
+					
+					/* ACTIONS */
+					var actions = document.createElement('ul');
+					actions.className = 'actions';
+					
+					var actionList = [{name: 'Like', className: 'like', glyName: 'check'},
+										{name: 'Comment', className: 'comment', glyName: 'comment'},
+										{name: 'Remove', className: 'remove', glyName: 'trash'}];
+					$.each(actionList, function(act) {
+						var li = document.createElement('li');
+						var a = document.createElement('a');
+						var span = document.createElement('span');
+						a.href = '#';
+						a.className = act.className;
+						span.className = 'glyphicon glyphicon-' + this.glyName;
+						
+						a.appendChild(span);
+						a.innerHTML += ' ' + this.name;
+						li.appendChild(a);
+						actions.appendChild(li);
+					});
+					
+					
+					/* ADDING */
+					
+					post.appendChild(header);
+					post.appendChild(content);
+					post.appendChild(actions);
+					
+					main.appendChild(post);
+				});
+				
+			}
+			else {alert('ne valja status');}
+		});
+		
+	}
+	else if ($.inArray(newHash, pages) != -1) {
+		$('#main-content').load('/partial/' + newHash.substring(1));
+	}
+	else if (newHash == '#sign-out')
+	{
+		document.getElementById('sign-out-form').submit();
+	}
+	else {
+		//$('#main-content').html('bad request');
+	}
 }
 
-function chechHash() {
-    if (location.hash != '') {
-        loadPage();
-    }
+function loadPageIfNeeded() {
+	if (document.location.pathname == '/home/homepage') {
+		loadPage();
+	}
 }
 
 function clearSearchResults() {
@@ -74,4 +158,4 @@ $(document).click(function(event) {
 
 
 $(window).on('hashchange', loadPage);
-$(document).ready(chechHash);
+$(document).ready(loadPageIfNeeded);
