@@ -52,6 +52,17 @@ var User = db.Model.extend({
     }
 });
 
+User.prototype.getCreatedBubbles = function() {
+    var user_id = this.get('id');
+    return Bubble.query({where: {user_id: user_id}, andWhere: {bubble_type_id: 3}}).fetchAll({columns: ['id', 'title']});
+};
+
+User.prototype.createBubble = function(attributes) {
+    attributes['bubble_type_id'] = 3;
+    attributes['user_id'] = this.get('id');
+    return Bubble.forge(attributes).save();
+};
+
 User.validPassword = function(pass1,pass2) {
     return bcrypt.compareSync(pass1,pass2);
 };

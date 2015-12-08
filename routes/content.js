@@ -162,6 +162,12 @@ router.get('/timeline', function(req, res, end) {
     });
 });
 
+router.get('/myBubbles', function (req, res, next) {
+    req.user.getCreatedBubbles().then(function (bubbles) {
+        res.json({bubbles: bubbles});
+    });
+});
+
 function parseContent(content, type){
     if (type == 1){
         return content;
