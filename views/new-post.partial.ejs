@@ -72,7 +72,7 @@ $('#post-form').on('submit', function(event) {
 					
 	else {
 		$.post('/content/post', postData, function(success) {
-			alert(success);
+			window.history.back();
 		});
 	}
 	return false;

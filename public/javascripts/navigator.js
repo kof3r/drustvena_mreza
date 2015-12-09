@@ -2,99 +2,13 @@
 function loadPage() {
     var newHash = location.hash;
 	var pages = ['#new-post', '#view-profile', '#edit-profile', '#manage-account'];
+	
 	if (newHash == null || newHash == '' && newHash != '#' || newHash == '#feed') {
-		var main = document.getElementById('main-content');
-		main.innerHTML = '';
-		
-		$.get('/content/timeline', function(data, status) {
-			// provjeriti status
-			if (data.posts.length) {
-				
-				$.each(data.posts, function() {
-					var post = document.createElement('div');
-					post.className = 'post col-md-6 col-sm-12';
-					
-					/* HEADER */
-					var header = document.createElement('div');
-					header.className = 'header';
-					
-						var link = document.createElement('a');
-						link.className = 'author';
-						link.href = '/profile/username';
-						
-							var img = document.createElement('img');
-							img.src = '/images/avatar.jpg';
-							img.alt = '';
-							link.appendChild(img);
-							
-							var username = document.createElement('span');
-							username.className = 'glyphicon glyphicon-user';
-							link.appendChild(username);
-							link.innerHTML += ' ' + this.username;
-							
-							header.appendChild(link);
-							
-						var datetime = document.createElement('span');
-						datetime.className = 'date-time';
-							
-							var dticon = document.createElement('span');
-							dticon.className = 'glyphicon glyphicon-time';
-							datetime.appendChild(dticon);
-							
-						datetime.innerHTML += ' ' + this.created_at;
-					
-						header.appendChild(datetime);
-						
-						var title = document.createElement('h4');
-						title.className = 'title';
-						title.innerHTML += this.title;
-						header.appendChild(title);
-						
-					/* CONTENT */
-					var content = document.createElement('div');
-					content.className = 'content';
-					content.innerHTML = this.content;
-					
-							
-					
-					/* ACTIONS */
-					var actions = document.createElement('ul');
-					actions.className = 'actions';
-					
-					var actionList = [{name: 'Like', className: 'like', glyName: 'check'},
-										{name: 'Comment', className: 'comment', glyName: 'comment'},
-										{name: 'Remove', className: 'remove', glyName: 'trash'}];
-					$.each(actionList, function(act) {
-						var li = document.createElement('li');
-						var a = document.createElement('a');
-						var span = document.createElement('span');
-						a.href = '#';
-						a.className = act.className;
-						span.className = 'glyphicon glyphicon-' + this.glyName;
-						
-						a.appendChild(span);
-						a.innerHTML += ' ' + this.name;
-						li.appendChild(a);
-						actions.appendChild(li);
-					});
-					
-					
-					/* ADDING */
-					
-					post.appendChild(header);
-					post.appendChild(content);
-					post.appendChild(actions);
-					
-					main.appendChild(post);
-				});
-				
-			}
-			else {
-				var msg = document.createElement('div');
-				msg.className = 'alert alert-info alert-dismissible';
-				msg.innerHTML = 'There are no posts to show';
-				main.appendChild(msg);
-			}
+
+		$.get('/content/timeline', function(data) {
+			var templateFunction = doT.template(document.getElementById('feed-tmp').text);
+			var html = templateFunction( data );
+			document.getElementById('main-content').innerHTML = html;
 		});
 		
 	}
@@ -165,6 +79,19 @@ $(document).click(function(event) {
         }
     }        
 })
+
+function showComments(content_id) {
+	if (content_id) {
+		$.get('/content/comments/' + content_id, function (data) {
+			if (data.comments.length) {
+				var templateFunction = doT.template(document.getElementById('comments-tmp').text);
+				var html = templateFunction(data);
+				$('#post-' + content_id + ' .comments').html(html);
+			}
+			else { alert('nema postova') }
+		});
+	}
+}
 
 
 $(window).on('hashchange', loadPage);

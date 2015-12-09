@@ -8,5 +8,55 @@
 
     <!-- Navigator -->
     <script src="/javascripts/navigator.js"></script>
+    
+    <!-- DoT -->
+    <script src="/javascripts/doT.min.js" type="text/javascript"></script>
+    
+	<!-- DoT templates -->
+	<!-- Feed -->
+    <script id="feed-tmp" type="text/x-dot-template">
+		{{~it.posts :post:index}}
+			<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
+			<div class="header">
+			  <a class="author" href="profile/view/">
+				<img width="64" height="64" src="/images/avatar.jpg" />
+				<span class="glyphicon glyphicon-user"></span> JA!
+			  </a>
+			  <span class="date-time">
+				<span class="glyphicon glyphicon-time"></span> {{=post.created_at}}
+			  </span>
+			</div>
+			<div class="content">
+				{{=post.content}}
+			</div>
+			<ul class="actions">
+			  <li>
+				<a href="#" class="like">
+				  <span class="glyphicon glyphicon-check"></span> Like
+				</a>
+			  </li>
+			  <li>
+				<a href="#" class="remove">
+				  <span class="glyphicon glyphicon-trash"></span> Remove
+				</a>
+			  </li>
+			  <li>
+				<a href="javascript:showComments({{= post.id }})" class="comment">
+				  <span class="glyphicon glyphicon-comment"></span> Comments
+				</a>
+			  </li>
+			</ul>
+			<ul class="comments">
+			</ul>
+			</div>
+		{{~}}
+	</script>
+	
+	<!-- Comments -->
+    <script id="comments-tmp" type="text/x-dot-template">
+		{{~it.comments :comment:index}}
+			<li>{{= comment.comment}}</li>
+		{{~}}
+	</script>
 </body>
 </html>
