@@ -59,7 +59,7 @@ exports.up = function(knex, Promise) {
     var createComment = knex.schema.createTable('comment', function (t) {
         t.increments().primary();
         t.integer('content_id').unsigned().notNullable().references('id').inTable('content');
-        t.integer('author_id').unsigned().notNullable().references('id').inTable('user');
+        t.integer('user_id').unsigned().notNullable().references('id').inTable('user');
         t.timestamps();
         t.text('comment');
     });
@@ -85,13 +85,21 @@ exports.down = function(knex, Promise) {
 
     return Promise.all([
 
-        knex.schema.dropTable('content'),
+        knex.schema.dropTable('comment')
 
-        knex.schema.dropTable('bubble'),
+    ]).then(function () {
 
-        knex.schema.dropTable('user')
+        Promise.all([
 
-    ]).then (function () {
+            knex.schema.dropTable('content'),
+
+            knex.schema.dropTable('bubble'),
+
+            knex.schema.dropTable('user')
+
+        ])
+
+    }).then (function () {
 
         return Promise.all([
 

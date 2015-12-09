@@ -11,7 +11,8 @@ var Content = db.Model.extend({
     tableName : 'content',
     hasTimestamps : true,
     bubble : function() { return this.belongsTo('Bubble'); },
-    contentType : function() { return this.belongsTo('ContentType'); }
+    contentType : function() { return this.belongsTo('ContentType'); },
+    comments : function() { return this.hasMany('Comment'); }
 });
 
 module.exports = db.model('Content', Content);

@@ -6,6 +6,7 @@ var Promise = require('bluebird');
 var Country = require('./country');
 require('./relationship_status');
 var Bubble = require('./bubble');
+var Comment = require('./comment');
 
 var bcrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
 
@@ -15,6 +16,7 @@ var User = db.Model.extend({
     country : function () { return this.belongsTo('Country'); },
     relationshipStatus : function() { return this.belongsTo('RelationshipStatus'); },
     bubbles : function() { return this.hasMany('Bubble');},
+    comments: function () { return this.hasMany('Comment'); },
 
     initialize : function() {
         this.on('created', this.onCreated, this);
@@ -62,6 +64,26 @@ User.prototype.createBubble = function(attributes) {
     attributes['user_id'] = this.get('id');
     return Bubble.forge(attributes).save();
 };
+
+User.prototype.forgeComment = function(attributes) {
+    attributes['user_id'] = this.get('id');
+    return Comment.forge(attributes);
+};
+
+User.prototype.editComment = function(comment_id, content) {
+    var user = this;
+    return Comment.where({id: comment_id}).fetch().then(function (comment) {
+        comment.set('comment', content);
+        return comment.save();
+    })
+}
+
+User.prototype.deleteComment = function(comment_id) {
+    return Comment.where({id: comment_id}).fetch().then(function (comment) {
+        comment.set('comment', content);
+        return comment.save();
+    })
+}
 
 User.validPassword = function(pass1,pass2) {
     return bcrypt.compareSync(pass1,pass2);

@@ -154,7 +154,7 @@ router.post('/delete/:id', function(req, res, next){
 
 })
 
-router.get('/timeline', function(req, res, end) {
+router.get('/timeline', function(req, res) {
     var user = req.user;
     console.log(user.toJSON());
     Bubble.where({user_id: user.id, bubble_type_id: 1}).fetch({withRelated : 'contents'}).then(function(bubble) {
@@ -162,10 +162,26 @@ router.get('/timeline', function(req, res, end) {
     });
 });
 
-router.get('/myBubbles', function (req, res, next) {
+router.get('/myBubbles', function (req, res) {
     req.user.getCreatedBubbles().then(function (bubbles) {
         res.json({bubbles: bubbles});
     });
+});
+
+router.get('/comments/:content_id', function (req, res) {
+    Content.where({id: req.params.content_id}).fetch({withRelated: 'comments.user'}).then(function (content) {
+        var comments = content.related('comments').map(function (fetchedComment) {
+            var comment = fetchedComment.toJSON();
+            delete comment['user'];
+            var author = fetchedComment.related('user');
+            comment['username'] = author.get('username');
+            comment['first_name'] = author.get('first_name') || '';
+            comment['middle_name'] = author.get('middle_name') || '';
+            comment['last_name'] = author.get('last_name') || '';
+            return comment;
+        });
+        res.json({comments: comments});
+    })
 });
 
 function parseContent(content, type){
