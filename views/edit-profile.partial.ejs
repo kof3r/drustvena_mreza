@@ -53,16 +53,16 @@
                           <div class="control-group">
                              <label class = "text_other control-label" for="middleName">MIDDLE NAME</label>
                               <div class="controls">
-                                <input type="text" id="middleName" name="middleName" placeholder="" class="form-control" />
+                                <input type="text" id="middleName" name="middleName" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.middle_name %>"<% } %> />
                               </div>
-                         </div>
+                              </div>
                               
                           <div class="control-group">
                              <label class = "text_other control-label" for="lastName">LAST NAME</label>
                              <div class="controls">
-                              <input type="text" id="lastName" name="lastName" placeholder="" class="form-control" />
+                              <input type="text" id="lastName" name="lastName" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.last_name %>"<% } %>/>
                               </div>
-                        </div>
+                            </div>
              
         
                 
@@ -78,14 +78,14 @@
                         <div class="control-group">
                             <label for = "city" class = "text_other">CITY</label>
                              <div class="controls">
-                                <input type="text" id="city" name="city" placeholder="" class="form-control" />
+                                <input type="text" id="city" name="city" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.city %>"<% } %> />
                             </div>
                         </div>        
                         <div class="control-group">
                     
                             <label class = "text_other" for="address">ADDRESS</label>
                              <div class="controls">
-                                 <input type="text" id="address" name="address" placeholder="" class="form-control" />
+                                 <input type="text" id="address" name="address" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.address %>"<% } %> />
                             </div>
                         </div>
                     
