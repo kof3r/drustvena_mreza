@@ -56,6 +56,14 @@ exports.up = function(knex, Promise) {
         t.string('description');
     });
 
+    var createComment = knex.schema.createTable('comment', function (t) {
+        t.increments().primary();
+        t.integer('content_id').unsigned().notNullable().references('id').inTable('content');
+        t.integer('author_id').unsigned().notNullable().references('id').inTable('user');
+        t.timestamps();
+        t.text('comment');
+    });
+
     return Promise.all([
         createCountry,
         createRelationshipStatus,
@@ -67,6 +75,8 @@ exports.up = function(knex, Promise) {
             createBubble,
             createContent
         ]);
+    }).then( function () {
+        return createComment;
     });
 
 };
