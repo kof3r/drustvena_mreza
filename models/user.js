@@ -189,12 +189,4 @@ var User = db.Model.extend({
     }
 });
 
-User.validPassword = function(pass1,pass2) {
-    return bcrypt.compareSync(pass1,pass2);
-};
-
-User.generateHash = function(password) {
-    return bcrypt.hashSync(password);
-};
-
 module.exports=db.model('User', User);
