@@ -171,39 +171,23 @@ var User = db.Model.extend({
         }).maybe(countryRules, function () {
             return user.hasChanged('country')
         })
+    },
+
+    getCreatedBubbles : function() {
+        var user_id = this.get('id');
+        return Bubble.query({where: {user_id: user_id}, andWhere: {bubble_type_id: 3}}).fetchAll({columns: ['id', 'title']});
+    },
+
+    createBubble : function(attributes) {
+        attributes['bubble_type_id'] = 3;
+        attributes['user_id'] = this.get('id');
+        return Bubble.forge(attributes).save();
+    },
+
+    validPassword: function(password) {
+        return bcrypt.hashSync(password, this.password_hash);
     }
 });
-
-User.prototype.getCreatedBubbles = function() {
-    var user_id = this.get('id');
-    return Bubble.query({where: {user_id: user_id}, andWhere: {bubble_type_id: 3}}).fetchAll({columns: ['id', 'title']});
-};
-
-User.prototype.createBubble = function(attributes) {
-    attributes['bubble_type_id'] = 3;
-    attributes['user_id'] = this.get('id');
-    return Bubble.forge(attributes).save();
-};
-
-User.prototype.forgeComment = function(attributes) {
-    attributes['user_id'] = this.get('id');
-    return Comment.forge(attributes);
-};
-
-User.prototype.editComment = function(comment_id, content) {
-    var user = this;
-    return Comment.where({id: comment_id}).fetch().then(function (comment) {
-        comment.set('comment', content);
-        return comment.save();
-    })
-}
-
-User.prototype.deleteComment = function(comment_id) {
-    return Comment.where({id: comment_id}).fetch().then(function (comment) {
-        comment.set('comment', content);
-        return comment.save();
-    })
-}
 
 User.validPassword = function(pass1,pass2) {
     return bcrypt.compareSync(pass1,pass2);

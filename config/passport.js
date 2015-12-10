@@ -1,22 +1,21 @@
+
 var LocalStrategy = require('passport-local').Strategy;
+
 var User = require('../models/user');
-var bcrypt = require('bcrypt-nodejs');
+
 module.exports=function(passport){
    passport.use(new LocalStrategy({
       usernameField:'username',
       passwordField:'password'
    },function(username, password, done) {
-      new User({'username':username}).fetch()
-          .then(function(data) {
-             var user = data;
+      User.where({username: username}).fetch().then(function(user) {
              if(user === null) {
                 return done(null, false, {message: 'Invalid username or password'});
              } else {
-                user = data.toJSON();
-                if(!User.validPassword(password,user.password_hash)) {
+                if(!user.validPassword(password)) {
                    return done(null, false, {message: 'Invalid username or password'});
-                } else if(user.confirmed===1 ){
-                   return done(null, user);
+                } else if(user.get('confirmed') === 1 ){
+                   return done(null, user.toJSON());
                 }
                 else{
                    return done(null,false,{message:'You should verify your email'});
