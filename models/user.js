@@ -49,7 +49,7 @@ var User = db.Model.extend({
                         error.push(message);
                     })
                 });
-                throw new ValidationError(error);
+                throw new ValidationError(user, error);
             });
     },
 

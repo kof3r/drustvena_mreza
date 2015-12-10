@@ -5,6 +5,8 @@
 var express = require('express');
 var router = express.Router();
 
+var ValidationError = require('../models/errors/validationError.js');
+
 var User = require('../models/user');
 
 var requireAuthentication = require('../utils/authentication');
@@ -20,7 +22,24 @@ router.get('/edit', function(req, res, next) {
 });
 
 router.post('/edit', function(req, res, next) {
-    res.render('edit-profile.ejs', {user: req.user.toJSON()});
+    return Promise.method(function () {
+        var user = req.user;
+        var form = req.body;
+
+        user.set('first_name', form.firstName);
+        user.set('last_name', form.lastName);
+        user.set('middle_name', form.middleName);
+        user.set('country', form.country);
+        user.set('city', form.city);
+        user.set('address', form.address);
+        user.set('relationship_status_id', form.relationshipStatusId);
+        user.set('gender_id', form.genderId);
+        return user.save();
+    }).then(function (user) {
+        res.render('edit-profile.ejs', {user: user.toJSON()});
+    }).catch(ValidationError, function (error) {
+        res.render('edit-profile.ejs', {user: error.user.toJSON(), editProfileError: error.messages});
+    })
 });
 
 module.exports=router;
