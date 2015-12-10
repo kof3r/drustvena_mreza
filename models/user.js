@@ -18,31 +18,19 @@ var User = db.Model.extend({
     bubbles : function() { return this.hasMany('Bubble');},
     comments: function () { return this.hasMany('Comment'); },
 
+    constructor: function() {
+        db.Model.apply(this, arguments);
+        this.checkIt = getCheckIt.call(this);
+    },
+
     initialize : function() {
-        this.on('created', this.onCreated, this);
+        //this.on('created', this.onCreated, this);
         this.on('saving', this.onSaving, this);
     },
 
     onSaving : function() {
-        var user = this;
-        var passwordChanged = user.hasChanged('password_hash');
-        var checkIt = Checkit(getRules(this)).maybe(passwordRules, function () {
-            return passwordChanged;
-        });
-        return checkIt.run(this.attributes).then(Promise.method(function () {
-            if(passwordChanged) {
-                return user.hash();
-            }
-        }));
-    },
-
-    hash: function() {
-        var model = this;
-        return bcrypt.genSaltAsync(10).then(function (salt) {
-            return bcrypt.hashAsync(model.attributes.password_hash, salt, null);
-        }).then(Promise.method(function (hash) {
-            model.attributes.password_hash = hash;
-        }));
+        return validateUser.call(this)
+            .then(hashIfNeeded.call(this));
     },
 
     onCreated: function() {
@@ -51,8 +39,41 @@ var User = db.Model.extend({
             Bubble.forge({user_id: user.get('id'), bubble_type_id: 1}).save(),
             Bubble.forge({user_id: user.get('id'), bubble_type_id: 2}).save()
         ]);
+    },
+
+    format: function(attributes) {
+        delete attributes.password;
+        return attributes;
     }
 });
+
+function resolveCountry() {
+    var user = this;
+}
+
+function validateUser() {
+    return this.checkIt.run(this.attributes);
+}
+
+function hashIfNeeded() {
+    var user = this;
+    if(this.hasChanged('password')) {
+        return bcrypt.genSaltAsync(10).then(function (salt) {
+            return bcrypt.hashAsync(user.attributes.password, salt, null);
+        }).then(Promise.method(function (hash) {
+            user.attributes.password_hash = hash;
+        }));
+    }
+
+    return Promise.resolve();
+}
+
+function getCheckIt() {
+    var user = this;
+    return Checkit(getRules(this)).maybe(passwordRules, function () {
+        return user.hasChanged('password');
+    });
+}
 
 User.prototype.getCreatedBubbles = function() {
     var user_id = this.get('id');
@@ -96,7 +117,7 @@ User.generateHash = function(password) {
 module.exports=db.model('User', User);
 
 var passwordRules = {
-    password_hash: [
+    password: [
         {
             rule: 'required',
             message: 'Password is required'
@@ -165,6 +186,17 @@ function getRules(user) {
                 }
             }
 
+        ],
+        country:[
+            {
+                rule: function(country) {
+                    return Country.where({name: country}).fetch().then(function () {
+                        if(country) {
+                            throw new Error('Country does not exist.')
+                        }
+                    })
+                }
+            }
         ]
     };
 
