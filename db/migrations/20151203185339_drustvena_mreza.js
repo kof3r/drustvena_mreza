@@ -11,6 +11,11 @@ exports.up = function(knex, Promise) {
         t.string('description').notNullable().unique();
     });
 
+    var createGender = knex.schema.createTable('gender', function (t) {
+        t.increments().primary();
+        t.string('gender').unique();
+    })
+
     var createUser = knex.schema.createTable('user', function(t) {
         t.increments().primary();
         t.string('username').notNullable().unique();
@@ -25,6 +30,7 @@ exports.up = function(knex, Promise) {
         t.string('city');
         t.string('address');
         t.integer('relationship_status_id').unsigned().references('id').inTable('relationship_status');
+        t.integer('gender_id').unsigned().references('id').inTable('gender');
     });
 
     var createBubbleType = knex.schema.createTable('bubble_type', function(t){
@@ -68,7 +74,8 @@ exports.up = function(knex, Promise) {
         createCountry,
         createRelationshipStatus,
         createBubbleType,
-        createContentType
+        createContentType,
+        createGender
     ]).then(function () {
         return Promise.all([
             createUser,

@@ -15,10 +15,12 @@ var bcrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
 var User = db.Model.extend({
     tableName: 'user',
     hasTimestamps : true,
+
     country : function () { return this.belongsTo('Country'); },
     relationshipStatus : function() { return this.belongsTo('RelationshipStatus'); },
     bubbles : function() { return this.hasMany('Bubble');},
     comments: function () { return this.hasMany('Comment'); },
+    gender: function() { return this.belongsTo('Gender');},
 
     constructor: function() {
         db.Model.apply(this, arguments);
@@ -62,6 +64,11 @@ var User = db.Model.extend({
     },
 
     format: function(attributes) {
+        attributes.first_name = attributes.first_name || null;
+        attributes.last_name = attributes.last_name || null;
+        attributes.middle_name = attributes.middle_name || null;
+        attributes.city = attributes.city || null;
+        attributes.address = attributes.address || null;
         delete attributes.password;
         delete attributes.country;
         return attributes;
