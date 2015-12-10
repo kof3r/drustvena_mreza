@@ -3,6 +3,8 @@ var db = require('../config/db');
 var Checkit = require('checkit');
 var Promise = require('bluebird');
 
+var ValidationError = require('./errors/validationError');
+
 var Country = require('./country');
 require('./relationship_status');
 var Bubble = require('./bubble');
@@ -40,6 +42,14 @@ var User = db.Model.extend({
                     return Promise.resolve();
                 });
 
+            }).catch(Checkit.Error, function(checkError) {
+                var error = [];
+                checkError.forEach(function (val, key) {
+                    val.forEach(function(message) {
+                        error.push(message);
+                    })
+                });
+                throw new ValidationError(error);
             });
     },
 

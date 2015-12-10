@@ -6,6 +6,8 @@ var Mail=require('../config/mail');
 var Checkit = require('checkit');
 var Promise = require('bluebird');
 
+var ValidationError = require('../models/errors/validationError');
+
 var User = require('../models/user');
 var Country = require('../models/country');
 
@@ -87,14 +89,8 @@ module.exports = function(passport){
                 var hash = user.get('password_hash');
                 Mail.sendVerificationEmail(email, "localhost:8080/emailverification?id=" + id + "&hash=" + hash);
                 res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
-            }).catch(Checkit.Error, function(err) {
-            var error = [];
-            err.forEach(function (val, key) {
-                val.forEach(function(message) {
-                    error.push(message);
-                })
-            });
-            res.render('index', {title: 'Sign up', signUp: true, registerError: error, registrationInput: form});
+            }).catch(ValidationError, function(error) {
+            res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
         });
     });
 
