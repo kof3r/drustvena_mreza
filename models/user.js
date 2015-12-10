@@ -22,7 +22,7 @@ var User = db.Model.extend({
 
     constructor: function() {
         db.Model.apply(this, arguments);
-        this.checkIt = getCheckIt.call(this);
+        this.checkIt = this.getCheckIt();
     },
 
     initialize : function() {
@@ -84,15 +84,95 @@ var User = db.Model.extend({
                 user.set('country_id', country.id);
             })
         }
+    },
+
+    getCheckIt : function () {
+        var user = this;
+
+        var usernameRules = { username: [
+            {
+                rule: 'required',
+                message: 'Username is required.'
+            },
+            {
+                rule: 'minLength:3',
+                message: 'Username must be at least 3 characters in length.'
+            },
+            {
+                rule: 'maxLength:30',
+                message: 'Username must be at most 30 characters in length'
+            },
+            {
+                rule: 'alphaDash',
+                message: 'Username must consist of alphanumerics, dashes and underscores.'
+            },
+            function (username) {
+                return User.where({username: username}).fetch().then(function (fetchedUser) {
+                    if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.username === user.username){
+                        throw new Error('Username already exists.');
+                    }
+                })
+            }
+        ]};
+
+        var passwordRules = {password: [
+            {
+                rule: 'required',
+                message: 'Password is required'
+            },
+            {
+                rule: 'minLength:8',
+                message: 'Password must be at least 8 characters in length.'
+            },
+            {
+                rule: 'maxLength:30',
+                message: 'Password must be at most 30 characters in length.'
+            },
+            {
+                rule: 'alphaDash',
+                message: 'Password must consist of alphanumerics, dashes and underscores.'
+            }
+        ]};
+
+        var emailRules = {email: [
+            {
+                rule: 'required',
+                message: 'Email is required.'
+            },
+            {
+                rule: 'email',
+                message: 'Invalid email format.'
+            },
+            function (email) {
+                return User.where({email: email}).fetch().then(function (fetchedUser) {
+                    if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.email === user.email) {
+                        throw new Error('Email already exists.');
+                    }
+                })
+            }
+        ]};
+
+        var countryRules = {country: [
+            function(country) {
+                return Country.where({name: country}).fetch().then(function (fetchedCountry) {
+                    if(!fetchedCountry) {
+                        throw new Error('Country does not exist.');
+                    }
+                })
+            }
+        ]}
+
+        return Checkit().maybe(usernameRules, function () {
+            return user.hasChanged('password');
+        }).maybe(passwordRules, function () {
+            return user.hasChanged('password');
+        }).maybe(emailRules, function () {
+            return user.hasChanged('email')
+        }).maybe(countryRules, function () {
+            return user.hasChanged('country')
+        })
     }
 });
-
-function getCheckIt() {
-    var user = this;
-    return Checkit(getRules(this)).maybe(passwordRules, function () {
-        return user.hasChanged('password');
-    });
-}
 
 User.prototype.getCreatedBubbles = function() {
     var user_id = this.get('id');
@@ -134,98 +214,3 @@ User.generateHash = function(password) {
 };
 
 module.exports=db.model('User', User);
-
-var passwordRules = {
-    password: [
-        {
-            rule: 'required',
-            message: 'Password is required'
-        },
-        {
-            rule: 'minLength:8',
-            message: 'Password must be at least 8 characters in length.'
-        },
-        {
-            rule: 'maxLength:30',
-            message: 'Password must be at most 30 characters in length.'
-        },
-        {
-            rule: 'alphaDash',
-            message: 'Password must consist of alphanumerics, dashes and underscores.'
-        }
-    ]
-};
-
-function getRules(user) {
-    var rules = {
-        username: [
-            {
-                rule: 'required',
-                message: 'Username is required.'
-            },
-            {
-                rule: 'minLength:3',
-                message: 'Username must be at least 3 characters in length.'
-            },
-            {
-                rule: 'maxLength:30',
-                message: 'Username must be at most 30 characters in length'
-            },
-            {
-                rule: 'alphaDash',
-                message: 'Username must consist of alphanumerics, dashes and underscores.'
-            },
-            {
-                rule: function (username) {
-                    return User.where({username: username}).fetch().then(function (fetchedUser) {
-                        if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.username === user.username){
-                            throw new Error('Username already exists.');
-                        }
-                    })
-                }
-            }
-
-
-
-        ],
-        email: [
-            {
-                rule: 'required',
-                message: 'Email is required.'
-            },
-            {
-                rule: 'email',
-                message: 'Invalid email format.'
-            },
-            function (email) {
-                    return User.where({email: email}).fetch().then(function (fetchedUser) {
-                        if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.email === user.email) {
-                            throw new Error('Email already exists.');
-                        }
-                    })
-                }
-
-
-        ],
-        country:[
-            function(country) {
-                    return Country.where({name: country}).fetch().then(function (fetchedCountry) {
-                        if(!fetchedCountry) {
-                            throw new Error('Country does not exist.');
-                        }
-                    })
-                }
-        ],
-        country_id:[
-            function(country_id) {
-                    return Country.where({id: country_id}).fetch().then(function (country) {
-                        if(!country) {
-                            throw new Error('Country with provided iso code does not exist.');
-                        }
-                    })
-                }
-        ]
-    };
-
-    return rules;
-}
