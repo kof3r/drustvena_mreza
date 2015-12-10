@@ -33,16 +33,9 @@ var User = db.Model.extend({
     onSaving : function() {
         var user = this;
         return this.validateUser()
-            .then(function () {
-
-                return Promise.all([
-                    user.hashIfNeeded(),
-                    user.resolveCountry()
-                ]).then(function () {
-                    return Promise.resolve();
-                });
-
-            }).catch(Checkit.Error, function(checkError) {
+            .then(Promise.method(this.resolveCountry.bind(this)))
+            .then(Promise.method(this.hashIfNeeded.bind(this)))
+            .catch(Checkit.Error, function(checkError) {
                 var error = [];
                 checkError.forEach(function (val, key) {
                     val.forEach(function(message) {
@@ -74,7 +67,7 @@ var User = db.Model.extend({
     hashIfNeeded : function() {
         var user = this;
         if(this.hasChanged('password')) {
-            return bcrypt.genSaltAsync(10).then(function (salt) {
+            bcrypt.genSaltAsync(10).then(function (salt) {
                 return bcrypt.hashAsync(user.attributes.password, salt, null);
             }).then(Promise.method(function (hash) {
                 user.attributes.password_hash = hash;
@@ -84,15 +77,13 @@ var User = db.Model.extend({
         return Promise.resolve();
     },
 
-    resolveCountry : function() {
+    resolveCountry :  function() {
         var user = this;
         if(this.hasChanged('country')) {
             return Country.where({name: this.get('country')}).fetch().then(function (country) {
                 user.set('country_id', country.id);
-                return Promise.resolve();
             })
         }
-        return Promise.resolve();
     }
 });
 
@@ -184,13 +175,16 @@ function getRules(user) {
                 rule: 'alphaDash',
                 message: 'Username must consist of alphanumerics, dashes and underscores.'
             },
-            function (username) {
+            {
+                rule: function (username) {
                     return User.where({username: username}).fetch().then(function (fetchedUser) {
                         if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.username === user.username){
                             throw new Error('Username already exists.');
                         }
                     })
+                }
             }
+
 
 
         ],
