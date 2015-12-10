@@ -156,7 +156,6 @@ router.post('/delete/:id', function(req, res, next){
 
 router.get('/timeline', function(req, res) {
     var user = req.user;
-    console.log(user.toJSON());
     Bubble.where({user_id: user.id, bubble_type_id: 1}).fetch({withRelated : 'contents'}).then(function(bubble) {
         res.json( {posts: bubble.related('contents')} );
     });

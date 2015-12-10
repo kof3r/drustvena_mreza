@@ -24,13 +24,23 @@ var User = db.Model.extend({
     },
 
     initialize : function() {
-        //this.on('created', this.onCreated, this);
+        this.on('created', this.onCreated, this);
         this.on('saving', this.onSaving, this);
     },
 
     onSaving : function() {
-        return validateUser.call(this)
-            .then(hashIfNeeded.call(this));
+        var user = this;
+        return this.validateUser()
+            .then(function () {
+
+                return Promise.all([
+                    user.hashIfNeeded(),
+                    user.resolveCountry()
+                ]).then(function () {
+                    return Promise.resolve();
+                });
+
+            });
     },
 
     onCreated: function() {
@@ -43,30 +53,38 @@ var User = db.Model.extend({
 
     format: function(attributes) {
         delete attributes.password;
+        delete attributes.country;
         return attributes;
+    },
+
+    validateUser : function() {
+        return this.checkIt.run(this.attributes);
+    },
+
+    hashIfNeeded : function() {
+        var user = this;
+        if(this.hasChanged('password')) {
+            return bcrypt.genSaltAsync(10).then(function (salt) {
+                return bcrypt.hashAsync(user.attributes.password, salt, null);
+            }).then(Promise.method(function (hash) {
+                user.attributes.password_hash = hash;
+            }));
+        }
+
+        return Promise.resolve();
+    },
+
+    resolveCountry : function() {
+        var user = this;
+        if(this.hasChanged('country')) {
+            return Country.where({name: this.get('country')}).fetch().then(function (country) {
+                user.set('country_id', country.id);
+                return Promise.resolve();
+            })
+        }
+        return Promise.resolve();
     }
 });
-
-function resolveCountry() {
-    var user = this;
-}
-
-function validateUser() {
-    return this.checkIt.run(this.attributes);
-}
-
-function hashIfNeeded() {
-    var user = this;
-    if(this.hasChanged('password')) {
-        return bcrypt.genSaltAsync(10).then(function (salt) {
-            return bcrypt.hashAsync(user.attributes.password, salt, null);
-        }).then(Promise.method(function (hash) {
-            user.attributes.password_hash = hash;
-        }));
-    }
-
-    return Promise.resolve();
-}
 
 function getCheckIt() {
     var user = this;
@@ -156,15 +174,14 @@ function getRules(user) {
                 rule: 'alphaDash',
                 message: 'Username must consist of alphanumerics, dashes and underscores.'
             },
-            {
-                rule: function (username) {
+            function (username) {
                     return User.where({username: username}).fetch().then(function (fetchedUser) {
                         if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.username === user.username){
                             throw new Error('Username already exists.');
                         }
                     })
-                }
             }
+
 
         ],
         email: [
@@ -176,27 +193,33 @@ function getRules(user) {
                 rule: 'email',
                 message: 'Invalid email format.'
             },
-            {
-                rule: function (email) {
+            function (email) {
                     return User.where({email: email}).fetch().then(function (fetchedUser) {
                         if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.email === user.email) {
                             throw new Error('Email already exists.');
                         }
                     })
                 }
-            }
+
 
         ],
         country:[
-            {
-                rule: function(country) {
-                    return Country.where({name: country}).fetch().then(function () {
-                        if(country) {
-                            throw new Error('Country does not exist.')
+            function(country) {
+                    return Country.where({name: country}).fetch().then(function (fetchedCountry) {
+                        if(!fetchedCountry) {
+                            throw new Error('Country does not exist.');
                         }
                     })
                 }
-            }
+        ],
+        country_id:[
+            function(country_id) {
+                    return Country.where({id: country_id}).fetch().then(function (country) {
+                        if(!country) {
+                            throw new Error('Country with provided iso code does not exist.');
+                        }
+                    })
+                }
         ]
     };
 

@@ -71,28 +71,23 @@ module.exports = function(passport){
 // POST
     router.post('/sign-up', function(req, res, next) {
         var form = req.body;
-        var country_id;
-        Country.where({name: form.country}).fetch().then(function (country) {
-            country_id = country ? country.id : null;
-        }).then(function() {
-            return User.forge({
+        User.forge({
                 username : form.username,
                 email : form.email,
-                password_hash : form.password,
+                password : form.password,
                 first_name : form.firstName || null,
                 last_name : form.lastName || null,
                 middle_name : form.middleName || null,
                 address : form.address || null,
                 city : form.city || null,
-                country_id : country_id
+                country : form.country
             }).save().then(function (user) {
                 var email = user.get('email');
                 var id = user.get('id');
                 var hash = user.get('password_hash');
                 Mail.sendVerificationEmail(email, "localhost:8080/emailverification?id=" + id + "&hash=" + hash);
                 res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
-            })
-        }).catch(Checkit.Error, function(err) {
+            }).catch(Checkit.Error, function(err) {
             var error = [];
             err.forEach(function (val, key) {
                 val.forEach(function(message) {

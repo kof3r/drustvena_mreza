@@ -8,7 +8,7 @@ exports.seed = function(knex, Promise) {
 
       User.forge({
         username : 'user',
-        password_hash : 'useruser',
+        password : 'useruser',
         email : 'user@fer.hr',
         confirmed : true,
         first_name : 'Ivan',
@@ -19,7 +19,7 @@ exports.seed = function(knex, Promise) {
 
       User.forge({
         username : 'kolinda',
-        password_hash : 'hrvatska3',
+        password : 'hrvatska3',
         email : 'kolinda@hdz.hr',
         confirmed : true,
         first_name : 'Kolinda',
