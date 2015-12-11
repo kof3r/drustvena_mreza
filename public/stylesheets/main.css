@@ -223,6 +223,31 @@
     border: 3px solid;
 }
 
+.post .comments {
+	margin-bottom: 15px;
+	display: none;
+}
+
+.post .comments ul {
+	list-style: none;
+	border-bottom: 2px solid lightgrey;
+	width: 100% !important;
+}
+
+.post .comments ul li {
+	padding: 5px;
+	border-top: 1px dotted;
+}
+
+.post .comments ul li strong {
+	color: darkorange;
+}
+
+.post .comments textarea {
+	min-width: 300px !important;
+	margin-bottom: 30px;
+}
+
 .post .actions {
     background-color: lightgoldenrodyellow;
     padding: 15px 5px 35px 5px;

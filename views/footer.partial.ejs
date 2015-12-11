@@ -41,13 +41,23 @@
 				</a>
 			  </li>
 			  <li>
-				<a href="javascript:showComments({{= post.id }})" class="comment">
+				<a href="javascript:loadComments({{= post.id }})" class="comment">
 				  <span class="glyphicon glyphicon-comment"></span> Comments
 				</a>
 			  </li>
 			</ul>
-			<ul class="comments">
-			</ul>
+			<div class="comments">
+				<ul>
+				</ul>
+				<div class="col-sm-9">
+					<label>Your comment</label>
+					<textarea class="form-control"></textarea>
+				</div>
+				<div class="col-sm-3">
+					<label class="col-sm-12">Actions</label>
+					<button onclick="postComment({{= post.id }})" class="btn btn-default">Post</button>
+				</div>
+			</div>
 			</div>
 		{{~}}
 	</script>
@@ -55,7 +65,7 @@
 	<!-- Comments -->
     <script id="comments-tmp" type="text/x-dot-template">
 		{{~it.comments :comment:index}}
-			<li>{{= comment.comment}}</li>
+			<li><a href="/profile/view/{{= comment.username }}" title="View {{= comment.first_name }}&#39; profile">{{= comment.first_name }} {{= comment.last_name }}</a>: {{= comment.comment }}</li>
 		{{~}}
 	</script>
 </body>

@@ -80,16 +80,49 @@ $(document).click(function(event) {
     }        
 })
 
-function showComments(content_id) {
+function loadComments(content_id) {
 	if (content_id) {
+		var cmtbtn = $('#post-' + content_id + ' .actions .comment span');
+		cmtbtn.removeClass('glyphicon-comment');
+		cmtbtn.addClass('gly-spin glyphicon-refresh');
+
 		$.get('/content/comments/' + content_id, function (data) {
 			if (data.comments.length) {
 				var templateFunction = doT.template(document.getElementById('comments-tmp').text);
 				var html = templateFunction(data);
-				$('#post-' + content_id + ' .comments').html(html);
+				$('#post-' + content_id + ' .comments ul').html(html);
 			}
-			else { alert('nema postova') }
+			else {
+				$('#post-' + content_id + ' .comments ul').html('<li>No comments</li>');
+			}
+			
+			$('#post-' + content_id + ' .comments').slideDown();
+			
+			cmtbtn.removeClass('gly-spin glyphicon-refresh');
+			cmtbtn.addClass('glyphicon-comment');
 		});
+	}
+}
+
+function postComment(content_id) {
+	
+	var comment = $('#post-' + content_id + ' .comments textarea');
+	if(comment.val().length) {
+		var pbtn = $('#post-' + content_id + ' .comments button');
+		pbtn.attr('disabled', 'disabled');
+		pbtn.html('Posting... <span class="glyphicon glyphicon-refresh gly-spin"></span>');
+		
+		$.post('/content/comment/' + content_id, {content_id: content_id, comment: comment.val()}, function (data) {
+			alert(data);
+		});
+		
+		pbtn.html('Post');
+		pbtn.removeAttr('disabled');
+		loadComments(content_id);
+		comment.val('');
+	}
+	else {
+		comment.focus();
 	}
 }
 
