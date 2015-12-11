@@ -84,10 +84,6 @@ module.exports = function(passport){
                 city : form.city,
                 country_name : form.country
             }).save().then(function (user) {
-                var email = user.get('email');
-                var id = user.get('id');
-                var hash = user.get('password_hash');
-                Mail.sendVerificationEmail(email, "localhost:8080/emailverification?id=" + id + "&hash=" + hash);
                 res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
             }).catch(ValidationError, function(error) {
                 res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});

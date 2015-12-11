@@ -2,6 +2,7 @@
 var db = require('../config/db');
 var CheckIt = require('checkit');
 var Promise = require('bluebird');
+var Mail = require('../config/mail');
 
 var ValidationError = require('./errors/validationError');
 
@@ -28,7 +29,7 @@ var User = db.Model.extend({
 
     onCreating : function() {
         var user = this;
-        return this.validateUser()
+        return this.validateNewUser()
             .then(this.resolveCountry.bind(this))
             .then(this.hash.bind(this))
             .catch(CheckIt.Error, Promise.method(function(checkError) {
@@ -42,7 +43,7 @@ var User = db.Model.extend({
             }) );
     },
 
-    validateUser : function() {
+    validateNewUser : function() {
         return this.getOnCreatingCheckIt().run(this.attributes);
     },
 
@@ -66,9 +67,14 @@ var User = db.Model.extend({
         var user = this;
         return Promise.all([
             Bubble.forge({user_id: user.get('id'), bubble_type_id: 1}).save(),
-            Bubble.forge({user_id: user.get('id'), bubble_type_id: 2}).save()
+            Bubble.forge({user_id: user.get('id'), bubble_type_id: 2}).save(),
+            this.sendConfirmationMail()
         ]);
     },
+
+    sendConfirmationMail: Promise.method(function() {
+        Mail.sendVerificationEmail(this.get('email'), "localhost:8080/emailverification?id=" + this.get('id') + "&hash=" + this.get('password_hash'));
+    }),
 
     format: function(attributes) {
         attributes.first_name = attributes.first_name || null;
