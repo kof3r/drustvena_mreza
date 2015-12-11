@@ -10,6 +10,7 @@ var router = express.Router();
 var Content = require('../models/content');
 var Bubble = require('../models/bubble');
 var User = require('../models/user');
+var Comment = require('../models/comment');
 
 var convert = require('../utils/convert');
 var arrays = require('../utils/arrays');
@@ -182,6 +183,14 @@ router.get('/comments/:content_id', function (req, res) {
         res.json({comments: comments});
     })
 });
+
+router.post('/comment/:content_id', function(req, res, next) {
+    Comment.forge({
+        user_id: req.user.id,
+        content_id: req.params.content_id,
+        comment: req.body.comment
+    }).save();
+})
 
 function parseContent(content, type){
     if (type == 1){
