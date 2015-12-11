@@ -18,12 +18,12 @@
 
 <form name="post-form" id="post-form">
 
-	<div class="form-group col-sm-7 col-xs-8">
+	<div class="form-group col-sm-6 col-xs-8">
 		<label for="post-title">Title</label>
 			<input type="text" id="post-title" name="post-title" class="form-control" />
 	</div>
 	
-	<div class="form-group col-sm-2 col-xs-4">
+	<div class="form-group col-sm-3 col-xs-4">
 		<label>Bubble</label>
 		<select id="bubble-to-post-in" name="bubble-to-post-in" class="form-control">
 		</select>
@@ -33,7 +33,7 @@
 		<label>Actions</label>
 		<div>
 			<input type="submit" class="btn btn-primary " value="Publish" />
-			<button class="btn btn-danger ">Discard</button>
+			<button class="btn btn-danger" onclick="Javascript:discard();">Discard</button>
 		</div>
 	</div>
 
@@ -49,6 +49,7 @@
 
 <!-- My Bubbles -->
 <script id="new-post-bubble-select-tmp" type="text/x-dot-template">
+	<option></option>
 	{{~it.bubbles :bubble:index}}
 		<option value="{{= bubble.id }}">{{= bubble.title }}</option>
 	{{~}}
@@ -69,17 +70,23 @@ function renderEditor() {
 	});
 }
 
+function discard() {
+	window.history.back();
+}
+
 $('#post-form').on('submit', function(event) {
 	event.preventDefault();
 	
 	var title = document.getElementById('post-title').value;
+	var bubble = $('#bubble-to-post-in').val();
 	var content = $("#editor").bbcode();
-	var postData = {bubble_id: $('#bubble-to-post-in').val(),
+	var postData = {bubble_id: bubble,
 					content: content,
 					title: title,
 					description: ''};
 	
 	if (title == '')	{ $('#post-title').focus();}
+	else if (bubble == '') { $('#bubble-to-post-in').focus();}
 	else if (content == '') { $('#editor').focus();}
 					
 	else {
