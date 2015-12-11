@@ -24,10 +24,15 @@ function loadPage() {
 	}
 }
 
-function loadPageIfNeeded() {
+function initialize() {
 	if (document.location.pathname == '/home/homepage') {
 		loadPage();
 	}
+	$.get('/content/myBubbles', function(data) {
+		var templateFunction = doT.template(document.getElementById('my-bubbles-tmp').text);
+		var html = templateFunction(data);
+		$('#my-bubbles').html(html);
+	});
 }
 
 function clearSearchResults() {
@@ -128,4 +133,4 @@ function postComment(content_id) {
 
 
 $(window).on('hashchange', loadPage);
-$(document).ready(loadPageIfNeeded);
+$(document).ready(initialize);
