@@ -22,20 +22,18 @@ router.get('/edit', function(req, res, next) {
 });
 
 router.post('/edit', function(req, res, next) {
-    return Promise.method(function () {
-        var user = req.user;
-        var form = req.body;
 
-        user.set('first_name', form.firstName);
-        user.set('last_name', form.lastName);
-        user.set('middle_name', form.middleName);
-        user.set('country', form.country);
-        user.set('city', form.city);
-        user.set('address', form.address);
-        user.set('relationship_status_id', form.relationshipStatusId);
-        user.set('gender_id', form.genderId);
-        return user.save();
-    }).then(function (user) {
+    var user = req.user;
+    var form = req.body;
+
+    user.set('first_name', form.firstName);
+    user.set('last_name', form.lastName);
+    user.set('middle_name', form.middleName);
+    user.set('country_name', form.country);
+    user.set('city', form.city);
+    user.set('address', form.address);
+    user.set('relationship_status_id', form.relationshipStatusId);
+    user.save().then(function (user) {
         res.render('edit-profile.ejs', {user: user.toJSON()});
     }).catch(ValidationError, function (error) {
         res.render('edit-profile.ejs', {user: error.user.toJSON(), editProfileError: error.messages});
