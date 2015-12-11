@@ -26,7 +26,6 @@ router.all("*", requireAuhentication);
 router.post('/post', function(req, res, next) {
 
     // user submitted values
-    console.log(req.body.bubble_id);
     var bubbleId = req.body.bubble_id;
     var content = parseContent(req.body.content, 1);
     var title = req.body.title;
@@ -157,8 +156,18 @@ router.post('/delete/:id', function(req, res, next){
 
 router.get('/timeline', function(req, res) {
     var user = req.user;
-    Bubble.where({user_id: user.id, bubble_type_id: 1}).fetch({withRelated : 'contents'}).then(function(bubble) {
-        res.json( {posts: bubble.related('contents')} );
+    Bubble.query(function (qb) {
+        qb.where('user_id', user.id).andWhere(function() {
+            this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3)
+        })
+    }).fetchAll({withRelated : 'contents'}).then(function(bubbles) {
+        var result = [];
+        bubbles.forEach(function (bubble) {
+            bubble.related('contents').forEach(function (content) {
+                result.push(content.toJSON());
+            })
+        })
+        res.json( {posts: result} );
     });
 });
 
