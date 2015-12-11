@@ -206,7 +206,7 @@ var User = db.Model.extend({
     },
 
     validPassword: function(password) {
-        return bCrypt.hashSync(password, this.get('password_hash'));
+        return bCrypt.compareSync(password, this.get('password_hash'));
     }
 });
 
