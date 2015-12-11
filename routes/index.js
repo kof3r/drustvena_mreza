@@ -85,7 +85,7 @@ module.exports = function(passport){
                 country_name : form.country
             }).save().then(function (user) {
                 res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
-            }).catch(ValidationError, function(error) {
+            }, function(error) {
                 res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
         });
     });
