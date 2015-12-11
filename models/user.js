@@ -19,12 +19,13 @@ var User = db.Model.extend({
 
     country : function () { return this.belongsTo('Country'); },
     relationshipStatus : function() { return this.belongsTo('RelationshipStatus'); },
-    bubbles : function() { return this.hasMany('Bubble');},
+    bubbles : function() { return this.hasMany('Bubble'); },
     comments: function () { return this.hasMany('Comment'); },
 
     initialize : function() {
         this.on('creating', this.onCreating, this);
         this.on('created', this.onCreated, this);
+        this.on('updating', this.onUpdating, this);
     },
 
     onCreating : function() {
@@ -32,19 +33,31 @@ var User = db.Model.extend({
         return this.validateNewUser()
             .then(this.resolveCountry.bind(this))
             .then(this.hash.bind(this))
-            .catch(CheckIt.Error, Promise.method(function(checkError) {
-                var error = [];
-                checkError.forEach(function (val, key) {
-                    val.forEach(function(message) {
-                        error.push(message);
-                    })
-                });
-                throw new ValidationError(user, error);
-            }) );
+            .catch(CheckIt.Error, function(checkError) {
+                return user.throwValidationError(checkError);
+            });
+    },
+
+    onCreated: function() {
+        var user = this;
+        return Promise.all([
+            Bubble.forge({user_id: user.get('id'), bubble_type_id: 1}).save(),
+            Bubble.forge({user_id: user.get('id'), bubble_type_id: 2}).save(),
+            this.sendConfirmationMail()
+        ]);
+    },
+
+    onUpdating: function () {
+        var user = this;
+        return this.getExistingUserCheckIt().run(this.attributes)
+            .then(this.resolveCountry.bind(this))
+            .catch(CheckIt.Error, function (checkError) {
+                return user.throwValidationError(checkError);
+            })
     },
 
     validateNewUser : function() {
-        return this.getOnCreatingCheckIt().run(this.attributes);
+        return this.getNewUserCheckIt().run(this.attributes);
     },
 
     resolveCountry :  function() {
@@ -63,14 +76,16 @@ var User = db.Model.extend({
         });
     },
 
-    onCreated: function() {
+    throwValidationError : Promise.method(function (checkError) {
         var user = this;
-        return Promise.all([
-            Bubble.forge({user_id: user.get('id'), bubble_type_id: 1}).save(),
-            Bubble.forge({user_id: user.get('id'), bubble_type_id: 2}).save(),
-            this.sendConfirmationMail()
-        ]);
-    },
+        var error = [];
+        checkError.forEach(function (val, key) {
+            val.forEach(function(message) {
+                error.push(message);
+            })
+        });
+        throw new ValidationError(user, error);
+    }),
 
     sendConfirmationMail: Promise.method(function() {
         Mail.sendVerificationEmail(this.get('email'), "localhost:8080/emailverification?id=" + this.get('id') + "&hash=" + this.get('password_hash'));
@@ -87,7 +102,7 @@ var User = db.Model.extend({
         return attributes;
     },
 
-    getOnCreatingCheckIt : function () {
+    getNewUserCheckIt : function () {
         var user = this;
 
         return new CheckIt({
@@ -151,6 +166,22 @@ var User = db.Model.extend({
                     })
                 }
             ],
+            country_name: [
+                function(country) {
+                    return Country.where({name: country}).fetch().then(function (fetchedCountry) {
+                        if(!fetchedCountry) {
+                            throw new Error('Country does not exist.');
+                        }
+                    })
+                }
+            ]
+        });
+    },
+
+    getExistingUserCheckIt: function () {
+        var user = this;
+
+        return new CheckIt({
             country_name: [
                 function(country) {
                     return Country.where({name: country}).fetch().then(function (fetchedCountry) {
