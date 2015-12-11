@@ -70,7 +70,7 @@
                             <label for="country" class = "text_other">COUNTRY</label>
                             
                              <div class="controls">
-                            <input type="text" id="country" name="country" placeholder="" class="form-control" list="countries" />
+                            <input type="text" id="country" name="country" placeholder="" class="form-control" list="countries" <% if(locals.user) { %>value="<%= user.country %>"<% } %> />
                             <% include countries-datalist.partial.ejs %>
                             </div>
                         </div>    
