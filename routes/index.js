@@ -73,16 +73,16 @@ module.exports = function(passport){
 // POST
     router.post('/sign-up', function(req, res, next) {
         var form = req.body;
-        User.forge({
+        return User.forge({
                 username : form.username,
                 email : form.email,
-                password : form.password,
-                first_name : form.firstName || null,
-                last_name : form.lastName || null,
-                middle_name : form.middleName || null,
-                address : form.address || null,
-                city : form.city || null,
-                country : form.country
+                password_hash : form.password,
+                first_name : form.firstName,
+                last_name : form.lastName,
+                middle_name : form.middleName,
+                address : form.address,
+                city : form.city,
+                country_name : form.country
             }).save().then(function (user) {
                 var email = user.get('email');
                 var id = user.get('id');
@@ -90,7 +90,7 @@ module.exports = function(passport){
                 Mail.sendVerificationEmail(email, "localhost:8080/emailverification?id=" + id + "&hash=" + hash);
                 res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
             }).catch(ValidationError, function(error) {
-            res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
+                res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
         });
     });
 

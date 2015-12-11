@@ -1,4 +1,6 @@
 
+var ValidationError = require('../../models/errors/validationError');
+
 var User = require('../../models/user');
 var Bubble = require('../../models/bubble');
 var Content = require('../../models/content');
@@ -12,7 +14,7 @@ exports.seed = function(knex, Promise) {
 
       User.forge({
         username : 'user',
-        password : 'useruser',
+        password_hash : 'useruser',
         email : 'user@fer.hr',
         confirmed : true,
         first_name : 'Ivan',
@@ -52,13 +54,13 @@ exports.seed = function(knex, Promise) {
 
       User.forge({
         username : 'kolinda',
-        password : 'hrvatska3',
+        password_hash : 'hrvatska3',
         email : 'kolinda@hdz.hr',
         confirmed : true,
         first_name : 'Kolinda',
         last_name : 'Grabar-Kitarovi�',
         city : 'Grad Zagreb',
-        country_id : 'HR'
+        country_name : 'Croatia'
       }).save().then(function(user) {
         kolinda_id = user.id;
         return Bubble.where({user_id: user.id, bubble_type_id: 1}).fetch().then(function(bubble) {

@@ -5,7 +5,7 @@
 function ValidationError(user, messages) {
     this.user = user;
     this.messages = messages;
-    this.stack = Error().stack;
+    this.stack = (new Error()).stack;
 }
 
 ValidationError.prototype = Object.create(Error.prototype);
