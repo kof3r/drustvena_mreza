@@ -26,9 +26,9 @@
 		{{~it.posts :post:index}}
 			<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
 			<div class="header">
-			  <a class="author" href="profile/view/">
+			  <a class="author" href="/profile/view/{{= post.username }}">
 				<img width="64" height="64" src="/images/avatar.jpg" />
-				<span class="glyphicon glyphicon-user"></span> JA!
+				<span class="glyphicon glyphicon-user"></span> {{= post.username }}
 			  </a>
 			  <span class="date-time">
 				<span class="glyphicon glyphicon-time"></span> {{=post.created_at}}
@@ -73,7 +73,7 @@
 	<!-- Comments -->
     <script id="comments-tmp" type="text/x-dot-template">
 		{{~it.comments :comment:index}}
-			<li><a href="/profile/view/{{= comment.username }}" title="View {{= comment.first_name }}&#39; profile">{{= comment.first_name }} {{= comment.last_name }}</a>: {{= comment.comment }}</li>
+			<li><a href="/profile/view/{{= comment.username }}" title="View {{= comment.first_name }}&#39;s profile">{{= comment.first_name }} {{= comment.last_name }}</a>: {{= comment.comment }}</li>
 		{{~}}
 	</script>
 </body>
