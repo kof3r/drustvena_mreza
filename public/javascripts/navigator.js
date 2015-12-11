@@ -6,6 +6,9 @@ function loadPage() {
 	if (newHash == null || newHash == '' && newHash != '#' || newHash == '#feed') {
 
 		$.get('/content/timeline', function(data) {
+			$.each(data.posts, function() {
+				this.content = BBC2HTML(this.content);
+			});
 			var templateFunction = doT.template(document.getElementById('feed-tmp').text);
 			var html = templateFunction( data );
 			document.getElementById('main-content').innerHTML = html;
