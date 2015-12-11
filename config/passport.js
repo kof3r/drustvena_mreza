@@ -29,7 +29,7 @@ module.exports=function(passport){
    });
 
    passport.deserializeUser(function(username, done) {
-      new User({username: username}).fetch().then(function(user) {
+      User.where({username: username}).fetch().then(function(user) {
          done(null, user);
       });
    });
