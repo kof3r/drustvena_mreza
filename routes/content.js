@@ -156,18 +156,12 @@ router.post('/delete/:id', function(req, res, next){
 
 router.get('/timeline', function(req, res) {
     var user = req.user;
-    Bubble.query(function (qb) {
-        qb.where('user_id', user.id).andWhere(function() {
-            this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3)
-        })
-    }).fetchAll({withRelated : 'contents'}).then(function(bubbles) {
-        var result = [];
-        bubbles.forEach(function (bubble) {
-            bubble.related('contents').forEach(function (content) {
-                result.push(content.toJSON());
-            })
-        })
-        res.json( {posts: result} );
+    Content.query(function (qb) {
+        qb.join('bubble', 'content.bubble_id', '=', 'bubble.id').where('bubble.user_id', user.id).andWhere(function () {
+            this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
+        }).orderBy('created_at', 'DESC');
+    }).fetchAll().then(function (posts) {
+        res.json( {posts: posts} );
     });
 });
 
