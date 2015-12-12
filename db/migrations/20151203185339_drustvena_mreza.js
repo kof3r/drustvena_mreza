@@ -18,13 +18,14 @@ exports.up = function(knex, Promise) {
         t.string('email', 254).notNullable().unique();
         t.boolean('confirmed').notNullable().defaultsTo(false);
         t.timestamps();
-        t.string('first_name');
-        t.string('last_name');
-        t.string('middle_name');
-        t.string('country_id', 2).references('id').inTable('country');
-        t.string('city');
-        t.string('address');
-        t.integer('relationship_status_id').unsigned().references('id').inTable('relationship_status');
+        t.string('first_name').defaultsTo(null);
+        t.string('last_name').defaultsTo(null);
+        t.string('middle_name').defaultsTo(null);;
+        t.string('country_id', 2).references('id').inTable('country').defaultsTo(null);;
+        t.string('city').defaultsTo(null);;
+        t.string('address').defaultsTo(null);;
+        t.integer('relationship_status_id').unsigned().references('id').inTable('relationship_status').defaultsTo(null);;
+        t.integer('gender_id').unsigned().references('id').inTable('gender').defaultsTo(null);;
     });
 
     var createBubbleType = knex.schema.createTable('bubble_type', function(t){
@@ -64,11 +65,17 @@ exports.up = function(knex, Promise) {
         t.text('comment');
     });
 
+    var createGender = knex.schema.createTable('gender', function (t) {
+        t.increments().primary();
+        t.string('type', 6).notNullable().unique();
+    });
+
     return Promise.all([
         createCountry,
         createRelationshipStatus,
         createBubbleType,
-        createContentType
+        createContentType,
+        createGender
     ]).then(function () {
         return Promise.all([
             createUser,
@@ -109,7 +116,9 @@ exports.down = function(knex, Promise) {
 
             knex.schema.dropTable('relationship_status'),
 
-            knex.schema.dropTable('country')
+            knex.schema.dropTable('country'),
+
+            knex.schema.dropTable('gender')
 
         ]);
     });

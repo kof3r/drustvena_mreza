@@ -10,6 +10,7 @@ var Country = require('./country');
 require('./relationship_status');
 var Bubble = require('./bubble');
 var Comment = require('./comment');
+require('./gender');
 
 var bCrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
 
@@ -20,7 +21,8 @@ var User = db.Model.extend({
     country : function () { return this.belongsTo('Country'); },
     relationshipStatus : function() { return this.belongsTo('RelationshipStatus'); },
     bubbles : function() { return this.hasMany('Bubble'); },
-    comments: function () { return this.hasMany('Comment'); },
+    comments: function() { return this.hasMany('Comment'); },
+    gender: function() { return this.belongsTo('Gender'); },
 
     initialize : function() {
         this.on('creating', this.onCreating, this);
@@ -97,6 +99,7 @@ var User = db.Model.extend({
         attributes.middle_name = attributes.middle_name || null;
         attributes.city = attributes.city || null;
         attributes.address = attributes.address || null;
+        attributes.gender_id = attributes.gender_id || null;
 
         delete attributes.country_name;
         return attributes;
