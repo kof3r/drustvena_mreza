@@ -157,7 +157,7 @@ router.post('/delete/:id', function(req, res, next){
 router.get('/timeline', function(req, res) {
     var user = req.user;
     Content.query(function (qb) {
-        qb.join('bubble', 'content.bubble_id', '=', 'bubble.id').where('bubble.user_id', user.id).andWhere(function () {
+        qb.join('bubble', 'content.bubble_id', 'bubble.id').where('bubble.user_id', user.id).andWhere(function () {
             this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
         }).orderBy('created_at', 'DESC');
     }).fetchAll({columns: ['content.id', 'content.created_at', 'content.title', 'content.content', 'content.description']}).then(function (posts) {
@@ -172,17 +172,11 @@ router.get('/myBubbles', function (req, res) {
 });
 
 router.get('/comments/:content_id', function (req, res) {
-    Content.where({id: req.params.content_id}).fetch({withRelated: 'comments.user'}).then(function (content) {
-        var comments = content.related('comments').map(function (fetchedComment) {
-            var comment = fetchedComment.toJSON();
-            delete comment['user'];
-            var author = fetchedComment.related('user');
-            comment['username'] = author.get('username');
-            comment['first_name'] = author.get('first_name') || '';
-            comment['middle_name'] = author.get('middle_name') || '';
-            comment['last_name'] = author.get('last_name') || '';
-            return comment;
-        });
+    Comment.query(function (qb) {
+        qb.join('user', 'comment.user_id', 'user.id')
+            .where('content_id', req.params.content_id)
+            .orderBy('comment.created_at', 'desc');
+    }).fetchAll({columns: ['comment.*', 'first_name', 'last_name', 'middle_name', 'username']}).then(function(comments) {
         res.json({comments: comments});
     })
 });
