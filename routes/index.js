@@ -125,20 +125,6 @@ module.exports = function(passport){
             res.redirect('/');
         }
     });
-
-    router.get('/test', function(req, res, next) {
-        var User = require('../models/user');
-        User.where({username : 'user'}).fetch({withRelated : 'bubbles'}).then(function (user) {
-            user.related('bubbles').forEach(function (bubble) {
-               bubble.fetch({withRelated : 'contents'}).then(function (bubble) {
-                  bubble.related('contents').forEach(function (content) {
-                      console.log(JSON.stringify(content) + '\n');
-                  });
-               });
-            });
-        });
-        res.end();
-    });
     
 
     /********************************/
