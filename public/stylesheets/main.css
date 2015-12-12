@@ -192,6 +192,14 @@
     font: 1.2em sans;
 }
 
+.post .header .date-time {
+}
+
+.post .header .title {
+	font: 1.2em;
+	display: block;
+}
+
 .post .header img {
     float: left;
     margin: 0 20px 10px 0;
@@ -209,6 +217,31 @@
     max-width: 100%;
     margin: 10px 0;
     border: 3px solid;
+}
+
+.post .comments {
+	margin-bottom: 15px;
+	display: none;
+}
+
+.post .comments ul {
+	list-style: none;
+	border-bottom: 2px solid lightgrey;
+	width: 100% !important;
+}
+
+.post .comments ul li {
+	padding: 5px;
+	border-top: 1px dotted;
+}
+
+.post .comments ul li strong {
+	color: darkorange;
+}
+
+.post .comments textarea {
+	min-width: 300px !important;
+	margin-bottom: 30px;
 }
 
 .post .actions {

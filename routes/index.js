@@ -1,16 +1,27 @@
+
 var express = require('express');
 var router = express.Router();
-var bcrypt = require('bcrypt-nodejs');
+
+var Mail=require('../config/mail');
+var Checkit = require('checkit');
+var Promise = require('bluebird');
+
+var ValidationError = require('../models/errors/validationError');
+
 var User = require('../models/user');
 var Country = require('../models/country');
-var Mail=require('../config/mail');
-
 
 module.exports = function(passport){
 
     router.use('/api', require('./api'));
     router.use('/home', require('./home'));
     router.use('/search', require('./search'));
+<<<<<<< HEAD
+=======
+    router.use('/content', require('./content'));
+    router.use('/partial', require('./partial'));
+    router.use('/profile', require('./profile'));
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
 
 // signin
 // GET
@@ -53,6 +64,7 @@ module.exports = function(passport){
         }
     });
 // POST
+<<<<<<< HEAD
     router.post('/registration.js', function(req, res, next) {
         var user = req.body;
         var country_id;
@@ -107,6 +119,24 @@ module.exports = function(passport){
             }
         }).catch(function (err) {
             console.log(err);
+=======
+    router.post('/sign-up', function(req, res, next) {
+        var form = req.body;
+        return User.forge({
+                username : form.username,
+                email : form.email,
+                password_hash : form.password,
+                first_name : form.firstName,
+                last_name : form.lastName,
+                middle_name : form.middleName,
+                address : form.address,
+                city : form.city,
+                country_name : form.country
+            }).save().then(function (user) {
+                res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
+            }, function(error) {
+                res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
         });
     });
 
@@ -159,6 +189,10 @@ module.exports = function(passport){
         });
         res.end();
     });
+<<<<<<< HEAD
+=======
+    
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
 
     /********************************/
 // 404 not found

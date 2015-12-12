@@ -7,12 +7,12 @@
         .text_orange {
             color: darkorange;
             font-family: "Times New Roman";
-            font-size: 25px;
+            font-size: 1.5em;
         }
         .text_other {
             color: green;
             font-family: "Times New Roman";
-            font-size: 18px;
+            font-size: 1.2em;
         }
 
         .text_center {
@@ -48,44 +48,63 @@
                          <div class="control-group">
                             <label class = "text_other control-label">FIRST NAME</label>
                             <div class="controls">
-                            <input type="text" id="firstName" name="firstName" placeholder="" class="form-control" />
+                            <input type="text" id="firstName" name="firstName" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.first_name %>"<% } %> />
                              </div>
                              </div>
                           <div class="control-group">
                              <label class = "text_other control-label">MIDDLE NAME</label>
                               <div class="controls">
-                                <input type="text" id="middleName" name="middleName" placeholder="" class="form-control" />
+                                <input type="text" id="middleName" name="middleName" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.middle_name %>"<% } %> />
                               </div>
-                         </div>
+                              </div>
                               
                           <div class="control-group">
                              <label class = "text_other control-label">LAST NAME</label>
                              <div class="controls">
+<<<<<<< HEAD
                               <input type="text" id="lastName" name="lasttName" placeholder="" class="form-control" />
+=======
+                              <input type="text" id="lastName" name="lastName" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.last_name %>"<% } %>/>
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
                               </div>
-                        </div>
+                            </div>
              
         
                 
                         <div class="control-group">
+<<<<<<< HEAD
                             <label for="count" class = "text_other">COUNTRY</label>
+=======
+                            <label for="country" class = "text_other">COUNTRY</label>
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
                             
                              <div class="controls">
-                            <input type="text" id="count" name="country" placeholder="" class="form-control" />
+                            <input type="text" id="country" name="country" placeholder="" class="form-control" list="countries" <% if(locals.user) { %>value="<%= user.country %>"<% } %> />
+                            <% include countries-datalist.partial.ejs %>
                             </div>
                         </div>    
                                 
                         <div class="control-group">
+<<<<<<< HEAD
                             <label for = "cit" class = "text_other">CITY</label>
                              <div class="controls">
                                 <input type="text" id="cit" name="city" placeholder="" class="form-control">
+=======
+                            <label for = "city" class = "text_other">CITY</label>
+                             <div class="controls">
+                                <input type="text" id="city" name="city" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.city %>"<% } %> />
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
                             </div>
                         </div>        
                         <div class="control-group">
                     
                             <label for = "add" class = "text_other">ADDRESS</label>
                              <div class="controls">
+<<<<<<< HEAD
                                  <input type="text" id="add" name="address" placeholder="" class="form-control">
+=======
+                                 <input type="text" id="address" name="address" placeholder="" class="form-control" <% if(locals.user) { %>value="<%= user.address %>"<% } %> />
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
                             </div>
                         </div>
                          
@@ -119,18 +138,33 @@
                     
                  <div class="control-group">
                     <label class = "text_other">GENDER</label>
+<<<<<<< HEAD
                      <br>
                     <input type="radio" name="sex" value="male" checked>Male
                     <br>
                     <input type="radio" name="sex" value="female">Female
                     <br>
                     <input type="radio" name="sex" value="other">Other
+=======
+                     <br />
+                       <label><input type="radio" name="gender" value="male" checked="checked" />Male</label>
+                    <br />
+                      <label><input type="radio" name="gender" value="female" />Female</label>
+                    <br />
+                      <label><input type="radio" name="gender" value="other" />Other</label>
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
                  </div>
                 
                      
                     <div class="control-group">
                         <label for="date" class = "text_other">DATE OF BIRTH</label>
+<<<<<<< HEAD
                         <input type="date" class="form-control" id="date">
+=======
+                        <div class="controls">
+							<input type="date" class="form-control" id="date" />
+                        </div>
+>>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
                     </div>
                                 
            
