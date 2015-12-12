@@ -192,7 +192,9 @@ router.post('/comment/:content_id', function(req, res, next) {
         user_id: req.user.id,
         content_id: req.params.content_id,
         comment: req.body.comment
-    }).save();
+    }).save().then(function () {
+        res.end();
+    });
 })
 
 function parseContent(content, type){
