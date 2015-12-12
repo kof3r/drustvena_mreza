@@ -70,23 +70,25 @@ module.exports = function(passport){
             res.render('index.ejs', {title: 'Sign up', signUp: true});
         }
     });
+
 // POST
     router.post('/sign-up', function(req, res, next) {
         var form = req.body;
         return User.forge({
-                username : form.username,
-                email : form.email,
-                password_hash : form.password,
-                first_name : form.firstName,
-                last_name : form.lastName,
-                middle_name : form.middleName,
-                address : form.address,
-                city : form.city,
-                country_name : form.country
-            }).save().then(function (user) {
-                res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
-            }, function(error) {
-                res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
+            username: form.username,
+            email: form.email,
+            password_hash: form.password,
+            first_name: form.firstName,
+            last_name: form.lastName,
+            middle_name: form.middleName,
+            address: form.address,
+            city: form.city,
+            country_name: form.country,
+            gender_id: form.gender_id
+        }).save().then(function (user) {
+            res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
+        }, function(error) {
+            res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
         });
     });
 
@@ -103,13 +105,11 @@ module.exports = function(passport){
     });
 
     router.get("/emailverification",function(req,res,next){
-        var id=req.query.id;
-        var hash=req.query.hash;
-        var usernamePromise = new User({'id': id}).fetch();
-        return usernamePromise.then(function(model) {
-            if(model.toJSON().password_hash===hash){
-                model.save({confirmed : 1}).then(function(model){
-                    res.render('emailverification.ejs', {username: model.toJSON().username});
+        User.where({id: req.query.id}).fetch().then(function(user) {
+            if(user.get('password_hash') === req.query.hash){
+                user.set({confirmed: true});
+                user.save().then(function(user){
+                    res.render('emailverification.ejs', {username: user.get('username')});
                 });
             }
         });
