@@ -16,110 +16,61 @@ module.exports = function(passport){
     router.use('/api', require('./api'));
     router.use('/home', require('./home'));
     router.use('/search', require('./search'));
-<<<<<<< HEAD
-=======
     router.use('/content', require('./content'));
     router.use('/partial', require('./partial'));
     router.use('/profile', require('./profile'));
->>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
 
-// signin
+// index - sign in and sign up
 // GET
     router.get('/', function(req, res, next) {
         if(req.isAuthenticated()){
             res.redirect('/home/homepage');
         }
         else {
-            res.render('index.ejs', {loginError:'', registerError:''});
+            res.render('index.ejs');
         }
     });
-
+// GET
+    router.get('/sign-in', function(req, res, next){
+        if(req.isAuthenticated()){
+            res.redirect('/home/homepage');
+        }
+        else {
+            res.render('index.ejs', {title: 'Sign in', signIn: true});
+        }
+    });
 // POST
-    router.post('/login.js', function(req, res, next) {
+    router.post('/sign-in', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
             if(err) {
-                return res.render('index.ejs', {loginError:'An error occoured.', registerError:''});
+                return res.render('index.ejs', {loginError:'An error occoured.'});
             }
 
             if(!user) {
-                return res.render('index.ejs', {loginError:'Invalid login attempt.', registerError:''});
+                return res.render('index.ejs', {loginError:'Invalid login attempt.'});
             }
             
             return req.logIn(user, function(err) {
                 if(err) {
-                    return res.render('index', {loginError:'An error occoured.', registerError:''});
+                    return res.render('index', {title: 'Sign in', loginError:'An error occoured.'});
                 } else {
                     return res.redirect('/home/homepage');
                 }
             });
         })(req, res, next);
     });
-// signup
+    
+// sign up
 // GET
-    router.get('/signup', function(req, res, next) {
-        if(req.isAuthenticated()) {
-            res.redirect('/');
-        } else {
-            res.render('signup', {title: 'Sign Up'});
+    router.get('/sign-up', function(req, res, next) {
+        if(req.isAuthenticated()){
+            res.redirect('/home/homepage');
+        }
+        else {
+            res.render('index.ejs', {title: 'Sign up', signUp: true});
         }
     });
 // POST
-<<<<<<< HEAD
-    router.post('/registration.js', function(req, res, next) {
-        var user = req.body;
-        var country_id;
-        Promise.all([
-            Promise.resolve(!/^[a-z][a-z0-9_-]{2,15}$/.test(user.username) ? 'username must begin with an alphabetic character, be between 3 and 8 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
-            Promise.resolve(!/^[a-z0-9_-]{8,18}$/.test(user.password) ? 'password must be between 8 and 18 characters in length, contain only alphanumerics, underscores and hyphens' : ''),
-            Promise.resolve(!/^([a-z0-9_\.-]+)@([\da-z\.-]+)\.([a-z\.]{2,6})$/.test(user.email) ? 'invalid email' : ''),
-            User.where({username: user.username}).fetch().then(function (user) {
-                if(user) {
-                    return Promise.resolve('username already exists');
-                }
-                return Promise.resolve('');
-            }),
-            User.where({email: user.email}).fetch().then(function (user) {
-                if(user) {
-                    return Promise.resolve('email already exists');
-                }
-                return Promise.resolve('');
-            }),
-            Country.where({name: user.country}).fetch().then(function (country) {
-                if(!country && user.country !== '') {
-                    return Promise.resolve('country does not exist');
-                }
-                country_id = country === null ? null : country.id;
-                return Promise.resolve('');
-            })
-        ]).then(function(errorMessages) {
-            var error = [];
-            errorMessages.forEach(function (message) {
-                if(message !== '') {
-                    error.push(message);
-                }
-            })
-            if(error.length === 0) {
-                var hash = User.generateHash(user.password);
-                User.forge({
-                    username : user.username,
-                    email : user.email,
-                    password_hash : hash,
-                    first_name : user.firstName === '' ? null : user.firstName,
-                    middle_name : user.middleName === '' ? null : user.middleName,
-                    last_name : user.lastName === '' ? null : user.lastName,
-                    address : user.address === '' ? null : user.address,
-                    city : user.city === '' ? null : user.city,
-                    country_id : country_id
-                }).save().then(function (model) {
-                    Mail.sendVerificationEmail(user.email, "localhost:8080/emailverification?id=" + model.id + "&hash=" + hash);
-                    res.redirect('/#successful-sign-up');
-                })
-            } else {
-                res.render('index', {title: 'Sign up', loginError: '', registerError: error});
-            }
-        }).catch(function (err) {
-            console.log(err);
-=======
     router.post('/sign-up', function(req, res, next) {
         var form = req.body;
         return User.forge({
@@ -136,7 +87,6 @@ module.exports = function(passport){
                 res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
             }, function(error) {
                 res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
->>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
         });
     });
 
@@ -165,7 +115,7 @@ module.exports = function(passport){
         });
     });
 
-// logout
+// sign out
 // POST
     router.post('/sign-out', function(req, res, next) {
         if(!req.isAuthenticated()) {
@@ -189,10 +139,7 @@ module.exports = function(passport){
         });
         res.end();
     });
-<<<<<<< HEAD
-=======
     
->>>>>>> 88e216b1f6c02e9c13e4a5f2c7b0ee33f2743b73
 
     /********************************/
 // 404 not found
