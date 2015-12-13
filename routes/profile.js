@@ -33,6 +33,7 @@ router.post('/edit', function(req, res, next) {
     user.set('city', form.city);
     user.set('address', form.address);
     user.set('relationship_status_id', form.relationshipStatusId);
+    user.set('gender_id', form.gender_id);
     user.save().then(function (user) {
         res.render('edit-profile.ejs', {user: user.toJSON()});
     }).catch(ValidationError, function (error) {
