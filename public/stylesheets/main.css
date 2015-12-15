@@ -183,7 +183,7 @@
     }
 }
 
-.post .header {
+.post > .header {
     background-color: lightblue;
     padding: 10px;
     border-top-left-radius: 10px;
@@ -241,6 +241,10 @@
 
 .post .comments ul li strong {
 	color: darkorange;
+}
+
+.post .comments .header {
+	color: grey;
 }
 
 .post .comments textarea {

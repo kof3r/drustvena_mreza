@@ -8,6 +8,10 @@ function loadPage() {
 		$.get('/content/timeline', function(data) {
 			$.each(data.posts, function() {
 				this.content = BBC2HTML(this.content);
+				var dt = Date.parse(this.created_at);
+				this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+				dt = Date.parse(this.updated_at);
+				this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
 			});
 			var templateFunction = doT.template(document.getElementById('feed-tmp').text);
 			var html = templateFunction( data );
@@ -97,6 +101,12 @@ function loadComments(content_id) {
 		$.get('/content/comments/' + content_id, function (data) {
 			if (data.comments.length) {
 				var templateFunction = doT.template(document.getElementById('comments-tmp').text);
+				$.each(data.comments, function() {
+					var dt = Date.parse(this.created_at);
+					this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+					dt = Date.parse(this.updated_at);
+					this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+				});
 				var html = templateFunction(data);
 				$('#post-' + content_id + ' .comments ul').html(html);
 			}
@@ -121,13 +131,12 @@ function postComment(content_id) {
 		pbtn.html('Posting... <span class="glyphicon glyphicon-refresh gly-spin"></span>');
 		
 		$.post('/content/comment/' + content_id, {content_id: content_id, comment: comment.val()}, function (data) {
-			alert(data);
-		});
 		
 		pbtn.html('Post');
 		pbtn.removeAttr('disabled');
 		loadComments(content_id);
 		comment.val('');
+		});
 	}
 	else {
 		comment.focus();

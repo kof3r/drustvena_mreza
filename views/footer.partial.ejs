@@ -12,6 +12,9 @@
     <!-- BBC2HTML -->
     <script src="/javascripts/bbc2html.js"></script>
     
+    <!-- date.format -->
+    <script src="/javascripts/date.format.js" type="text/javascript"></script>
+    
     <!-- DoT -->
     <script src="/javascripts/doT.min.js" type="text/javascript"></script>
     
@@ -35,6 +38,9 @@
 			  </a>
 			  <span class="date-time">
 				<span class="glyphicon glyphicon-time"></span> {{=post.created_at}}
+				{{? post.updated_at != post.created_at }}
+				, <em>updated {{=post.updated_at}}</em>
+				{{?}}
 			  </span>
 			</div>
 			<div class="content">
@@ -76,7 +82,15 @@
 	<!-- Comments -->
     <script id="comments-tmp" type="text/x-dot-template">
 		{{~it.comments :comment:index}}
-			<li><a href="/profile/view/{{= comment.username }}" title="View {{= comment.first_name }}&#39;s profile">{{= comment.first_name }} {{= comment.last_name }}</a>: {{= comment.comment }}</li>
+			<li>
+				<div class="header">
+					<a href="/profile/view/{{= comment.username }}" title="View {{= comment.first_name }}&#39;s profile">{{= comment.username }}</a> {{=comment.created_at}}
+					{{? comment.updated_at != comment.created_at }}
+						, <em>updated {{= comment.updated_at }}</em>
+					{{?}}
+				</div>
+				<div>{{= comment.comment }}</div>
+			</li>
 		{{~}}
 	</script>
 </body>
