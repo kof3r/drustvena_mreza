@@ -160,7 +160,7 @@ router.get('/timeline', function(req, res) {
         qb.join('bubble', 'content.bubble_id', 'bubble.id').where('bubble.user_id', user.id).andWhere(function () {
             this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
         }).orderBy('created_at', 'DESC');
-    }).fetchAll({columns: ['content.id', 'content.created_at', 'content.title', 'content.content', 'content.description']}).then(function (posts) {
+    }).fetchAll({columns: ['content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description']}).then(function (posts) {
         res.json( {posts: posts} );
     });
 });
