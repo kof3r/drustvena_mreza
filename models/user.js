@@ -100,7 +100,8 @@ var User = db.Model.extend({
         attributes.middle_name = attributes.middle_name || null;
         attributes.city = attributes.city || null;
         attributes.address = attributes.address || null;
-        attributes.gender_id = attributes.gender_id || null;
+        attributes.gender_id = attributes.gender_id ? parseInt(attributes.gender_id) : null;
+        attributes.relationship_status_id = attributes.relationship_status_id ? parseInt(attributes.relationship_status_id) : null;
 
         delete attributes.country_name;
         return attributes;
