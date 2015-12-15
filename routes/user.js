@@ -17,7 +17,7 @@ router.get('/isContact', function (req, res) {
         return Privilege.where({permittee_id: req.user.get('id'), permitter_id: user.get('id')}).fetch();
     })
     .then(function (privilege) {
-        res.json({isFriend: (privilege ? true : false)});
+        res.json({isContact: (privilege ? true : false)});
     });
 });
 
