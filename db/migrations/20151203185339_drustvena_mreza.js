@@ -70,6 +70,11 @@ exports.up = function(knex, Promise) {
         t.string('type', 6).notNullable().unique();
     });
 
+    var createPrivilege = knex.schema.createTable('privilege', function(t) {
+        t.integer('permitter_id').unsigned().references('id').inTable('user').notNullable();
+        t.integer('permitee_id').unsigned().references('id').inTable('user').notNullable();
+    });
+
     return Promise.all([
         createCountry,
         createRelationshipStatus,
@@ -83,7 +88,10 @@ exports.up = function(knex, Promise) {
             createContent
         ]);
     }).then( function () {
-        return createComment;
+        return Promise.all([
+            createComment,
+            createPrivilege
+        ]);
     });
 
 };
@@ -92,16 +100,15 @@ exports.down = function(knex, Promise) {
 
     return Promise.all([
 
-        knex.schema.dropTable('comment')
+        knex.schema.dropTable('comment'),
+        knex.schema.dropTable('privilege')
 
     ]).then(function () {
 
         Promise.all([
 
             knex.schema.dropTable('content'),
-
             knex.schema.dropTable('bubble'),
-
             knex.schema.dropTable('user')
 
         ])
@@ -111,13 +118,9 @@ exports.down = function(knex, Promise) {
         return Promise.all([
 
             knex.schema.dropTable('content_type'),
-
             knex.schema.dropTable('bubble_type'),
-
             knex.schema.dropTable('relationship_status'),
-
             knex.schema.dropTable('country'),
-
             knex.schema.dropTable('gender')
 
         ]);

@@ -23,6 +23,7 @@ var User = db.Model.extend({
     bubbles : function() { return this.hasMany('Bubble'); },
     comments: function() { return this.hasMany('Comment'); },
     gender: function() { return this.belongsTo('Gender'); },
+    privilege: function() { return this.belongsToMany('User', 'privilege', 'permitter_id', 'permitee_id') },
 
     initialize : function() {
         this.on('creating', this.onCreating, this);
