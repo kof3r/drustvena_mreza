@@ -10,7 +10,7 @@ var Privilege = require('../models/privilege');
 
 var requireAuthentication = require('../utils/authentication');
 
-//router.all('*', requireAuthentication);
+router.all('*', requireAuthentication);
 
 router.get('/isContact', function (req, res) {
     User.where({username: req.query.username}).fetch().then(function (user) {
