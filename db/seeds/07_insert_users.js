@@ -68,12 +68,12 @@ exports.seed = function(knex, Promise) {
 
             Privilege.forge({
                 permitter_id: zeljko_id,
-                permitee_id: kolinda_id
+                permittee_id: kolinda_id
             }).save(),
 
             Privilege.forge({
                 permitter_id: katarina_id,
-                permitee_id: kolinda_id
+                permittee_id: kolinda_id
             }).save()
 
         ]);

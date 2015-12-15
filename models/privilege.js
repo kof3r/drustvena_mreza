@@ -11,7 +11,7 @@ var Privilege = db.Model.extend({
     tableName : 'privilege',
 
     permitter: function() { return this.belongsTo('User', 'permitter_id') },
-    permitee: function() { return this.belongsTo('User', 'permitee_id') }
+    permittee: function() { return this.belongsTo('User', 'permittee_id') }
 });
 
 module.exports = db.model('Privilege', Privilege);
