@@ -20,6 +20,7 @@ module.exports = function(passport){
     router.use('/partial', require('./partial'));
     router.use('/profile', require('./profile'));
     router.use('/bubble', require('./bubble'));
+    router.use('/user', require('./user'));
 
 // index - sign in and sign up
 // GET

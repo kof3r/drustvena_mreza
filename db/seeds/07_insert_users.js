@@ -22,7 +22,7 @@ exports.seed = function(knex, Promise) {
             city : 'Zagreb',
             country_id : 'HR'
         }).save().then(function (user) {
-            kolinda_id = user.get('id');
+            user_id = user.get('id');
         }),
 
          User.forge({
@@ -35,7 +35,7 @@ exports.seed = function(knex, Promise) {
             city : 'Grad Zagreb',
             country_name : 'Croatia'
         }).save().then(function (user) {
-             user_id = user.get('id');
+             kolinda_id = user.get('id');
          }),
 
         User.forge({
