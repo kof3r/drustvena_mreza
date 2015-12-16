@@ -1,0 +1,221 @@
+swagger: '2.0'
+info:
+  title: Bubbles API
+  description: Mrzim svoj život.
+  version: 1.0.0
+produces:
+  - application/json
+paths:
+  /api/sign-up:
+    post:
+      tags:
+        - Android
+      summary: Registracija
+      parameters:
+        - name: username
+          in: formData
+          required: true
+          type: string
+        - name: email
+          in: formData
+          required: true
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
+        - name: firstName
+          in: formData
+          required: false
+          type: string
+        - name: lastName
+          in: formData
+          required: false
+          type: string
+        - name: middleName
+          in: formData
+          required: false
+          type: string
+        - name: address
+          in: formData
+          required: false
+          type: string
+        - name: city
+          in: formData
+          required: false
+          type: string
+        - name: country
+          in: formData
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Kod uspješne registracije.
+        default:
+          description: Kod neispravnog polja
+          schema:
+            $ref: '#/definitions/ValidationError'
+  /api/sign-in:
+    post:
+      tags:
+        - Android
+      summary: Prijava
+      parameters:
+        - name: username
+          in: formData
+          required: true
+          type: string
+        - name: password
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Uspješna prijava
+        default:
+          description: Error
+          schema:
+            $ref: '#/definitions/Error'
+  /api/sign-out:
+    post:
+      tags:
+        - Android
+      summary: Odjava
+      responses:
+        '200':
+          description: Uspješna odjava
+  /content/timeline:
+    get:
+      tags:
+        - JSON
+        - Content
+      summary: Vraća sve korisnikove postove.
+      responses:
+        '200':
+          description: Korisnikovi postovi
+          schema:
+            type: object
+            properties:
+              posts:
+                type: array
+                items:
+                  $ref: '#/definitions/Post'
+  /content/myBubbles:
+    get:
+      tags:
+        - JSON
+        - Content
+      summary: Vraća sve bubbleove vlasnika session-a uključujući i timeline bubble.
+      responses:
+        '200':
+          description: Korisnikovi bubbleovi
+          schema:
+            type: object
+            properties:
+              bubbles:
+                type: array
+                items:
+                  $ref: '#/definitions/Bubble'
+  /content/comments/{content_id}:
+    get:
+      tags:
+        - JSON
+        - Content
+      summary: Vraća sve komentare za dani content_id
+      parameters:
+        - name: content_id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Komentari
+          schema:
+            type: object
+            properties:
+              comments:
+                type: array
+                items:
+                  $ref: '#/definitions/Comment'
+  /content/comment{content_id}:
+    post:
+      tags:
+        - JSON
+        - Content
+      summary: Posta komentar na content sa content_id-om
+      parameters:
+        - name: content_id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Kod uspjesnog komentiranja
+definitions:
+  Comment:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      content_id:
+        type: integer
+        format: int32
+      user_id:
+        type: integer
+        format: int32
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      comment:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      middle_name:
+        type: string
+      username:
+        type: string
+  Bubble:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      title:
+        type: string
+  Post:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      title:
+        type: string
+        description: Naslov posta
+      content:
+        type: string
+        description: Sadržaj posta
+      description:
+        type: string
+        description: Opis posta
+  Error:
+    type: object
+    properties:
+      error:
+        type: string
+  ValidationError:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          type: string
