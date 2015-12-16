@@ -44,7 +44,7 @@ var User = db.Model.extend({
     onCreated: function() {
         var user = this;
         return Promise.all([
-            Bubble.forge({user_id: user.get('id'), bubble_type_id: 1}).save(),
+            Bubble.forge({user_id: user.get('id'), bubble_type_id: 1, title: 'Timeline'}).save(),
             Bubble.forge({user_id: user.get('id'), bubble_type_id: 2}).save(),
             this.sendConfirmationMail()
         ]);
@@ -197,11 +197,6 @@ var User = db.Model.extend({
                 }
             ]
         });
-    },
-
-    getCreatedBubbles : function() {
-        var user_id = this.get('id');
-        return Bubble.query({where: {user_id: user_id}, andWhere: {bubble_type_id: 3}}).fetchAll({columns: ['id', 'title']});
     },
 
     createBubble : function(attributes) {
