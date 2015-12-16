@@ -8,8 +8,6 @@ var User = require('../models/user');
 
 module.exports=function (passport) {
 
-    router.use(require('body-parser').json());
-
     router.post('/sign-up', function(req, res, next) {
         var form = req.body;
         User.forge({
@@ -21,8 +19,7 @@ module.exports=function (passport) {
             middle_name: form.middleName,
             address: form.address,
             city: form.city,
-            country_name: form.country,
-            gender_id: form.gender_id
+            country_name: form.country
         }).save().then(function (user) {
             res.end();
         }, function(error) {
@@ -42,7 +39,6 @@ module.exports=function (passport) {
 
             req.logIn(user, function(err) {
                 if(err) {
-                    console.log(err.stack);
                     return res.json({error:'An error occurred.'});
                 } else {
                     return res.end();
