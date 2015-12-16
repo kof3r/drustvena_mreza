@@ -99,26 +99,24 @@
                 <div class="control-group">
                     <label class = "text_other">RELATIONSHIP</label>
                         <br />
-                          <label><input type="radio" name="relationship" value="complicated" checked="checked" />complicated</label>
+                          <label><input type="radio" name="relationshipStatusId" value="1"<% if(user.relationship_status_id==1){%> <%= checked="checked" %><%}%> /> Single</label>
                         <br />
-                          <label><input type="radio" name="relationship" value="single" />single</label>
+                          <label><input type="radio" name="relationshipStatusId" value="2"<% if(user.relationship_status_id==2){%> <%= checked="checked" %><%}%> /> Complicated</label>
                         <br />
-                          <label><input type="radio" name="relationship" value="dating" />dating</label>
+                          <label><input type="radio" name="relationshipStatusId" value="3"<% if(user.relationship_status_id==3){%> <%= checked="checked" %><%}%> /> In a relationship</label>
                         <br />
-                          <label><input type="radio" name="relationship" value="married" />married</label>
-                        <br />
-                          <label><input type="radio" name="relationship" value="other" />other</label>
+                          <label><input type="radio" name="relationshipStatusId" value="4"<% if(user.relationship_status_id==4){%> <%= checked="checked" %><%}%> /> Other</label>
                 </div>
                   
                     
                  <div class="control-group">
                     <label class = "text_other">GENDER</label>
                      <br />
-                       <label><input type="radio" name="gender" value="male" checked="checked" />Male</label>
+                       <label><input type="radio" name="gender_id" value="2"<% if(user.gender_id==2){%> <%= checked="checked" %><%}%> /> Male</label>
                     <br />
-                      <label><input type="radio" name="gender" value="female" />Female</label>
+                      <label><input type="radio" name="gender_id" value="1"<% if(user.gender_id==1){%> <%= checked="checked" %><%}%> /> Female</label>
                     <br />
-                      <label><input type="radio" name="gender" value="other" />Other</label>
+                      <label><input type="radio" name="gender_id" value=""<% if(user.gender_id==''){%> <%= checked="checked" %><%}%> /> Other or not set</label>
                  </div>
                 
                      
