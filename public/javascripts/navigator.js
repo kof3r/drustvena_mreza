@@ -153,15 +153,18 @@ function postComment(content_id) {
 }
 
 function initializeVideos() {
-	$('#main-content .popup-youtube, #main-content.popup-vimeo, #main-content.popup-gmaps').magnificPopup({
-	disableOn: 700,
-	type: 'iframe',
-	mainClass: 'mfp-fade',
-	removalDelay: 160,
-	preloader: false,
 
-	fixedContentPos: false
-	});
+	$(document).ready(function() {
+        $('#main-content .popup-youtube, #main-content .popup-vimeo, #main-content .popup-gmaps').magnificPopup({
+          disableOn: 700,
+          type: 'iframe',
+          mainClass: 'mfp-fade',
+          removalDelay: 160,
+          preloader: false,
+
+          fixedContentPos: false
+        });
+    });
 }
 
 
