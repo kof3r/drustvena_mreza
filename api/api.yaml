@@ -29,7 +29,7 @@ paths:
         - JSON
       summary: Provjerava ima li registrirani korisnik s tim e-mailom
       parameters:
-        - name: e-mail adresa
+        - name: email
           type: string
           in: query
           required: true
