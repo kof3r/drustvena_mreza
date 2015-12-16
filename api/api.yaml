@@ -6,6 +6,39 @@ info:
 produces:
   - application/json
 paths:
+  /isUsernameAvailable:
+    get:
+      tags:
+        - Android
+        - JSON
+      summary: Provjerava ima li registrirani korisnik s tim imenom
+      parameters:
+        - name: username
+          type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          description: true ili false
+          schema:
+            $ref: '#/definitions/Available'
+  /isEmailAvailable:
+    get:
+      tags:
+        - Android
+        - JSON
+      summary: Provjerava ima li registrirani korisnik s tim e-mailom
+      parameters:
+        - name: e-mail adresa
+          type: string
+          in: query
+          required: true
+      responses:
+        '200':
+          description: true ili false
+          schema:
+            $ref: '#/definitions/Available'
+        
   /api/sign-up:
     post:
       tags:
@@ -116,7 +149,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Bubble'
-  /content/comments/{content_id}:
+  '/content/comments/{content_id}':
     get:
       tags:
         - JSON
@@ -138,7 +171,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Comment'
-  /content/comment/{content_id}:
+  '/content/comment/{content_id}':
     post:
       tags:
         - JSON
@@ -225,6 +258,11 @@ definitions:
       description:
         type: string
         description: Opis posta
+  Available:
+    type: object
+    properties:
+      available:
+        type: boolean
   Error:
     type: object
     properties:
