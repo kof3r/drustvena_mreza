@@ -84,7 +84,7 @@ var User = db.Model.extend({
         var error = [];
         checkError.forEach(function (val, key) {
             val.forEach(function(message) {
-                error.push(message);
+                error.push(message.message);
             })
         });
         throw new ValidationError(user, error);
