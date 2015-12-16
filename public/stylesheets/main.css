@@ -223,15 +223,19 @@
     border: 3px solid;
 }
 
-.post .content a.video {
-	display: block;
+.post .content div.external {
+	text-align: center;
 }
 
-.post .content a.video img {
+.post .content div.external a {
+	color: orangered;
+}
+
+.post .content .popup-youtube img {
 	opacity: 0.75;
 }
 
-.post .content a.video img:hover {
+.post .content a.popup-youtube img:hover {
 	opacity: 1;
 }
 
