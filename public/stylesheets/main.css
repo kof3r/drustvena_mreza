@@ -223,6 +223,18 @@
     border: 3px solid;
 }
 
+.post .content a.video {
+	display: block;
+}
+
+.post .content a.video img {
+	opacity: 0.75;
+}
+
+.post .content a.video img:hover {
+	opacity: 1;
+}
+
 .post .comments {
 	margin-bottom: 15px;
 	display: none;

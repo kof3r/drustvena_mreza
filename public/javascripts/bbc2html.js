@@ -12,7 +12,7 @@
       function A(s, p) {for (var i in p) s = s.replace(X(i, 'g'), p[i]); return s;}       function P($0, $1, $2, $3) {
         if ($3 && $3.indexOf('[') > -1) $3 = R($3);
         switch ($1) {
-		  case 'video': return '<a class="popup-youtube video" href="' + Y[$1] + $3 + '"><span class="glyphicon glyphicon-facetime-video"></span> ' + Y[$1] + $3 + '</a>';
+		  case 'video': return '<a class="popup-youtube video" href="' + Y[$1] + $3 + '"><img src="http://img.youtube.com/vi/'+ $3 + '/0.jpg" alt="Thumbnail" /><span class="glyphicon glyphicon-facetime-video"></span> ' + Y[$1] + $3 + '</a>';
           case 'url':case 'anchor':case 'email': return '<a '+ L[$1] + ($2||$3) +'">'+ $3 +'</a>';
           case 'img': var d = D($2); return '<img src="'+ $3 +'"'+ (d ? ' width="'+ d[1] +'" height="'+ d[2] +'"' : '') +' alt="'+ (d ? '' : $2) +'" />';
           case 'flash': var d = D($2)||[0, 425, 366]; return '<object type="application/x-shockwave-flash" data="'+ Y[$1] + $3 +'" width="'+ d[1] +'" height="'+ d[2] +'"><param name="movie" value="'+ Y[$1] + $3 +'" /></object>';
