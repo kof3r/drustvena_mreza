@@ -22,9 +22,22 @@
 	
 	<!-- My Bubbles -->
     <script id="my-bubbles-tmp" type="text/x-dot-template">
-		{{~it.bubbles :bubble:index}}
-			<li><a href="/bubble/{{= bubble.id }}">{{= bubble.title }}</a></li>
-		{{~}}
+    
+		{{? it.bubbles.length > 0 }}
+			{{~it.bubbles :bubble:index}}
+				<li><a href="/bubble/{{= bubble.id }}">{{= bubble.title }}</a></li>
+			{{~}}
+		{{??}}
+			<li class="dropdown-header">No bubbles</li>
+		{{?}}
+		<li class="divider" role="separator">
+		<li>
+			<a href="#new-bubble">
+				<span class="glyphicon glyphicon-plus-sign"></span> 
+				Create new bubble
+			</a>
+		</li>
+			
 	</script>
 	
 	<!-- Feed -->

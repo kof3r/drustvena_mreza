@@ -12,6 +12,7 @@
       function A(s, p) {for (var i in p) s = s.replace(X(i, 'g'), p[i]); return s;}       function P($0, $1, $2, $3) {
         if ($3 && $3.indexOf('[') > -1) $3 = R($3);
         switch ($1) {
+		  case 'video': return '<a class="popup-youtube" href="http://www.youtube.com/watch?v=' + $3 + '"><span class="glyphicon glyphicon-facetime-video"></span> Video</a>';
           case 'url':case 'anchor':case 'email': return '<a '+ L[$1] + ($2||$3) +'">'+ $3 +'</a>';
           case 'img': var d = D($2); return '<img src="'+ $3 +'"'+ (d ? ' width="'+ d[1] +'" height="'+ d[2] +'"' : '') +' alt="'+ (d ? '' : $2) +'" />';
           case 'flash':case 'youtube': var d = D($2)||[0, 425, 366]; return '<object type="application/x-shockwave-flash" data="'+ Y[$1] + $3 +'" width="'+ d[1] +'" height="'+ d[2] +'"><param name="movie" value="'+ Y[$1] + $3 +'" /></object>';
@@ -26,7 +27,7 @@
       }       var rB = X('\\[([a-z][a-z0-9]*)(?:=([^\\]]+))?]((?:.|[\r\n])*?)\\[/\\1]', 'g'), rD = X('^(\\d+)x(\\d+)$');
       var L = {url: 'href="', 'anchor': 'name="', email: 'href="mailto: '};
       var G = {google: 'http://www.google.com/search?q=', wikipedia: 'http://www.wikipedia.org/wiki/'};
-      var Y = {youtube: 'http://www.youtube.com/v/', flash: ''};
+      var Y = {video: 'http://www.youtube.com/v/', flash: ''};
       var T = {row: 'tr', r: 'tr', header: 'th', head: 'th', h: 'th', col: 'td', c: 'td'};
       var C = {notag: [{'\\[': '&#91;', ']': '&#93;'}, '', ''], code: [{'<': '&lt;'}, '<code><pre>', '</pre></code>']};
       C.php = [C.code[0], C.code[1]+ '&lt;?php ', '?>'+ C.code[2]];

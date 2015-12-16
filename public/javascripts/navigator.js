@@ -6,21 +6,30 @@ function loadPage() {
 	if (newHash == null || newHash == '' && newHash != '#' || newHash == '#feed') {
 
 		$.get('/content/timeline', function(data) {
-			$.each(data.posts, function() {
-				this.content = BBC2HTML(this.content);
-				var dt = Date.parse(this.created_at);
-				this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
-				dt = Date.parse(this.updated_at);
-				this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
-			});
-			var templateFunction = doT.template(document.getElementById('feed-tmp').text);
-			var html = templateFunction( data );
-			document.getElementById('main-content').innerHTML = html;
+			if(data.posts.length > 0) {
+				$.each(data.posts, function() {
+					this.content = BBC2HTML(this.content);
+					var dt = Date.parse(this.created_at);
+					this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+					dt = Date.parse(this.updated_at);
+					this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+				});
+				var templateFunction = doT.template(document.getElementById('feed-tmp').text);
+				var html = templateFunction( data );
+				document.getElementById('main-content').innerHTML = html;
+				initializeVideos();
+			}
+			else {
+				document.getElementById('main-content').innerHTML = '<div class="alert alert-info">There are currently no posts to show</div>';
+			}
 		});
 		
 	}
 	else if ($.inArray(newHash, pages) != -1) {
 		$('#main-content').load('/partial/' + newHash.substring(1));
+	}
+	else if(newHash == '#new-bubble') {
+		;
 	}
 	else if (newHash == '#sign-out')
 	{
@@ -141,6 +150,18 @@ function postComment(content_id) {
 	else {
 		comment.focus();
 	}
+}
+
+function initializeVideos() {
+	$('#main-content .popup-youtube, #main-content.popup-vimeo, #main-content.popup-gmaps').magnificPopup({
+	disableOn: 700,
+	type: 'iframe',
+	mainClass: 'mfp-fade',
+	removalDelay: 160,
+	preloader: false,
+
+	fixedContentPos: false
+	});
 }
 
 
