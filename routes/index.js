@@ -44,19 +44,37 @@ module.exports = function(passport){
 // POST
     router.post('/sign-in', function(req, res, next) {
         passport.authenticate('local', function(err, user, info) {
+            var isAndroid = req.is('application/json');
             if(err) {
-                return res.render('index.ejs', {loginError:'An error occoured.'});
+                if(isAndroid) {
+                    return res.json({error:'An error occurred.'});
+                } else {
+                    return res.render('index.ejs', {loginError:'An error occoured.'});
+                }
+
             }
 
             if(!user) {
-                return res.render('index.ejs', {loginError:'Invalid login attempt.'});
+                if(isAndroid) {
+                    return res.json({error:'Invalid login attempt.'});
+                } else {
+                    return res.render('index.ejs', {loginError:'Invalid login attempt.'});
+                }
             }
             
             return req.logIn(user, function(err) {
                 if(err) {
-                    return res.render('index', {title: 'Sign in', loginError:'An error occoured.'});
+                    if(isAndroid) {
+                        return res.json({error:'An error occurred.'});
+                    } else {
+                        return res.render('index', {title: 'Sign in', loginError:'An error occoured.'});
+                    }
                 } else {
-                    return res.redirect('/home/homepage');
+                    if(isAndroid) {
+                        return res.end();
+                    } else {
+                        return res.redirect('/home/homepage');
+                    }
                 }
             });
         })(req, res, next);
@@ -75,6 +93,7 @@ module.exports = function(passport){
 
 // POST
     router.post('/sign-up', function(req, res, next) {
+        var isAndroid = req.is('application/json');
         var form = req.body;
         return User.forge({
             username: form.username,
@@ -88,9 +107,17 @@ module.exports = function(passport){
             country_name: form.country,
             gender_id: form.gender_id
         }).save().then(function (user) {
-            res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
+            if(isAndroid) {
+                res.json(user);
+            } else {
+                res.render('sign-up-successful.ejs', {title: 'Confirm account', data: form});
+            }
         }, function(error) {
-            res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
+            if(isAndroid) {
+                res.json(error.messages);
+            } else {
+                res.render('index', {title: 'Sign up', signUp: true, registerError: error.messages, registrationInput: form});
+            }
         });
     });
 
