@@ -138,7 +138,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Comment'
-  /content/comment{content_id}:
+  /content/comment/{content_id}:
     post:
       tags:
         - JSON
@@ -150,6 +150,24 @@ paths:
           required: true
           type: integer
           format: int32
+      responses:
+        '200':
+          description: Kod uspjesnog komentiranja
+  /bubble/create:
+    post:
+      tags:
+        - JSON
+        - Bubble
+      summary: Stvara novi bubble za aktualnog vlasnika session-a
+      parameters:
+        - name: title
+          in: formData
+          required: true
+          type: string
+        - name: description
+          in: formData
+          required: false
+          type: string
       responses:
         '200':
           description: Kod uspjesnog komentiranja
