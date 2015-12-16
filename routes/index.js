@@ -122,13 +122,13 @@ module.exports = function(passport){
     });
 
     router.get("/isUsernameAvailable", function(req, res, next) {
-        new User({username: req.query.username}).fetch().then(function(model) {
+        User.where({username: req.query.username}).fetch().then(function(model) {
             res.json({available:(model ? false : true)});
         });
     });
 
     router.get("/isEmailAvailable", function(req, res, next) {
-        new User({email: req.query.email}).fetch().then(function(model) {
+        User.where({email: req.query.email}).fetch().then(function(model) {
             res.json({available:(model ? false : true)});
         });
     });
