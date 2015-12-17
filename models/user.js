@@ -24,6 +24,7 @@ var User = db.Model.extend({
     comments: function() { return this.hasMany('Comment'); },
     gender: function() { return this.belongsTo('Gender'); },
     privilege: function() { return this.belongsToMany('User', 'privilege', 'permitter_id', 'permittee_id') },
+    likes: function() { return this.belongsToMany('Like', 'like', 'user_id', 'content_id') },
 
     initialize : function() {
         this.on('created', this.onCreated, this);

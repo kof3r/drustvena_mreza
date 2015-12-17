@@ -7,10 +7,13 @@
 var express = require('express');
 var router = express.Router();
 
+var ValidationError = require('../models/errors/validationError');
+
 var Content = require('../models/content');
 var Bubble = require('../models/bubble');
 var User = require('../models/user');
 var Comment = require('../models/comment');
+var Like = require('../models/like');
 
 var convert = require('../utils/convert');
 var arrays = require('../utils/arrays');
@@ -157,10 +160,16 @@ router.post('/delete/:id', function(req, res, next){
 router.get('/timeline', function(req, res) {
     var user = req.user;
     Content.query(function (qb) {
-        qb.join('bubble', 'content.bubble_id', 'bubble.id').where('bubble.user_id', user.id).andWhere(function () {
-            this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
-        }).orderBy('created_at', 'DESC');
-    }).fetchAll({columns: ['content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description']}).then(function (posts) {
+        qb.join('bubble', 'content.bubble_id', 'bubble.id')
+            .leftJoin('like', 'like.content_id', 'content.id')
+            .where('bubble.user_id', user.id)
+            .andWhere(function () {
+                this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
+            }).groupBy('content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
+            .columns('content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
+            .count('like.content_id as likes')
+            .orderBy('created_at', 'DESC');
+    }).fetchAll().then(function (posts) {
         res.json( {posts: posts} );
     });
 });
@@ -193,7 +202,28 @@ router.post('/comment/:content_id', function(req, res, next) {
     }).save().then(function () {
         res.end();
     });
-})
+});
+
+router.post('/like/:id', function (req, res) {
+    Like.forge({
+        user_id: req.user.id,
+        content_id: req.params.id
+    }).save().then(function () {
+        res.end();
+    }).catch(ValidationError, function (error) {
+        res.json({errors: error.messages});
+    });
+});
+
+router.get('/likes/:id', function (req, res) {
+    Like.query(function(qb) {
+        qb.join('user', 'user.id', 'like.user_id')
+            .where('content_id', req.params.id)
+            .columns(['first_name', 'last_name', 'middle_name', 'username']);
+    }).fetchAll().then(function (users) {
+        res.json({users: users});
+    })
+});
 
 function parseContent(content, type){
     if (type == 1){

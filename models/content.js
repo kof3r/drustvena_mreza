@@ -8,11 +8,15 @@ require('./bubble');
 require('./content_type');
 
 var Content = db.Model.extend({
+
     tableName : 'content',
     hasTimestamps : true,
+
     bubble : function() { return this.belongsTo('Bubble'); },
     contentType : function() { return this.belongsTo('ContentType'); },
-    comments : function() { return this.hasMany('Comment'); }
+    comments : function() { return this.hasMany('Comment'); },
+    likes: function() { return this.belongsToMany('Like', 'like', 'content_id', 'user_id') }
+
 });
 
 module.exports = db.model('Content', Content);
