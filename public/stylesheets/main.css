@@ -190,25 +190,57 @@
     border-top-right-radius: 10px;
 }
 
-.post .header .author {
-    font-family: 'Comfortaa', cursive;
+.post .header a.author {
     display: block;
-    font: 1.2em sans;
+}
+
+.post .header a.author .username {
+    font-family: 'Comfortaa', cursive;
+    width: 10px;
+    overflow: hidden;
 }
 
 .post .header .date-time {
+	font-size: 0.9em;
 }
 
-.post .header .title {
-	font: 1.2em;
-	display: block;
+.post .header a.location {
+	display: inline-block;
+}
+
+.post .header a:link.location, .post .header a:visited.location {
+	color: green;
+}
+
+.post .header a:hover.location {
+	color: darkgreen;
 }
 
 .post .header img {
     float: left;
-    margin: 0 20px 10px 0;
+    margin: 0 15px 10px 0;
     border: 2px solid;
     border-radius: 5px;
+}
+
+@media screen and (max-width: 512px) {
+	.post .header img {
+		display: none;
+	}
+}
+
+.post .header h4 {
+	float: right;
+	margin: 5px 5px 5px 5px;
+	padding: 10px 15px 10px 15px;
+	min-width: 185px;
+	max-width: 235px;
+	min-height: 30px;
+	background: white;
+	border-radius: 5px 5px 0 0;
+	font-size: 110%;
+	position: relative;
+	bottom: 5px;
 }
 
 .post .content {
@@ -219,7 +251,10 @@
 .post .content img {
     color: lightblue;
     max-width: 100%;
-    margin: 10px 0;
+    margin: 10px auto;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
     border: 3px solid;
 }
 
@@ -283,13 +318,10 @@
     text-decoration: none;
 }
 
-.post .actions li a.like {
-    color: darkgreen;
+.post .actions li a:link, .post .action li a:visited {
+    color: grey;
 }
-.post .actions li a.remove {
-    color: gray;
-}
-.post .actions li a.comment {
+.post .actions li a.active {
     color: darkblue;
 }
 

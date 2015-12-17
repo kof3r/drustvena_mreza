@@ -103,7 +103,7 @@
                         <% } %>
                         <div class="form-group">
                             <label for="usernameLogin" class="control-label">Username</label>
-                            <input class="form-control input-lg" type="text" id="usernameLogin" name="username">
+                            <input class="form-control input-lg" type="text" id="usernameLogin" name="username" maxlength="32">
                         </div>
                         <div class="form-group">
                             <label for="passwordLogin" class="control-label">Password</label>
@@ -143,7 +143,7 @@
                         <!-- Username -->
                         <label class="control-label col-sm-2" for="username">Username</label>
                         <div class="controls col-sm-10">
-                            <input type="text" id="username" name="username" <% if(locals.registrationInput) { %>value="<%= registrationInput.username %>"<% } %> class="form-control" data-toggle="popover" data-trigger = "manual">
+                            <input type="text" id="username" name="username" maxlength="32"<% if(locals.registrationInput) { %>value="<%= registrationInput.username %>"<% } %> class="form-control" data-toggle="popover" data-trigger = "manual">
                             <p class="help-block">Username can contain any letters or numbers, without spaces</p>
                         </div>
                     </div>

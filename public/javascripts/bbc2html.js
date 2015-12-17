@@ -12,7 +12,7 @@
       function A(s, p) {for (var i in p) s = s.replace(X(i, 'g'), p[i]); return s;}       function P($0, $1, $2, $3) {
         if ($3 && $3.indexOf('[') > -1) $3 = R($3);
         switch ($1) {
-		  case 'video': return '<a class="popup-youtube" href="' + Y[$1] + $3 + '"><img src="http://img.youtube.com/vi/'+ $3 + '/mqdefault.jpg" alt="Thumbnail" title="Play" /></a>' +
+		  case 'video': return '<a class="popup-youtube" href="' + Y[$1] + $3 + '"><img src="http://img.youtube.com/vi/'+ $3 + '/mqdefault.jpg" height="180" width="320" alt="Thumbnail" title="Play" /></a>' +
 		  '<div class="external"><a title="Open YouTube" href="' + Y[$1] + $3 + '" target="_blank">' + Y[$1] + $3 + '</div></a>';
           case 'url':case 'anchor':case 'email': return '<a '+ L[$1] + ($2||$3) +'">'+ $3 +'</a>';
           case 'img': var d = D($2); return '<img src="'+ $3 +'"'+ (d ? ' width="'+ d[1] +'" height="'+ d[2] +'"' : '') +' alt="'+ (d ? '' : $2) +'" />';
