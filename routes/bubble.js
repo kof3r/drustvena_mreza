@@ -2,6 +2,8 @@
  * Created by Gordan on 14.12.2015..
  */
 
+var ValidationError = require('../models/errors/validationError');
+
 var express = require('express');
 var router = express.Router();
 
@@ -20,8 +22,8 @@ router.post('/create', function(req, res) {
         description: form.description
     }).save().then(function (bubble) {
         res.end();
-    }).catch(function (error) {
-        console.log(error);
+    }).catch(ValidationError, function (error) {
+        res.json({errors: error.messages});
     })
 })
 
