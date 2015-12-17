@@ -3,7 +3,7 @@
  */
 
 var db = require('../config/db');
-
+var Promise = require('bluebird');
 var CheckIt = require('checkit');
 
 var ValidationError = require('./errors/validationError');

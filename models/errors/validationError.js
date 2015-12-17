@@ -2,7 +2,7 @@
  * Created by Gordan on 10.12.2015..
  */
 
-function ValidationError(user, checkItError) {
+function ValidationError(checkItError) {
     this.messages = [];
     var temp = this.messages;
     checkItError.forEach(function (val, key) {

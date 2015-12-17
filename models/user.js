@@ -26,18 +26,17 @@ var User = db.Model.extend({
     privilege: function() { return this.belongsToMany('User', 'privilege', 'permitter_id', 'permittee_id') },
 
     initialize : function() {
-        this.on('creating', this.onCreating, this);
         this.on('created', this.onCreated, this);
-        this.on('updating', this.onUpdating, this);
+        this.on('saving', this.onSaving, this)
     },
 
-    onCreating : function() {
-        var user = this;
-        return this.getNewUserCheckIt().run(this.attributes)
+    onSaving: function () {
+        return this.getUserCheckIt().run(this.attributes)
             .then(this.resolveCountry.bind(this))
             .then(this.hash.bind(this))
             .catch(CheckIt.Error, Promise.method(function(checkItError) {
-                throw new ValidationError(user, checkItError);
+                console.log(checkItError);
+                throw new ValidationError(checkItError);
             }));
     },
 
@@ -50,15 +49,6 @@ var User = db.Model.extend({
         ]);
     },
 
-    onUpdating: function () {
-        var user = this;
-        return this.getExistingUserCheckIt().run(this.attributes)
-            .then(this.resolveCountry.bind(this))
-            .catch(CheckIt.Error, Promise.method(function (checkItError) {
-                throw new ValidationError(user, checkItError);
-            }));
-    },
-
     resolveCountry :  function() {
         var user = this;
         return Country.where({name: this.get('country_name')}).fetch().then(function (country) {
@@ -66,14 +56,16 @@ var User = db.Model.extend({
         })
     },
 
-    hash : function() {
+    hash : Promise.method(function() {
         var user = this;
-        return bCrypt.genSaltAsync(10).then(function (salt) {
-            return bCrypt.hashAsync(user.get('password_hash'), salt, null);
-        }).then(function (hash) {
-            user.set('password_hash', hash);
-        });
-    },
+        if(user.hasChanged('password_hash')) {
+            return bCrypt.genSaltAsync(10).then(function (salt) {
+                return bCrypt.hashAsync(user.get('password_hash'), salt, null);
+            }).then(function (hash) {
+                user.set('password_hash', hash);
+            });
+        }
+    }),
 
     sendConfirmationMail: Promise.method(function() {
         Mail.sendVerificationEmail(this.get('email'), "localhost:8080/emailverification?id=" + this.get('id') + "&hash=" + this.get('password_hash'));
@@ -92,10 +84,10 @@ var User = db.Model.extend({
         return attributes;
     },
 
-    getNewUserCheckIt : function () {
+    getUserCheckIt : function () {
         var user = this;
 
-        return new CheckIt({
+        var checkIt = new CheckIt({
             username: [
                 {
                     rule: 'required',
@@ -119,24 +111,6 @@ var User = db.Model.extend({
                             throw new Error('Username already exists.');
                         }
                     })
-                }
-            ],
-            password_hash: [
-                {
-                    rule: 'required',
-                    message: 'Password is required'
-                },
-                {
-                    rule: 'minLength:8',
-                    message: 'Password must be at least 8 characters in length.'
-                },
-                {
-                    rule: 'maxLength:30',
-                    message: 'Password must be at most 30 characters in length.'
-                },
-                {
-                    rule: 'alphaDash',
-                    message: 'Password must consist of alphanumerics, dashes and underscores.'
                 }
             ],
             email: [
@@ -184,39 +158,30 @@ var User = db.Model.extend({
                 }
             ]
         });
-    },
 
-    getExistingUserCheckIt: function () {
-        var user = this;
-
-        return new CheckIt({
-            country_name: [
-                function(country) {
-                    return Country.where({name: country}).fetch().then(function (fetchedCountry) {
-                        if(!fetchedCountry) {
-                            throw new Error('Country does not exist.');
-                        }
-                    })
-                }
-            ],
-            first_name: [
+        var passwordCheck = {
+            password_hash: [
                 {
-                    rule: 'maxLength:35',
-                    message: 'First name must be at most 35 characters in length.'
-                }
-            ],
-            last_name: [
+                    rule: 'required',
+                    message: 'Password is required'
+                },
                 {
-                    rule: 'maxLength:35',
-                    message: 'Last name must be at most 35 characters in length.'
-                }
-            ],
-            middle_name: [
+                    rule: 'minLength:8',
+                    message: 'Password must be at least 8 characters in length.'
+                },
                 {
-                    rule: 'maxLength:35',
-                    message: 'Middle name must be at most 35 characters in length.'
+                    rule: 'maxLength:30',
+                    message: 'Password must be at most 30 characters in length.'
+                },
+                {
+                    rule: 'alphaDash',
+                    message: 'Password must consist of alphanumerics, dashes and underscores.'
                 }
             ]
+        }
+
+        return checkIt.maybe(passwordCheck, function(password_hash) {
+            return user.hasChanged('password_hash');
         });
     },
 
