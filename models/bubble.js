@@ -3,6 +3,10 @@
  */
 
 var db = require('../config/db');
+var Promise = require('bluebird');
+var CheckIt = require('checkit');
+
+var ValidationError = require('./errors/validationError');
 
 require('./user');
 require('./bubble_type');
@@ -17,9 +21,32 @@ var Bubble = db.Model.extend({
     bubble_type : function() { return this.belongsTo('BubbleType'); },
     contents : function() { return this.hasMany('Content'); },
 
-    format: function(attributes) {
+    initialize: function() {
+        this.on('saving', this.onSaving, this)
+    },
 
-        attributes.title = attributes.title || null;
+    onSaving: function() {
+        return this.getCheckIt().run(this.attributes).catch(CheckIt.Error, Promise.method(function (checkItError) {
+            throw new ValidationError(checkItError);
+        }));
+    },
+
+    getCheckIt: function () {
+        return new CheckIt({
+            title: [
+                {
+                    rule: 'required',
+                    message: 'A bubble must have a title.'
+                },
+                {
+                    rule: 'maxLength:255',
+                    message: 'A bubble title is limited to 255 characters.'
+                }
+            ]
+        });
+    },
+
+    format: function(attributes) {
         attributes.description = attributes.description || null;
 
         return attributes;

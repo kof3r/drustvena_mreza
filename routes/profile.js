@@ -41,7 +41,7 @@ router.post('/edit', function(req, res, next) {
     user.save().then(function (user) {
         res.render('edit-profile.ejs', {user: user.toJSON()});
     }).catch(ValidationError, function (error) {
-        res.render('edit-profile.ejs', {user: error.user.toJSON(), editProfileError: error.messages});
+        res.render('edit-profile.ejs', {user: user.toJSON(), editProfileError: error.messages});
     })
 });
 
