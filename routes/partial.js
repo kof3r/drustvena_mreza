@@ -22,5 +22,8 @@ router.get('/edit-profile', function(req, res, next) {
 router.get('/manage-account', function(req, res, next) {
     res.render('manage-account.partial.ejs');
 });
+router.get('/new-bubble', function(req, res, next) {
+    res.render('new-bubble.partial.ejs');
+});
 
 module.exports=router;

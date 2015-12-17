@@ -49,6 +49,17 @@ function initialize() {
 		var html = templateFunction(data);
 		$('#my-bubbles').html(html);
 	});
+	
+	$('#new-bubble-menu-item').magnificPopup({
+		type: 'ajax',
+		alignTop: true,
+		overflowY: 'scroll',
+		mainClass: 'mfp-fade'
+	});
+
+	$('#new-bubble-form').magnificPopup({
+		type: 'ajax'
+	});
 }
 
 function clearSearchResults() {

@@ -378,7 +378,19 @@
   -o-transform: scale(1, -1);
   transform: scale(1, -1);
 }
+/* Magnific popup custom CSS */
+.white-popup {
+  position: relative;
+  background: #FFF;
+  padding: 20px;
+  width: auto;
+  max-width: 500px;
+  margin: 10% auto;
+}
 
+#new-bubble-form textarea {
+	width: 100% !important;
+}
 
 /* Magnific Popup CSS */
 .mfp-bg {
