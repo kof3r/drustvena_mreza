@@ -107,17 +107,22 @@
                 <!--  Ovdje će JQuery ubacit slike  -->
             </div>
             <div class="row">
-                <div class="col-md-9">
+                <div class="col-md-6">
                 </div>
-                <div class="col-md-3">
-                    <button type="button" class="btn btn-primary" id="uploadImageButton">Upload Image</button>
+                
+                <!-- Upload slike na bubble -->
+                <div class="col-md-6">
+                    <form id="imageUploadForm" role="form" method="post" action="/bytes/image">
+                        <input type="file" name="picture" accept="image/*">
+                        <input type="submit">
+                    </form>
                 </div>
             </div>
         </div>
     </div>
 </div>
 
-//gallery tab script
+<!--gallery tab script-->
 <script>
     //these two variables are dependant
     var numOfImagesPerRow = 4;
@@ -132,11 +137,6 @@
     //gets an array of image descriptors
     //for all the images of the current user
     $.get("/user/images?username="+username, addImages);
-    
-    
-    //potrebno je ovdje dodati funkcionalnost za upload slike
-    //na server
-    
     
     //adds all the images of the user to the gallery
     function addImages(imageArray, status) {

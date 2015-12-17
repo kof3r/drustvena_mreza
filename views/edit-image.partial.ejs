@@ -67,12 +67,12 @@
     
     //upravljanje gumbima
     //bubble name
-    $("#saveImageButton").click(function(){
+    $("#bubbleNameButton").click(function(){
         window.href.location="/bubble?id=" + bubbleID;
     });
     
     //save button
-    $("#deleteImageButton").click(function(){
+    $("#saveImageButton").click(function(){
         var imageTitle = $("#titleArea").text();
         var imageDescription = $("#descriptionArea").text();
         var imageJSON = {id : imageID, bubble_id:bubbleID, title:imageTitle, description:imageDescription};
@@ -83,7 +83,7 @@
     });
     
     //delete button
-    $("#bubbleNameButton").click(function(){
+    $("#deleteImageButton").click(function(){
         $.post("/content/delete/image", {id:imageID});
         
         //vjer. će trebat neki redirect odradit, na homepage ili galeriju
