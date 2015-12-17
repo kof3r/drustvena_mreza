@@ -33,19 +33,19 @@ var User = db.Model.extend({
 
     onCreating : function() {
         var user = this;
-        return this.validateNewUser()
+        return this.getNewUserCheckIt().run(this.attributes)
             .then(this.resolveCountry.bind(this))
             .then(this.hash.bind(this))
-            .catch(CheckIt.Error, function(checkError) {
-                return user.throwValidationError(checkError);
-            });
+            .catch(CheckIt.Error, Promise.method(function(checkItError) {
+                throw new ValidationError(user, checkItError);
+            }));
     },
 
     onCreated: function() {
         var user = this;
         return Promise.all([
             Bubble.forge({user_id: user.get('id'), bubble_type_id: 1, title: 'Timeline'}).save(),
-            Bubble.forge({user_id: user.get('id'), bubble_type_id: 2}).save(),
+            Bubble.forge({user_id: user.get('id'), bubble_type_id: 2, title: 'Gallery'}).save(),
             this.sendConfirmationMail()
         ]);
     },
@@ -54,13 +54,9 @@ var User = db.Model.extend({
         var user = this;
         return this.getExistingUserCheckIt().run(this.attributes)
             .then(this.resolveCountry.bind(this))
-            .catch(CheckIt.Error, function (checkError) {
-                return user.throwValidationError(checkError);
-            })
-    },
-
-    validateNewUser : function() {
-        return this.getNewUserCheckIt().run(this.attributes);
+            .catch(CheckIt.Error, Promise.method(function (checkItError) {
+                throw new ValidationError(user, checkItError);
+            }));
     },
 
     resolveCountry :  function() {
@@ -78,17 +74,6 @@ var User = db.Model.extend({
             user.set('password_hash', hash);
         });
     },
-
-    throwValidationError : Promise.method(function (checkError) {
-        var user = this;
-        var error = [];
-        checkError.forEach(function (val, key) {
-            val.forEach(function(message) {
-                error.push(message.message);
-            })
-        });
-        throw new ValidationError(user, error);
-    }),
 
     sendConfirmationMail: Promise.method(function() {
         Mail.sendVerificationEmail(this.get('email'), "localhost:8080/emailverification?id=" + this.get('id') + "&hash=" + this.get('password_hash'));
@@ -171,6 +156,24 @@ var User = db.Model.extend({
                     })
                 }
             ],
+            first_name: [
+                {
+                    rule: 'maxLength:35',
+                    message: 'First name must be at most 35 characters in length.'
+                }
+            ],
+            last_name: [
+                {
+                    rule: 'maxLength:35',
+                    message: 'Last name must be at most 35 characters in length.'
+                }
+            ],
+            middle_name: [
+                {
+                    rule: 'maxLength:35',
+                    message: 'Middle name must be at most 35 characters in length.'
+                }
+            ],
             country_name: [
                 function(country) {
                     return Country.where({name: country}).fetch().then(function (fetchedCountry) {
@@ -194,6 +197,24 @@ var User = db.Model.extend({
                             throw new Error('Country does not exist.');
                         }
                     })
+                }
+            ],
+            first_name: [
+                {
+                    rule: 'maxLength:35',
+                    message: 'First name must be at most 35 characters in length.'
+                }
+            ],
+            last_name: [
+                {
+                    rule: 'maxLength:35',
+                    message: 'Last name must be at most 35 characters in length.'
+                }
+            ],
+            middle_name: [
+                {
+                    rule: 'maxLength:35',
+                    message: 'Middle name must be at most 35 characters in length.'
                 }
             ]
         });

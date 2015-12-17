@@ -13,19 +13,20 @@ exports.up = function(knex, Promise) {
 
     var createUser = knex.schema.createTable('user', function(t) {
         t.increments().primary();
-        t.string('username').notNullable().unique();
+        t.string('username', 30).notNullable().unique();
         t.string('password_hash', 60).notNullable();
         t.string('email', 254).notNullable().unique();
         t.boolean('confirmed').notNullable().defaultsTo(false);
         t.timestamps();
-        t.string('first_name').defaultsTo(null);
-        t.string('last_name').defaultsTo(null);
-        t.string('middle_name').defaultsTo(null);;
-        t.string('country_id', 2).references('id').inTable('country').defaultsTo(null);;
-        t.string('city').defaultsTo(null);;
-        t.string('address').defaultsTo(null);;
-        t.integer('relationship_status_id').unsigned().references('id').inTable('relationship_status').defaultsTo(null);;
-        t.integer('gender_id').unsigned().references('id').inTable('gender').defaultsTo(null);;
+        t.string('first_name', 35).defaultsTo(null);
+        t.string('last_name', 35).defaultsTo(null);
+        t.string('middle_name', 35).defaultsTo(null);
+        t.date('date_of_birth').defaultsTo(null);
+        t.string('country_id', 2).references('id').inTable('country').defaultsTo(null);
+        t.string('city').defaultsTo(null);
+        t.string('address').defaultsTo(null);
+        t.integer('relationship_status_id').unsigned().references('id').inTable('relationship_status').defaultsTo(null);
+        t.integer('gender_id').unsigned().references('id').inTable('gender').defaultsTo(null);
     });
 
     var createBubbleType = knex.schema.createTable('bubble_type', function(t){
@@ -38,8 +39,8 @@ exports.up = function(knex, Promise) {
         t.increments().primary();
         t.integer('bubble_type_id').unsigned().references('id').inTable('bubble_type').notNullable();
         t.timestamps();
-        t.string('title');
-        t.string('description');
+        t.string('title').notNullable();
+        t.string('description').defaultsTo(null);
     });
 
     var createContentType = knex.schema.createTable('content_type', function(t) {
@@ -52,9 +53,9 @@ exports.up = function(knex, Promise) {
         t.increments().primary();
         t.integer('content_type_id').unsigned().references('id').inTable('content_type').notNullable();
         t.timestamps();
-        t.string('title');
+        t.string('title').defaultsTo(null);
         t.text('content').notNullable();
-        t.string('description');
+        t.string('description').defaultsTo(null);
     });
 
     var createComment = knex.schema.createTable('comment', function (t) {
@@ -62,7 +63,7 @@ exports.up = function(knex, Promise) {
         t.integer('content_id').unsigned().notNullable().references('id').inTable('content');
         t.integer('user_id').unsigned().notNullable().references('id').inTable('user');
         t.timestamps();
-        t.text('comment');
+        t.text('comment').notNullable();
     });
 
     var createGender = knex.schema.createTable('gender', function (t) {
@@ -74,6 +75,14 @@ exports.up = function(knex, Promise) {
         t.integer('permitter_id').unsigned().references('id').inTable('user').notNullable();
         t.integer('permittee_id').unsigned().references('id').inTable('user').notNullable();
         t.unique(['permitter_id', 'permittee_id']);
+    });
+
+    var createLike = knex.schema.createTable('like', function (t) {
+        t.integer('user_id').unsigned().references('id').inTable('user').notNullable();
+        t.integer('content_id').unsigned().references('id').inTable('content').notNullable();
+        t.timestamps();
+        t.integer('like').notNullable();
+        t.unique(['user_id', 'content_id']);
     });
 
     return Promise.all([
@@ -91,7 +100,8 @@ exports.up = function(knex, Promise) {
     }).then( function () {
         return Promise.all([
             createComment,
-            createPrivilege
+            createPrivilege,
+            createLike
         ]);
     });
 
