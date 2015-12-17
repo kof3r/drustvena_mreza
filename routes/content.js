@@ -205,13 +205,23 @@ router.post('/comment/:content_id', function(req, res, next) {
 });
 
 router.post('/like/:id', function (req, res) {
-    Like.forge({
+    Like.where({
         user_id: req.user.id,
         content_id: req.params.id
-    }).save().then(function () {
+    }).fetch().then(function (like) {
+        if(like) {
+            return Like.where({
+                user_id: req.user.id,
+                content_id: req.params.id
+            }).destroy();
+        } else {
+            return Like.forge({
+                user_id: req.user.id,
+                content_id: req.params.id
+            }).save()
+        }
+    }).then(function () {
         res.end();
-    }).catch(ValidationError, function (error) {
-        res.json({errors: error.messages});
     });
 });
 
