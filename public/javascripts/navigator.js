@@ -112,8 +112,16 @@ $(document).click(function(event) {
     }        
 })
 
+function like(content_id) {
+	$.post('/content/like/' + content_id, function() {
+		var likebtn = $('#post-' + content_id + ' .actions .like');
+		likebtn.addClass('active');
+	});
+}
+
 function loadComments(content_id) {
 	if (content_id) {
+		$('#post-' + content_id + ' .actions .comment').addClass('active');
 		var cmtbtn = $('#post-' + content_id + ' .actions .comment span');
 		cmtbtn.removeClass('glyphicon-comment');
 		cmtbtn.addClass('gly-spin glyphicon-refresh');

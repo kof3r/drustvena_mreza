@@ -40,29 +40,37 @@
 		{{~it.posts :post:index}}
 			<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
 			<div class="header">
-			  <a class="author" href="/profile/view/{{= post.username }}">
-				<img width="64" height="64" src="/images/avatar.jpg" />
-				<span class="glyphicon glyphicon-user"></span> {{= post.username }}
-			  </a>
-			  <span class="date-time">
-				<span class="glyphicon glyphicon-time"></span> {{=post.created_at}}
-				{{? post.updated_at != post.created_at }}
-				, <em>updated {{=post.updated_at}}</em>
+				<a class="author" href="/profile/view/{{= post.username }}">
+					<img width="64" height="64" src="/images/avatar.jpg" />
+					<span class="username">
+						<span class="glyphicon glyphicon-user"></span> {{=post.username}}
+					</span>
+				</a>
+				<h4>{{=post.title}}</h4>
+				<span class="date-time">
+					<span class="glyphicon glyphicon-time"></span> {{=post.created_at}}
+					{{? post.updated_at != post.created_at }} 
+						<span title="Updated {{=post.updated_at}}" class="glyphicon glyphicon-pushpin"></span>
+					{{?}}
+				</span>
+				{{? post.location!=null }}
+					<a href="javascript:showOnMap({{=post.location}})" class="location">
+						<span class="glyphicon glyphicon-map-marker"></span>
+					</a>
 				{{?}}
-			  </span>
 			</div>
 			<div class="content">
 				{{=post.content}}
 			</div>
 			<ul class="actions">
 			  <li>
-				<a href="#" class="like">
-				  <span class="glyphicon glyphicon-check"></span> Like
+				<a href="javascript:like('{{=post.id}}')" class="like">
+				  <span class="glyphicon glyphicon-thumbs-up"></span> Like
 				</a>
 			  </li>
 			  <li>
-				<a href="#" class="remove">
-				  <span class="glyphicon glyphicon-trash"></span> Remove
+				<a href="javascript:dislike('{{=post.id}}')" class="dislike">
+				  <span class="glyphicon glyphicon-thumbs-down"></span> Dislike
 				</a>
 			  </li>
 			  <li>
