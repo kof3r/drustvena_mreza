@@ -8,6 +8,7 @@ var express = require('express');
 var router = express.Router();
 
 var Bubble = require('../models/bubble');
+var Content = require('../models/content');
 
 var requireAuhentication = require('../utils/authentication');
 
@@ -25,6 +26,12 @@ router.post('/create', function(req, res) {
     }).catch(ValidationError, function (error) {
         res.json({errors: error.messages});
     })
-})
+});
+
+router.get('/:id', function (req, res) {
+    Content.where({bubble_id: req.params.id}).fetchAll().then(function (contents) {
+        res.json({contents: contents});
+    })
+});
 
 module.exports = router;
