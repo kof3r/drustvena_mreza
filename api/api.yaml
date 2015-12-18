@@ -309,7 +309,49 @@ paths:
               isContact:
                 type: boolean
                 description: true ako je osoba sa id-em id prijatelj vlasnika session-a
+  '/user/info':
+    get:
+      tags:
+        - JSON
+        - User
+      summary: Dohvaća podatke o korisniku s id-em id
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Uspješan dohvat
+          schema:
+            $ref: '#/definitions/User'
 definitions:
+  User:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int32
+      username:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      middle_name:
+        type: string
+      country_id:
+        type: string
+      city:
+        type: string
+      address:
+        type: string
+      relationship_status_id:
+        type: integer
+      gender_id:
+        type: integer
   Comment:
     type: object
     properties:
