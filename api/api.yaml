@@ -289,6 +289,26 @@ paths:
                     likes:
                       type: integer
                       format: int32'
+  '/user/isContact':
+    get:
+      tags:
+        - JSON
+        - User
+      summary: Provjerava jel osoba sa id-em id prijatelj vlasnika session-a
+      parameters:
+        - name: id
+          in: query
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Nakon provjere
+          schema:
+            type: object
+            properties:
+              isContact:
+                type: boolean
+                description: true ako je osoba sa id-em id prijatelj vlasnika session-a
 definitions:
   Comment:
     type: object
