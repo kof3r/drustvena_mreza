@@ -325,6 +325,46 @@ paths:
           description: Uspješan dohvat
           schema:
             $ref: '#/definitions/User'
+  '/user/contactRequest':
+    post:
+      tags:
+        - JSON
+        - User
+      summary: Vlasnik session-a dodaje osobu sa id-em id za prijatelja (može gledati njegove stvari)
+      parameters:
+        - name: user_id
+          in: formData
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Uspješno dodavanje
+  '/user/contacts':
+    get:
+      tags:
+        - JSON
+        - User
+      summary: Vraća kontakte od korisnika s id-em id ili od vlasnika sessiona ako id nije pružen
+      parameters:
+        - name: id
+          in: query
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: Uspješno dohvaćanje
+          schema:
+            type: object
+            properties:
+              contacts:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    username:
+                      type: string
 definitions:
   User:
     type: object
