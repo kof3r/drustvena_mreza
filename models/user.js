@@ -5,6 +5,7 @@ var Promise = require('bluebird');
 var Mail = require('../config/mail');
 var bCrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
 var fs = Promise.promisifyAll(require('fs'));
+var path = require('path');
 
 var ValidationError = require('./errors/validationError');
 
@@ -75,12 +76,20 @@ var User = db.Model.extend({
         Mail.sendVerificationEmail(this.get('email'), "localhost:8080/emailverification?id=" + this.get('id') + "&hash=" + this.get('password_hash'));
     }),
 
+    getUserPath: function() {
+        return path.resolve(__dirname, '../user', this.get('username'))
+    },
+
+    getUserImagePath: function () {
+        return path.resolve(this.getUserPath(), 'images');
+    },
+
     createUserDirectories: function() {
-        var userDir = './user/' + this.get('username');
-        return fs.mkdirAsync(userDir)
+        var user = this;
+        return fs.mkdirAsync(this.getUserPath())
             .then(function () {
                 return Promise.join(
-                    fs.mkdirAsync(userDir + '/images')
+                    fs.mkdirAsync(user.getUserImagePath())
                 );
             });
     },
