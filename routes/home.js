@@ -23,10 +23,18 @@ router.get('/feed', function(req, res) {
             .join('content', 'content.bubble_id', 'bubble.id')
             .leftJoin('like', 'content.id', 'like.content_id')
             .where('privilege.permittee_id', req.user.id)
-            .groupBy('content.bubble_id', 'content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
             .columns('content.*')
-            .count('like.user_id as likes')
-            .orderBy('content.created_at', 'DESC');
+            .groupBy('bubble_id', 'id', 'created_at', 'updated_at', 'title', 'content', 'description')
+            .count('like.user_id as likes').union(function () {
+                this.from('bubble')
+                    .join('content', 'content.bubble_id', 'bubble.id')
+                    .leftJoin('like', 'content.id', 'like.content_id')
+                    .where('bubble.user_id', req.user.id)
+                    .columns('content.*')
+                    .groupBy('bubble_id', 'id', 'created_at', 'updated_at', 'title', 'content', 'description')
+                    .count('like.user_id as likes')
+                    .orderBy('created_at', 'DESC');
+            })
     }).fetchAll().then(function (contents) {
         res.json({contents: contents});
     }).catch(function (error) {
