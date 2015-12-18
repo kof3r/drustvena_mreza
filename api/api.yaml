@@ -38,10 +38,10 @@ paths:
           description: true ili false
           schema:
             $ref: '#/definitions/Available'
-  /api/sign-up:
+  /sign-up:
     post:
       tags:
-        - Android
+        - General
       summary: Registracija
       parameters:
         - name: username
@@ -84,13 +84,13 @@ paths:
         '200':
           description: Kod uspješne registracije.
         default:
-          description: Kod neispravnog polja
+          description: Vraća kolekciju pogreški vezane uz poejdino polje
           schema:
             $ref: '#/definitions/ValidationError'
-  /api/sign-in:
+  /sign-in:
     post:
       tags:
-        - Android
+        - General
       summary: Prijava
       parameters:
         - name: username
@@ -105,13 +105,13 @@ paths:
         '200':
           description: Uspješna prijava
         default:
-          description: Error
+          description: Poruka vezana uz neuspješnu prijavu.
           schema:
             $ref: '#/definitions/Error'
-  /api/sign-out:
+  /sign-out:
     post:
       tags:
-        - Android
+        - General
       summary: Odjava
       responses:
         '200':
@@ -121,10 +121,10 @@ paths:
       tags:
         - JSON
         - Content
-      summary: Vraća sve korisnikove postove.
+      summary: Vraća sve korisnikove contente izuzev one u galeriji.
       responses:
         '200':
-          description: Korisnikovi postovi
+          description: Korisnikovi contenti
           schema:
             type: object
             properties:
@@ -185,6 +185,52 @@ paths:
       responses:
         '200':
           description: Kod uspjesnog komentiranja
+  '/content/like/{id}':
+    post:
+      tags:
+        - JSON
+        - Content
+      summary: Lajka/unlajka(toggle) content sa idem id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Uspješno lajkanje
+  '/content/likes/{id}':
+    get:
+      tags:
+        - JSON
+        - Content
+      summary: Dohvaća kolekciju korisnika koji su lajkali content sa id-em id
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+          format: int32
+      responses:
+        '200':
+          description: Uspješno dohvaćanje
+          schema:
+            type: object
+            properties:
+              users:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    first_name:
+                      type: string
+                    last_name:
+                      type: string
+                    middle_name:
+                      type: string
+                    username:
+                      type: string
   /bubble/create:
     post:
       tags:
@@ -207,6 +253,42 @@ paths:
           description: Ako dođe do greške tokom spremanja.
           schema:
             $ref: '#/definitions/ValidationError'
+  '/home/feed':
+    get:
+      tags:
+        - JSON
+        - Home
+      summary: Dohvaća sve contente od vlasnika sessiona i njegovih prijatelja
+      responses:
+        '200':
+          description: Uspješan dohvat
+          schema:
+            type: object
+            properties:
+              contents:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    bubble_id:
+                      type: integer
+                      format: int32
+                    id:
+                      type: integer
+                      format: int32
+                    created_at:
+                      type: string
+                    updated_at:
+                      type: string
+                    title:
+                      type: string
+                    content:
+                      type: string
+                    description:
+                      type: string
+                    likes:
+                      type: integer
+                      format: int32'
 definitions:
   Comment:
     type: object
