@@ -2,8 +2,8 @@
 var express = require('express');
 var router = express.Router();
 
-var Mail=require('../config/mail');
-var Checkit = require('checkit');
+var passport = require('../config/passport');
+
 var Promise = require('bluebird');
 
 var ValidationError = require('../models/errors/validationError');
@@ -11,7 +11,7 @@ var ValidationError = require('../models/errors/validationError');
 var User = require('../models/user');
 var Country = require('../models/country');
 
-module.exports = function(passport){
+
 
     router.use('/api', require('./api')(passport));
     router.use('/home', require('./home'));
@@ -162,5 +162,5 @@ module.exports = function(passport){
         res.status(404);
         res.render('404', {title: '404 Not Found'});
     });
-    return router;
-};
+
+module.exports = router;
