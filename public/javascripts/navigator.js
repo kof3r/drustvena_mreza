@@ -5,9 +5,9 @@ function loadPage() {
 	
 	if (newHash == null || newHash == '' && newHash != '#' || newHash == '#feed') {
 
-		$.get('/content/timeline', function(data) {
-			if(data.posts.length > 0) {
-				$.each(data.posts, function() {
+		$.get('/home/feed', function(data) {
+			if(data.contents.length > 0) {
+				$.each(data.contents, function() {
 					this.content = BBC2HTML(this.content);
 					var dt = Date.parse(this.created_at);
 					this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
