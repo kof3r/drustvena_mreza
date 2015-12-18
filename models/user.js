@@ -3,6 +3,8 @@ var db = require('../config/db');
 var CheckIt = require('checkit');
 var Promise = require('bluebird');
 var Mail = require('../config/mail');
+var bCrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
+var fs = Promise.promisifyAll(require('fs'));
 
 var ValidationError = require('./errors/validationError');
 
@@ -11,8 +13,6 @@ require('./relationship_status');
 var Bubble = require('./bubble');
 var Comment = require('./comment');
 require('./gender');
-
-var bCrypt = Promise.promisifyAll(require('bcrypt-nodejs'));
 
 var User = db.Model.extend({
     tableName: 'user',
@@ -46,8 +46,11 @@ var User = db.Model.extend({
         return Promise.all([
             Bubble.forge({user_id: user.get('id'), bubble_type_id: 1, title: 'Timeline'}).save(),
             Bubble.forge({user_id: user.get('id'), bubble_type_id: 2, title: 'Gallery'}).save(),
-            this.sendConfirmationMail()
-        ]);
+            this.sendConfirmationMail(),
+            this.createUserDirectories()
+        ]).catch(function(error) {
+            console.log(error.stack);
+        });
     },
 
     resolveCountry :  function() {
@@ -71,6 +74,16 @@ var User = db.Model.extend({
     sendConfirmationMail: Promise.method(function() {
         Mail.sendVerificationEmail(this.get('email'), "localhost:8080/emailverification?id=" + this.get('id') + "&hash=" + this.get('password_hash'));
     }),
+
+    createUserDirectories: function() {
+        var userDir = './user/' + this.get('username');
+        return fs.mkdirAsync(userDir)
+            .then(function () {
+                return Promise.join(
+                    fs.mkdirAsync(userDir + '/images')
+                );
+            });
+    },
 
     format: function(attributes) {
         attributes.first_name = attributes.first_name || null;
