@@ -253,7 +253,7 @@ paths:
           description: Ako dođe do greške tokom spremanja.
           schema:
             $ref: '#/definitions/ValidationError'
-  '/home/feed':
+  /home/feed:
     get:
       tags:
         - JSON
@@ -288,8 +288,8 @@ paths:
                       type: string
                     likes:
                       type: integer
-                      format: int32'
-  '/user/isContact':
+                      format: "int32'"
+  /user/isContact:
     get:
       tags:
         - JSON
@@ -309,7 +309,7 @@ paths:
               isContact:
                 type: boolean
                 description: true ako je osoba sa id-em id prijatelj vlasnika session-a
-  '/user/info':
+  /user/info:
     get:
       tags:
         - JSON
@@ -325,7 +325,7 @@ paths:
           description: Uspješan dohvat
           schema:
             $ref: '#/definitions/User'
-  '/user/contactRequest':
+  /user/contactRequest:
     post:
       tags:
         - JSON
@@ -339,7 +339,7 @@ paths:
       responses:
         '200':
           description: Uspješno dodavanje
-  '/user/contacts':
+  /user/contacts:
     get:
       tags:
         - JSON
@@ -365,6 +365,53 @@ paths:
                       type: integer
                     username:
                       type: string
+  /profile/edit:
+    post:
+      tags:
+        - Profile
+      summary: Izmjena osobnih podataka vlasnika session-a
+      parameters:
+        - name: firstName
+          in: formData
+          required: false
+          type: string
+        - name: lastName
+          in: formData
+          required: false
+          type: string
+        - name: middleName
+          in: formData
+          required: false
+          type: string
+        - name: address
+          in: formData
+          required: false
+          type: string
+        - name: city
+          in: formData
+          required: false
+          type: string
+        - name: country
+          in: formData
+          required: false
+          type: string
+        - name: relationshipStatusId
+          in: formData
+          required: false
+          type: integer
+        - name: gender_id
+          in: formData
+          required: false
+          type: integer
+      responses:
+        '200':
+          description: Uspješna izmjena podataka.
+          schema:
+            $ref: '#/definitions/User'
+        default:
+          description: Vraća kolekciju pogreški vezane uz poejdino polje.
+          schema:
+            $ref: '#/definitions/ValidationError'
 definitions:
   User:
     type: object

@@ -27,6 +27,8 @@ router.get('/edit', function(req, res, next) {
 
 router.post('/edit', function(req, res, next) {
 
+    var isAndroid = req.is('application/json');
+
     var user = req.user;
     var form = req.body;
 
@@ -39,9 +41,17 @@ router.post('/edit', function(req, res, next) {
     user.set('relationship_status_id', form.relationshipStatusId);
     user.set('gender_id', form.gender_id);
     user.save().then(function (user) {
-        res.render('edit-profile.ejs', {user: user.toJSON()});
+        if(isAndroid) {
+            res.json({user: user.toJSON()});
+        } else {
+            res.render('edit-profile.ejs', {user: user.toJSON()});
+        }
     }).catch(ValidationError, function (error) {
-        res.render('edit-profile.ejs', {user: user.toJSON(), editProfileError: error.messages});
+        if(isAndroid) {
+            res.json({errors: error.messages});
+        } else {
+            res.render('edit-profile.ejs', {user: user.toJSON(), editProfileError: error.messages});
+        }
     })
 });
 
