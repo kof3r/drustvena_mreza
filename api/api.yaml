@@ -412,6 +412,26 @@ paths:
           description: Vraća kolekciju pogreški vezane uz poejdino polje.
           schema:
             $ref: '#/definitions/ValidationError'
+  '/util/countries':
+    get:
+      tags:
+        - Util
+      summary: Dohvat popisa država i pripadajućih ISO kodova
+      responses:
+        '200':
+          description: Uspješan dohvat država.
+          schema:
+            type: object
+            properties:
+              countries:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                    name:
+                      type: string
 definitions:
   User:
     type: object
