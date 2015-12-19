@@ -74,14 +74,14 @@ exports.up = function(knex, Promise) {
     var createPrivilege = knex.schema.createTable('privilege', function(t) {
         t.integer('permitter_id').unsigned().references('id').inTable('user').notNullable();
         t.integer('permittee_id').unsigned().references('id').inTable('user').notNullable();
-        t.unique(['permitter_id', 'permittee_id']);
+        t.primary(['permitter_id', 'permittee_id']);
     });
 
     var createLike = knex.schema.createTable('like', function (t) {
         t.integer('user_id').unsigned().references('id').inTable('user').notNullable();
         t.integer('content_id').unsigned().references('id').inTable('content').notNullable();
         t.timestamps();
-        t.unique(['user_id', 'content_id']);
+        t.primary(['user_id', 'content_id']);
     });
 
     return Promise.all([
