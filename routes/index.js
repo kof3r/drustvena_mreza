@@ -20,6 +20,7 @@ router.use('/profile', require('./profile'));
 router.use('/bubble', require('./bubble'));
 router.use('/user', require('./user'));
 router.use('/util', require('./util'));
+router.use('/comment', require('./comment'));
 
 // index - sign in and sign up
 // GET

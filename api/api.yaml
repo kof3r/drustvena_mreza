@@ -10,7 +10,6 @@ paths:
     get:
       tags:
         - Android
-        - JSON
       summary: Provjerava ima li registrirani korisnik s tim imenom
       parameters:
         - name: username
@@ -26,7 +25,6 @@ paths:
     get:
       tags:
         - Android
-        - JSON
       summary: Provjerava ima li registrirani korisnik s tim e-mailom
       parameters:
         - name: email
@@ -119,7 +117,6 @@ paths:
   /content/timeline:
     get:
       tags:
-        - JSON
         - Content
       summary: Vraća sve korisnikove contente izuzev one u galeriji.
       responses:
@@ -135,7 +132,6 @@ paths:
   /content/myBubbles:
     get:
       tags:
-        - JSON
         - Content
       summary: Vraća sve bubbleove vlasnika session-a uključujući i timeline bubble.
       responses:
@@ -151,7 +147,6 @@ paths:
   '/content/comments/{content_id}':
     get:
       tags:
-        - JSON
         - Content
       summary: Vraća sve komentare za dani content_id
       parameters:
@@ -169,11 +164,10 @@ paths:
               comments:
                 type: array
                 items:
-                  $ref: '#/definitions/Comment'
+                  $ref: '#/definitions/ExtendedComment'
   '/content/comment/{content_id}':
     post:
       tags:
-        - JSON
         - Content
       summary: Posta komentar na content sa content_id-om
       parameters:
@@ -188,7 +182,6 @@ paths:
   '/content/like/{id}':
     post:
       tags:
-        - JSON
         - Content
       summary: Lajka/unlajka(toggle) content sa idem id
       parameters:
@@ -203,7 +196,6 @@ paths:
   '/content/likes/{id}':
     get:
       tags:
-        - JSON
         - Content
       summary: Dohvaća kolekciju korisnika koji su lajkali content sa id-em id
       parameters:
@@ -234,7 +226,6 @@ paths:
   /bubble/create:
     post:
       tags:
-        - JSON
         - Bubble
       summary: Stvara novi bubble za aktualnog vlasnika session-a
       parameters:
@@ -253,10 +244,10 @@ paths:
           description: Ako dođe do greške tokom spremanja.
           schema:
             $ref: '#/definitions/ValidationError'
+  
   /home/feed:
     get:
       tags:
-        - JSON
         - Home
       summary: Dohvaća sve contente od vlasnika sessiona i njegovih prijatelja
       responses:
@@ -292,7 +283,6 @@ paths:
   /user/isContact:
     get:
       tags:
-        - JSON
         - User
       summary: Provjerava jel osoba sa id-em id prijatelj vlasnika session-a
       parameters:
@@ -312,7 +302,6 @@ paths:
   /user/info:
     get:
       tags:
-        - JSON
         - User
       summary: Dohvaća podatke o korisniku s id-em id
       parameters:
@@ -328,7 +317,6 @@ paths:
   /user/contactRequest:
     post:
       tags:
-        - JSON
         - User
       summary: Vlasnik session-a dodaje osobu sa id-em id za prijatelja (može gledati njegove stvari)
       parameters:
@@ -342,7 +330,6 @@ paths:
   /user/contacts:
     get:
       tags:
-        - JSON
         - User
       summary: Vraća kontakte od korisnika s id-em id ili od vlasnika sessiona ako id nije pružen
       parameters:
@@ -452,6 +439,29 @@ paths:
                       type: integer
                     type:
                       type: string
+  '/comment/edit/{id}':
+    post:
+      tags:
+        - Comment
+      summary: Omogućava vlasniku session-a da promijeni jedan od svojih komentara.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - name: comment
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Uspješna izmjena komentara.
+          schema:
+            $ref: '#/definitions/ExtendedComment'
+        '403':
+          description: Vlasnik sessiona mijenja komentar koji nije napisao.
+          schema:
+            $ref: '#/definitions/Error'
 definitions:
   User:
     type: object
@@ -479,7 +489,7 @@ definitions:
         type: integer
       gender_id:
         type: integer
-  Comment:
+  ExtendedComment:
     type: object
     properties:
       id:
