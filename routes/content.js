@@ -179,7 +179,7 @@ router.get('/myBubbles', function (req, res) {
         qb.where({user_id: req.user.id}).andWhere(function () {
             this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
         });
-    }).fetchAll({columns: ['id', 'title']}).then(function (bubbles) {
+    }).fetchAll().then(function (bubbles) {
         res.json({bubbles: bubbles});
     });
 });

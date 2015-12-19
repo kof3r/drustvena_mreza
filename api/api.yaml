@@ -244,7 +244,41 @@ paths:
           description: Ako dođe do greške tokom spremanja.
           schema:
             $ref: '#/definitions/ValidationError'
-  
+  '/bubble/edit/{id}':
+    post:
+      tags:
+        - Bubble
+      summary: Omogućava promjenu naslova i opisa postojećeg bubble-a.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+        - name: title
+          in: formData
+          required:  true
+          type: string
+        - name: description
+          in: formData
+          required: false
+          type: string
+      responses:
+        '200':
+          description: Uspješna promjena podataka.
+          schema:
+            $ref: '#/definitions/Bubble'
+        '400':
+          description: Nedozvoljeni podaci.
+          schema:
+            $ref: '#/definitions/ValidationError'
+        '404':
+          description: Pokušaj promjene neposojećeg bubble-a.
+          schema:
+            $ref: '#/definitions/Error'
+        '403':
+          description: Pokušaj promjene tuđeg bubble-a.
+          schema:
+            $ref: '#/definitions/Error'
   /home/feed:
     get:
       tags:
@@ -399,7 +433,7 @@ paths:
           description: Vraća kolekciju pogreški vezane uz poejdino polje.
           schema:
             $ref: '#/definitions/ValidationError'
-  '/util/countries':
+  /util/countries:
     get:
       tags:
         - Util
@@ -419,7 +453,7 @@ paths:
                       type: string
                     name:
                       type: string
-  '/util/genders':
+  /util/genders:
     get:
       tags:
         - Util
@@ -518,10 +552,19 @@ definitions:
   Bubble:
     type: object
     properties:
+      user_id:
+        type: integer
       id:
         type: integer
-        format: int32
+      bubble_type_id:
+        type: integer
+      created_at:
+        type: string
+      updated_at:
+        type: string
       title:
+        type: string
+      description:
         type: string
   Post:
     type: object

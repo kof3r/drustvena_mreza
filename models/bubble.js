@@ -32,24 +32,17 @@ var Bubble = db.Model.extend({
     },
 
     getCheckIt: function () {
-        return new CheckIt({
-            title: [
-                {
-                    rule: 'required',
-                    message: 'A bubble must have a title.'
-                },
-                {
-                    rule: 'maxLength:255',
-                    message: 'A bubble title is limited to 255 characters.'
-                }
-            ]
-        });
+        return new CheckIt(require('./validation/bubble'));
     },
 
     format: function(attributes) {
         attributes.description = attributes.description || null;
 
         return attributes;
+    },
+
+    ownedBy: function(user) {
+        return this.get('user_id') === user.get('id');
     }
 });
 
