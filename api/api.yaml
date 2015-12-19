@@ -432,6 +432,26 @@ paths:
                       type: string
                     name:
                       type: string
+  '/util/genders':
+    get:
+      tags:
+        - Util
+      summary: Dohvat popisa spolova i pripadajućih id-eva
+      responses:
+        '200':
+          description: Uspješan dohvat spolova.
+          schema:
+            type: object
+            properties:
+              genders:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    type:
+                      type: string
 definitions:
   User:
     type: object
