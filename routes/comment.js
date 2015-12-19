@@ -20,17 +20,16 @@ router.post('/edit/:id', function(req, res) {
     Comment.where({
         id: req.params.id
     }).fetch().then(function (comment) {
-        if(comment.get('user_id') === user.get('id')) {
+        if(!comment) { res.status(404).json({error: 'Requested comment does not exist.'}) }
+        else if(!comment.ownedBy(user)) { res.status(403).json({error: 'You don\'t have permission to edit this comment.'}) }
+        else {
             comment.set('comment', form.comment);
             return comment.save();
         }
-        res.status(403).json({error: 'You don\'t have permission to edit this comment.'})
     }).then(function (comment) {
-        comment.set('first_name', user.get('first_name'));
-        comment.set('last_name', user.get('last_name'));
-        comment.set('middle_name', user.get('middle_name'));
-        comment.set('username', user.get('username'));
-        res.json(comment);
+        res.json(comment.appendAuthor(user));
+    }).catch(ValidationError, function(error) {
+        res.status(400).json({errors: error.messages});
     })
 });
 
