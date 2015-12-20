@@ -199,7 +199,7 @@ page('/home/homepage', function(){
 });
 
 page('/bubble/:id', function(context) {
-	loadFeed('/bubble/view/' + context.params.id, 'main-content');
+	loadFeed('/bubble/' + context.params.id, 'main-content');
 });
 
 page('/new/:type', function(context){
