@@ -26,7 +26,7 @@ router.get('/feed', function(req, res) {
             .join('user', 'bubble.user_id', 'user.id')
             .leftJoin('like', 'content.id', 'like.content_id')
             .leftJoin('like as myLike', function() {
-                this.on('content.id', 'myLike.content_id').andOn('myLike.user_id', user.get('id'));
+                this.on('like.content_id', 'myLike.content_id').andOn('like.user_id', 'myLike.user_id').andOn('like.user_id', user.get('id'));
             })
             .where('privilege.permittee_id', req.user.id)
             .columns('content.*', 'user.username')
@@ -38,7 +38,7 @@ router.get('/feed', function(req, res) {
                     .join('user', 'bubble.user_id', 'user.id')
                     .leftJoin('like', 'content.id', 'like.content_id')
                     .leftJoin('like as myLike', function() {
-                        this.on('content.id', 'myLike.content_id').andOn('myLike.user_id', user.get('id'));
+                        this.on('like.content_id', 'myLike.content_id').andOn('like.user_id', 'myLike.user_id').andOn('like.user_id', user.get('id'));
                     })
                     .where('bubble.user_id', req.user.id)
                     .columns('content.*', 'user.username')
