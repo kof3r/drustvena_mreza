@@ -314,7 +314,7 @@
 	margin: 0 5px;
 }
 
-.post > .comments ul li .actions a > .glyphicon {
+.post .glyphicon {
 	margin-right: 5px;
 }
 

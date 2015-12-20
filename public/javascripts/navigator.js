@@ -1,28 +1,34 @@
-function loadPartial(name) {
-	$('#main-content').load('/partial/' + name);
+function loadPartial(name, callback) {
+	$.get('/partial/' + name, function(response) {
+		$('#main-content').html(response);
+		callback();
+	});
 }
 
-function loadHomepage() {
+function loadFeed(url, element) {
 
-	$.get('/home/feed', function(data) {
-		if(data.contents.length > 0) {
-			$.each(data.contents, function() {
-				this.content = BBC2HTML(this.content);
-				var dt = Date.parse(this.created_at);
-				this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
-				dt = Date.parse(this.updated_at);
-				this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
-			});
-			var templateFunction = doT.template(document.getElementById('feed-tmp').text);
-			var html = templateFunction( data );
-			document.getElementById('main-content').innerHTML = html;
-			initializeVideos();
-		}
-		else {
-			document.getElementById('main-content').innerHTML = '<div class="alert alert-info">There are currently no posts to show</div>';
-		}
+	$.get(url, function(data) {
+		$.each(data.contents, function() {
+			this.content = BBC2HTML(this.content);
+			var dt = Date.parse(this.created_at);
+			this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+			dt = Date.parse(this.updated_at);
+			this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+		});
+		var templateFunction = doT.template(document.getElementById('feed-tmp').text);
+		var html = templateFunction( data );
+		document.getElementById(element).innerHTML = html;
+		initializeVideos();
 	});
 
+}
+
+function renderTemplate(url, template, element) {
+	
+	$.get(url, function(data) {
+		var templateFunction = doT.template(document.getElementById(template).text);
+		document.getElementById(element).innerHTML = templateFunction(data);
+	});
 }
 
 function signOut() {
@@ -189,15 +195,18 @@ function initializeVideos() {
 }
 
 page('/home/homepage', function(){
-	loadHomepage();
+	loadFeed('/home/feed', 'main-content');
 });
 
 page('/bubble/:id', function(context) {
-	alert(context.params.id);
+	loadFeed('/bubble/view/' + context.params.id, 'main-content');
 });
 
-page('/post/new', function(){
-	loadPartial('new-post');
+page('/new/:type', function(context){
+	var type = context.params.type;
+	loadPartial('new-content', function() {
+		$('#new-content-category-' + type).attr('checked', 'checked');
+	});
 });
 
 page('/profile/view', function() {

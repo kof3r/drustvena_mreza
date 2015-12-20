@@ -7,11 +7,14 @@ var requireAuthentication = require('../utils/authentication');
 router.all('*' , requireAuthentication);
 
 // GET
-router.get('/new-post', function(req, res, next) {
-    res.render('new-post.partial.ejs');
-});
 router.get('/feed', function(req, res, next) {
     res.render('feed.partial.ejs');
+});
+router.get('/new-bubble', function(req, res, next) {
+    res.render('new-bubble.partial.ejs');
+});
+router.get('/new-content', function(req, res, next) {
+    res.render('new-content.partial.ejs');
 });
 router.get('/view-profile', function(req, res, next) {
     res.render('view-profile.partial.ejs');
@@ -21,9 +24,6 @@ router.get('/edit-profile', function(req, res, next) {
 });
 router.get('/manage-account', function(req, res, next) {
     res.render('manage-account.partial.ejs');
-});
-router.get('/new-bubble', function(req, res, next) {
-    res.render('new-bubble.partial.ejs');
 });
 
 module.exports=router;
