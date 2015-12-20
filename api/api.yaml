@@ -504,6 +504,25 @@ paths:
           description: Pokušaj promjene tuđeg komentara.
           schema:
             $ref: '#/definitions/Error'
+  '/account/changePassword':
+    post:
+      tags:
+        - Account
+      summary: Omogućava vlasniku session-a promjenu lozinke.
+      parameters:
+        - name: password
+          in: formData
+          required: true
+          type: string
+      responses:
+        '200':
+          description: Uspješna promjena lozinke.
+          schema:
+            $ref: '#/definitions/User'
+        '400':
+          description: 'Neispravni podaci.'
+          schema:
+            $ref: '#/definitions/ValidationError'
 definitions:
   User:
     type: object
