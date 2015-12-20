@@ -190,33 +190,45 @@
     border-top-right-radius: 10px;
 }
 
-.post .header a.author {
-    display: block;
+.post > .header > .stats {
+	float: right;
+	margin-right: 5px;
+	font: 'Comfortaa', cursive;
 }
 
-.post .header a.author .username {
-    font-family: 'Comfortaa', cursive;
-    width: 10px;
-    overflow: hidden;
-}
-
-.post .header .date-time {
-	font-size: 0.9em;
-}
-
-.post .header a.location {
-	display: inline-block;
-}
-
-.post .header a:link.location, .post .header a:visited.location {
-	color: green;
-}
-
-.post .header a:hover.location {
+.post > .header > .stats > .likes {
 	color: darkgreen;
 }
 
-.post .header img {
+.post > .header > .stats > .dislikes {
+	color: darkred;
+}
+
+.post > .header a.author {
+    display: block;
+}
+
+.post > .header a.author .username {
+    font-family: 'Comfortaa', cursive;
+}
+
+.post > .header > .date-time {
+	font-size: 0.9em;
+}
+
+.post > .header a.location {
+	display: inline-block;
+}
+
+.post > .header a:link.location, .post > .header a:visited.location {
+	color: green;
+}
+
+.post > .header a:hover.location {
+	color: darkgreen;
+}
+
+.post > .header img {
     float: left;
     margin: 0 15px 10px 0;
     border: 2px solid;
@@ -224,17 +236,17 @@
 }
 
 @media screen and (max-width: 512px) {
-	.post .header img {
+	.post > .header img {
 		display: none;
 	}
 }
 
-.post .header h4 {
+.post > .header h4 {
 	float: right;
 	margin: 5px 5px 5px 5px;
 	padding: 10px 15px 10px 15px;
-	min-width: 185px;
-	max-width: 235px;
+	min-width: 180px;
+	max-width: 200px;
 	min-height: 30px;
 	background: white;
 	border-radius: 5px 5px 0 0;
@@ -243,12 +255,12 @@
 	bottom: 5px;
 }
 
-.post .content {
+.post > .content {
     padding: 15px;
     text-align: justify;
 }
 
-.post .content img {
+.post > .content img {
     color: lightblue;
     max-width: 100%;
     margin: 10px auto;
@@ -258,74 +270,109 @@
     border: 3px solid;
 }
 
-.post .content div.external {
+.post > .content div.external {
 	text-align: center;
 }
 
-.post .content div.external a {
+.post > .content div.external a {
 	color: orangered;
 }
 
-.post .content .popup-youtube img {
+.post > .content .popup-youtube img {
 	opacity: 0.75;
 }
 
-.post .content a.popup-youtube img:hover {
+.post > .content a.popup-youtube img:hover {
 	opacity: 1;
 }
 
-.post .comments {
+.post > .comments {
 	margin-bottom: 15px;
 	display: none;
 }
 
-.post .comments ul {
+.post > .comments ul {
 	list-style: none;
 	border-bottom: 2px solid lightgrey;
 	width: 100% !important;
+	padding: 0;
 }
 
-.post .comments ul li {
+.post > .comments ul li {
 	padding: 5px;
 	border-top: 1px dotted;
 }
 
-.post .comments ul li strong {
+.post > .comments ul li .actions {
+	float: right;
+	visibility: hidden;
+	cursor: pointer;
+}
+
+.post > .comments ul li .actions a {
+	display: inline-block;
+	margin: 0 5px;
+}
+
+.post > .comments ul li .actions a > .glyphicon {
+	margin-right: 5px;
+}
+
+.post > .comments ul li .actions a.remove {
+	color: red;
+}
+
+.post > .comments ul li .actions a:hover.remove {
+	color: darkred;
+}
+
+@media (pointer:none) {
+	.post > .comments ul li .actions {
+		visibility: visible !important;
+	}
+}
+
+.post > .comments ul li:hover .actions {
+	visibility: visible;
+}
+
+.post > .comments ul li strong {
 	color: darkorange;
 }
 
-.post .comments .header {
+.post > .comments .header {
 	color: grey;
 }
 
-.post .comments textarea {
+.post > .comments textarea {
 	min-width: 300px !important;
 	margin-bottom: 30px;
 }
 
-.post .actions {
+.post > .actions {
     background-color: lightgoldenrodyellow;
     padding: 15px 5px 35px 5px;
 }
 
-.post .actions li {
+.post > .actions li {
     display: block;
     float: left;
 }
 
-.post .actions li a {
+.post > .actions li a {
     padding: 5px 10px;
     text-decoration: none;
-}
-
-.post .actions li a:link, .post .action li a:visited {
+    cursor: pointer;
     color: grey;
 }
-.post .actions li a.active {
+
+.post > .actions li a:link, .post > .action li a:visited {
+}
+.post > .actions li a.active {
     color: darkblue;
 }
 
-.post .actions li a:hover, .post .actions li a:active {
+.post > .actions li a:hover, .post > .actions li a:active {
     color: orangered;
 }
 

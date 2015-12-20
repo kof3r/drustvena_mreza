@@ -40,6 +40,11 @@
 		{{~it.contents :post:index}}
 			<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
 			<div class="header">
+				<span class="stats">
+					<span class="likes">+{{=post.likes}}</span> 
+					<span class="dislikes">-5</span> = 
+					{{=post.likes-post.dislikes}}
+				</span>
 				<a class="author" href="/profile/view/{{= post.username }}">
 					<img width="64" height="64" src="/images/avatar.jpg" />
 					<span class="username">
@@ -64,17 +69,17 @@
 			</div>
 			<ul class="actions">
 			  <li>
-				<a href="javascript:like('{{=post.id}}')" class="like">
+				<a onclick="toggleLike('{{=post.id}}')" class="like{{? post.iLike != 0 }} active{{?}}">
 				  <span class="glyphicon glyphicon-thumbs-up"></span> Like
 				</a>
 			  </li>
 			  <li>
-				<a href="javascript:dislike('{{=post.id}}')" class="dislike">
+				<a onclick="dislike('{{=post.id}}')" class="dislike">
 				  <span class="glyphicon glyphicon-thumbs-down"></span> Dislike
 				</a>
 			  </li>
 			  <li>
-				<a href="javascript:loadComments({{= post.id }})" class="comment">
+				<a onclick="loadComments({{= post.id }})" class="comment">
 				  <span class="glyphicon glyphicon-comment"></span> Comments
 				</a>
 			  </li>
@@ -104,8 +109,18 @@
 					{{? comment.updated_at != comment.created_at }}
 						, <em>updated {{= comment.updated_at }}</em>
 					{{?}}
+					{{? comment.username == 'kolinda' }}
+						<span class="actions">
+							<a onclick="editComment('{{=comment.id}}')">
+								<span class="glyphicon glyphicon-edit"></span>Edit
+							</a>
+							<a class="remove" onclick="editComment('{{=comment.id}}')">
+								<span class="glyphicon glyphicon-remove-circle"></span>Remove
+							</a>
+						</span>
+					{{?}}
 				</div>
-				<div>{{= comment.comment }}</div>
+				<div id="comment-{{=comment.id}}">{{= comment.comment }}</div>
 			</li>
 		{{~}}
 	</script>

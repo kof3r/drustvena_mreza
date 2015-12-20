@@ -112,10 +112,15 @@ $(document).click(function(event) {
     }        
 })
 
-function like(content_id) {
+function toggleLike(content_id) {
 	$.post('/content/like/' + content_id, function() {
 		var likebtn = $('#post-' + content_id + ' .actions .like');
-		likebtn.addClass('active');
+		if (likebtn.hasClass('active')) {
+			likebtn.removeClass('active');
+		}
+		else {
+			likebtn.addClass('active');
+		}
 	});
 }
 
@@ -169,6 +174,11 @@ function postComment(content_id) {
 	else {
 		comment.focus();
 	}
+}
+
+function editComment(content_id) {
+	var comment = $('#post-' + content_id + ' .comments textarea');
+	comment.html(value);
 }
 
 function initializeVideos() {
