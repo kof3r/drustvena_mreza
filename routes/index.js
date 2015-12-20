@@ -21,6 +21,7 @@ router.use('/bubble', require('./bubble'));
 router.use('/user', require('./user'));
 router.use('/util', require('./util'));
 router.use('/comment', require('./comment'));
+router.use('/account', require('./account'));
 
 // index - sign in and sign up
 // GET

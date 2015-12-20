@@ -37,7 +37,6 @@ var User = db.Model.extend({
             .then(this.resolveCountry.bind(this))
             .then(this.hash.bind(this))
             .catch(CheckIt.Error, Promise.method(function(checkItError) {
-                console.log(checkItError);
                 throw new ValidationError(checkItError);
             }));
     },
