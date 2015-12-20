@@ -2,17 +2,16 @@
  * Created by Gordan on 4.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 var Promise = require('bluebird');
 var CheckIt = require('checkit');
-
 var ValidationError = require('./errors/validationError');
 
 require('./user');
 require('./bubble_type');
 require('./content');
 
-var Bubble = db.Model.extend({
+var Bubble = orm.Model.extend({
 
     tableName : 'bubble',
     hasTimestamps : true,
@@ -46,4 +45,4 @@ var Bubble = db.Model.extend({
     }
 });
 
-module.exports = db.model('Bubble', Bubble);
+module.exports = orm.model('Bubble', Bubble);

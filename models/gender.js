@@ -2,13 +2,16 @@
  * Created by Gordan on 12.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 
 require('./user');
 
-var Gender = db.Model.extend({
+var Gender = orm.Model.extend({
+
     tableName : 'gender',
+
     users : function() { return this.hasMany('User'); }
+
 });
 
-module.exports = db.model('Gender', Gender);
+module.exports = orm.model('Gender', Gender);

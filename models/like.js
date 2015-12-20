@@ -2,12 +2,12 @@
  * Created by Gordan on 17.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 
 require('./user');
 require('./content');
 
-var Like = db.Model.extend({
+var Like = orm.Model.extend({
 
     tableName : 'like',
     hasTimestamps: true,
@@ -17,4 +17,4 @@ var Like = db.Model.extend({
 
 });
 
-module.exports = db.model('Like', Like);
+module.exports = orm.model('Like', Like);

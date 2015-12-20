@@ -2,7 +2,7 @@
  * Created by Gordan on 9.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 var Promise = require('bluebird');
 var CheckIt = require('checkit');
 
@@ -11,7 +11,7 @@ var ValidationError = require('./errors/validationError');
 require('./user');
 require('./content');
 
-var Comment = db.Model.extend({
+var Comment = orm.Model.extend({
 
     tableName : 'comment',
     hasTimestamps : true,
@@ -47,4 +47,4 @@ var Comment = db.Model.extend({
     }
 });
 
-module.exports = db.model('Comment', Comment);
+module.exports = orm.model('Comment', Comment);

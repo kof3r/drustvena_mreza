@@ -2,13 +2,16 @@
  * Created by Gordan on 4.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 
 require('./bubble');
 
-var BubbleType = db.Model.extend({
+var BubbleType = orm.Model.extend({
+
     tableName : 'bubble_type',
+
     bubbles : function() { return this.hasMany('Bubble'); }
+
 });
 
-module.exports = db.model('BubbleType', BubbleType);
+module.exports = orm.model('BubbleType', BubbleType);

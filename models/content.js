@@ -2,12 +2,12 @@
  * Created by Gordan on 4.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 
 require('./bubble');
 require('./content_type');
 
-var Content = db.Model.extend({
+var Content = orm.Model.extend({
 
     tableName : 'content',
     hasTimestamps : true,
@@ -19,4 +19,4 @@ var Content = db.Model.extend({
 
 });
 
-module.exports = db.model('Content', Content);
+module.exports = orm.model('Content', Content);

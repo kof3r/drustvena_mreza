@@ -2,15 +2,16 @@
  * Created by Gordan on 4.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 
 require('./user');
 
-var Country = db.Model.extend({
+var Country = orm.Model.extend({
+
     tableName : 'country',
-    users : function() {
-        return this.hasMany('User');
-    }
+
+    users : function() { return this.hasMany('User'); }
+
 });
 
-module.exports = db.model('Country', Country);
+module.exports = orm.model('Country', Country);

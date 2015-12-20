@@ -1,5 +1,6 @@
 
-var db = require('../config/db');
+var orm = require('../config/orm');
+
 var CheckIt = require('checkit');
 var Promise = require('bluebird');
 var Mail = require('../config/mail');
@@ -15,7 +16,8 @@ var Bubble = require('./bubble');
 var Comment = require('./comment');
 require('./gender');
 
-var User = db.Model.extend({
+var User = orm.Model.extend({
+
     tableName: 'user',
     hasTimestamps : true,
 
@@ -109,98 +111,9 @@ var User = db.Model.extend({
     getUserCheckIt : function () {
         var user = this;
 
-        var checkIt = new CheckIt({
-            username: [
-                {
-                    rule: 'required',
-                    message: 'Username is required.'
-                },
-                {
-                    rule: 'minLength:3',
-                    message: 'Username must be at least 3 characters in length.'
-                },
-                {
-                    rule: 'maxLength:30',
-                    message: 'Username must be at most 30 characters in length'
-                },
-                {
-                    rule: 'alphaDash',
-                    message: 'Username must consist of alphanumerics, dashes and underscores.'
-                },
-                function (username) {
-                    return User.where({username: username}).fetch().then(function (fetchedUser) {
-                        if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.username === user.username){
-                            throw new Error('Username already exists.');
-                        }
-                    })
-                }
-            ],
-            email: [
-                {
-                    rule: 'required',
-                    message: 'Email is required.'
-                },
-                {
-                    rule: 'email',
-                    message: 'Invalid email format.'
-                },
-                function (email) {
-                    return User.where({email: email}).fetch().then(function (fetchedUser) {
-                        if (fetchedUser && fetchedUser.id !== user.id && fetchedUser.email === user.email) {
-                            throw new Error('Email already exists.');
-                        }
-                    })
-                }
-            ],
-            first_name: [
-                {
-                    rule: 'maxLength:35',
-                    message: 'First name must be at most 35 characters in length.'
-                }
-            ],
-            last_name: [
-                {
-                    rule: 'maxLength:35',
-                    message: 'Last name must be at most 35 characters in length.'
-                }
-            ],
-            middle_name: [
-                {
-                    rule: 'maxLength:35',
-                    message: 'Middle name must be at most 35 characters in length.'
-                }
-            ],
-            country_name: [
-                function(country) {
-                    return Country.where({name: country}).fetch().then(function (fetchedCountry) {
-                        if(!fetchedCountry) {
-                            throw new Error('Country does not exist.');
-                        }
-                    })
-                }
-            ]
-        });
+        var checkIt = new CheckIt(require('./validation/user')(user));
 
-        var passwordCheck = {
-            password_hash: [
-                {
-                    rule: 'required',
-                    message: 'Password is required'
-                },
-                {
-                    rule: 'minLength:8',
-                    message: 'Password must be at least 8 characters in length.'
-                },
-                {
-                    rule: 'maxLength:30',
-                    message: 'Password must be at most 30 characters in length.'
-                },
-                {
-                    rule: 'alphaDash',
-                    message: 'Password must consist of alphanumerics, dashes and underscores.'
-                }
-            ]
-        }
+        var passwordCheck = require('./validation/password');
 
         return checkIt.maybe(passwordCheck, function(password_hash) {
             return user.hasChanged('password_hash');
@@ -216,6 +129,7 @@ var User = db.Model.extend({
     validPassword: function(password) {
         return bCrypt.compareSync(password, this.get('password_hash'));
     }
+
 });
 
-module.exports=db.model('User', User);
+module.exports=orm.model('User', User);

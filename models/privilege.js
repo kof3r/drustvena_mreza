@@ -2,11 +2,11 @@
  * Created by Gordan on 15.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 
 require('./user');
 
-var Privilege = db.Model.extend({
+var Privilege = orm.Model.extend({
 
     tableName : 'privilege',
 
@@ -14,4 +14,4 @@ var Privilege = db.Model.extend({
     permittee: function() { return this.belongsTo('User', 'permittee_id') }
 });
 
-module.exports = db.model('Privilege', Privilege);
+module.exports = orm.model('Privilege', Privilege);

@@ -2,13 +2,16 @@
  * Created by Gordan on 4.12.2015..
  */
 
-var db = require('../config/db');
+var orm = require('../config/orm');
 
 require('./user');
 
-var RelationshipStatus = db.Model.extended({
+var RelationshipStatus = orm.Model.extended({
+
     tableName : 'relationship_status',
+
     users : function() { return this.hasMany('User'); }
+
 });
 
-module.exports = db.model('RelationshipStatus', RelationshipStatus);
+module.exports = orm.model('RelationshipStatus', RelationshipStatus);

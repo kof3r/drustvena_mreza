@@ -2,7 +2,7 @@
 var config = require('../knexfile');
 var knex = require('knex')(config['development']);
 
-var DB = require('bookshelf')(knex);
-DB.plugin('registry');
+var orm = require('bookshelf')(knex);
+orm.plugin('registry');
 
-module.exports = DB;
+module.exports = orm;
