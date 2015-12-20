@@ -1,49 +1,40 @@
+function loadPartial(name) {
+	$('#main-content').load('/partial/' + name);
+}
 
-function loadPage() {
-    var newHash = location.hash;
-	var pages = ['#new-post', '#view-profile', '#edit-profile', '#manage-account'];
-	
-	if (newHash == null || newHash == '' && newHash != '#' || newHash == '#feed') {
+function loadHomepage() {
 
-		$.get('/home/feed', function(data) {
-			if(data.contents.length > 0) {
-				$.each(data.contents, function() {
-					this.content = BBC2HTML(this.content);
-					var dt = Date.parse(this.created_at);
-					this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
-					dt = Date.parse(this.updated_at);
-					this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
-				});
-				var templateFunction = doT.template(document.getElementById('feed-tmp').text);
-				var html = templateFunction( data );
-				document.getElementById('main-content').innerHTML = html;
-				initializeVideos();
-			}
-			else {
-				document.getElementById('main-content').innerHTML = '<div class="alert alert-info">There are currently no posts to show</div>';
-			}
-		});
-		
-	}
-	else if ($.inArray(newHash, pages) != -1) {
-		$('#main-content').load('/partial/' + newHash.substring(1));
-	}
-	else if(newHash == '#new-bubble') {
-		;
-	}
-	else if (newHash == '#sign-out')
-	{
-		document.getElementById('sign-out-form').submit();
-	}
-	else {
-		//$('#main-content').html('bad request');
-	}
+	$.get('/home/feed', function(data) {
+		if(data.contents.length > 0) {
+			$.each(data.contents, function() {
+				this.content = BBC2HTML(this.content);
+				var dt = Date.parse(this.created_at);
+				this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+				dt = Date.parse(this.updated_at);
+				this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+			});
+			var templateFunction = doT.template(document.getElementById('feed-tmp').text);
+			var html = templateFunction( data );
+			document.getElementById('main-content').innerHTML = html;
+			initializeVideos();
+		}
+		else {
+			document.getElementById('main-content').innerHTML = '<div class="alert alert-info">There are currently no posts to show</div>';
+		}
+	});
+
+}
+
+function signOut() {
+	document.getElementById('sign-out-form').submit();
 }
 
 function initialize() {
+	/*
 	if (document.location.pathname == '/home/homepage') {
 		loadPage();
 	}
+	*/
 	$.get('/content/myBubbles', function(data) {
 		var templateFunction = doT.template(document.getElementById('my-bubbles-tmp').text);
 		var html = templateFunction(data);
@@ -104,6 +95,7 @@ $('#search-form').on('submit', function(event){
 	}
 });
 
+// hide search results when click outside happens
 $(document).click(function(event) { 
     if(!$(event.target).closest('#search-results').length) {
         if($('#search-results').css('display') == 'block') {
@@ -196,6 +188,34 @@ function initializeVideos() {
     });
 }
 
+page('/home/homepage', function(){
+	loadHomepage();
+});
 
-$(window).on('hashchange', loadPage);
+page('/bubble/:id', function(context) {
+	alert(context.params.id);
+});
+
+page('/post/new', function(){
+	loadPartial('new-post');
+});
+
+page('/profile/view', function() {
+	loadPartial('view-profile');
+});
+
+page('/profile/edit', function() {
+	loadPartial('edit-profile');
+});
+
+page('/account/manage', function() {
+	loadPartial('manage-account');
+});
+
+page('/sign-out', function() {
+	signOut();
+});
+
+page.start();
+
 $(document).ready(initialize);
