@@ -46,9 +46,9 @@
 				<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
 				<div class="header">
 					<span class="stats">
-						<span class="likes">+{{=post.likes}}</span> 
-						<span class="dislikes">-5</span> = 
-						{{=post.likes-post.dislikes}}
+						<span class="likes">{{=post.likes}}</span> 
+						<span class="dislikes"> - {{=post.dislikes}}</span> = 
+						<span class="karma">{{=post.likes-post.dislikes}}</span>
 					</span>
 					{{? post.username != undefined }}
 						<a class="author" href="/profile/view/{{= post.username }}">
@@ -76,12 +76,12 @@
 				</div>
 				<ul class="actions">
 				  <li>
-					<a onclick="toggleLike('{{=post.id}}')" class="like{{? post.iLike != 0 }} active{{?}}">
+					<a onclick="toggleOpinion('like', '{{=post.id}}')" class="like{{? post.iLike == 1 }} active{{?}}">
 					  <span class="glyphicon glyphicon-thumbs-up"></span> Like
 					</a>
 				  </li>
 				  <li>
-					<a onclick="dislike('{{=post.id}}')" class="dislike">
+					<a onclick="toggleOpinion('dislike', '{{=post.id}}')" class="dislike{{? post.iDislike == 1 }} active{{?}}">
 					  <span class="glyphicon glyphicon-thumbs-down"></span> Dislike
 					</a>
 				  </li>

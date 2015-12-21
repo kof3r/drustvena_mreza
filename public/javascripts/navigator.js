@@ -110,14 +110,14 @@ $(document).click(function(event) {
     }        
 })
 
-function toggleLike(content_id) {
-	$.post('/content/like/' + content_id, function() {
-		var likebtn = $('#post-' + content_id + ' .actions .like');
-		if (likebtn.hasClass('active')) {
-			likebtn.removeClass('active');
+function toggleOpinion(opinion, content_id) {
+	$.post('/content/' + opinion + '/' + content_id, function() {
+		var btn = $('#post-' + content_id + ' .actions .' + opinion);
+		if(btn.hasClass('active')) {
+			btn.removeClass('active');
 		}
 		else {
-			likebtn.addClass('active');
+			btn.addClass('active');
 		}
 	});
 }

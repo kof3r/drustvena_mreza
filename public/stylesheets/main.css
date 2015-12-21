@@ -194,6 +194,7 @@
 	float: right;
 	margin-right: 5px;
 	font: 'Comfortaa', cursive;
+	font-weight: bold;
 }
 
 .post > .header > .stats > .likes {
@@ -202,6 +203,10 @@
 
 .post > .header > .stats > .dislikes {
 	color: darkred;
+}
+
+.post > .header > .stats > .karma {
+	color: darkblue;
 }
 
 .post > .header a.author {
