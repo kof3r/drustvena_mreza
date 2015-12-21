@@ -16,12 +16,16 @@ var Bubble = require('../models/bubble');
 var User = require('../models/user');
 var Comment = require('../models/comment');
 var Like = require('../models/like');
-var Dislike = require('../models/like');
+var Dislike = require('../models/dislike');
 
 var convert = require('../utils/convert');
 var arrays = require('../utils/arrays');
 var params = require('../utils/params');
 var general = require('../utils/general');
+
+var multer  = require('multer');
+var storage = multer.memoryStorage();
+var upload = multer({ storage: storage });
 
 var requireAuhentication = require('../utils/authentication');
 
@@ -66,16 +70,16 @@ router.post('/post', function(req, res, next) {
 });
 
 // Not yet tested
-router.post('/image/:buble_id', function(req, res, next) {
+router.post('/image/:bubble_id', upload.single('content'), function(req, res, next) {
 
     // user submitted values
     var bubbleId = req.params.bubble_id;
     var title = req.body.title;
     var description = req.body.description;
 
+    console.log(bubbleId);
     // inferred values
     var typeId = 2;
-    var createdAt = convert.dateToSqlFormat(new Date());
 
     Bubble.where({id: bubbleId}).fetch().then(function (bubble){
         if (!bubble){
@@ -91,16 +95,15 @@ router.post('/image/:buble_id', function(req, res, next) {
                 content: '',
                 title: title,
                 description: description,
-                content_type_id: typeId,
-                created_at: createdAt,
+                content_type_id: typeId
             }).save().then(function(saved){
-                context = {
+                var context = {
                     imgPath: '/images/' + saved.id,
                     contentId: saved.id,
                     res: res
                 }
 
-                return parseContent(req.body.content, typeId, context)
+                return parseContent(req.file, typeId, context)
             })
         }
     })
@@ -322,7 +325,7 @@ function parseContent(content, type, context){
 
 // not yet tested
 function handleImg(content, imgPath, contentId, res){
-    fs.writeFile(imgPath.toString(), req.body.content, function(err){
+    fs.writeFile(imgPath.toString(), content, 0, content.length, function(err){
         if (err){
             return general.sendMessage(res, "Failed to write the image.", 500);
         }
