@@ -17,7 +17,9 @@ router.get('/new-content', function(req, res, next) {
     res.render('new-content.partial.ejs');
 });
 router.get('/view-profile', function(req, res, next) {
-    res.render('view-profile.partial.ejs');
+    User.where({id: req.user.id}).fetch().then(function (user) {
+        res.render('view-profile.partial.ejs', {user: user.toJSON()});
+    })
 });
 router.get('/edit-profile', function(req, res, next) {
     res.render('edit-profile.partial.ejs', {user: req.user.toJSON()});
