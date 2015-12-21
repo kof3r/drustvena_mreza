@@ -191,22 +191,24 @@
 }
 
 .post > .header > .stats {
-	float: right;
+	position: absolute;
+	top: -10px;
+	right: 20px;
 	margin-right: 5px;
 	font: 'Comfortaa', cursive;
 	font-weight: bold;
 }
 
 .post > .header > .stats > .likes {
-	color: darkgreen;
+	background-color: darkgreen;
 }
 
 .post > .header > .stats > .dislikes {
-	color: darkred;
+	background-color: darkred;
 }
 
 .post > .header > .stats > .karma {
-	color: darkblue;
+	background-color: darkblue;
 }
 
 .post > .header a.author {
