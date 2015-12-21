@@ -107,7 +107,8 @@ exports.up = function(knex, Promise) {
         return Promise.all([
             createComment,
             createPrivilege,
-            createLike
+            createLike,
+            createDislike
         ]);
     });
 
