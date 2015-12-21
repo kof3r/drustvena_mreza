@@ -29,6 +29,7 @@ var User = orm.Model.extend({
     gender: function() { return this.belongsTo('Gender'); },
     privilege: function() { return this.belongsToMany('User', 'privilege', 'permitter_id', 'permittee_id') },
     likes: function() { return this.belongsToMany('Like', 'like', 'user_id', 'content_id') },
+    dislikes: function() { return this.belongsToMany('Dislike', 'dislike', 'user_id', 'content_id') },
 
     initialize : function() {
         this.on('created', this.onCreated, this);

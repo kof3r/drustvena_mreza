@@ -6,6 +6,8 @@
  */
 var express = require('express');
 var router = express.Router();
+var gm = require('gm');
+var fs = require('fs');
 
 var ValidationError = require('../models/errors/validationError');
 
@@ -14,6 +16,7 @@ var Bubble = require('../models/bubble');
 var User = require('../models/user');
 var Comment = require('../models/comment');
 var Like = require('../models/like');
+var Dislike = require('../models/like');
 
 var convert = require('../utils/convert');
 var arrays = require('../utils/arrays');
@@ -30,7 +33,7 @@ router.post('/post', function(req, res, next) {
 
     // user submitted values
     var bubbleId = req.body.bubble_id;
-    var content = parseContent(req.body.content, 1);
+    var content = parseContent(req.body.content, 1, null);
     var title = req.body.title;
     var description = req.body.description;
 
@@ -57,6 +60,47 @@ router.post('/post', function(req, res, next) {
             }).save().then(function(saved){
                 res.status(200);
                 return res.json(saved);
+            })
+        }
+    })
+});
+
+// Not yet tested
+router.post('/image/:buble_id', function(req, res, next) {
+
+    // user submitted values
+    var bubbleId = req.params.bubble_id;
+    var title = req.body.title;
+    var description = req.body.description;
+
+    // inferred values
+    var typeId = 2;
+    var createdAt = convert.dateToSqlFormat(new Date());
+
+    Bubble.where({id: bubbleId}).fetch().then(function (bubble){
+        if (!bubble){
+            general.sendMessage(res, "This bubble doesn't exist or it was deleted!", 404);
+        } else {
+
+            if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
+                return general.sendMessage(res, "You don't have permission to post in this bubble!", 403)
+            }
+
+            Content.forge({
+                bubble_id: bubbleId,
+                content: '',
+                title: title,
+                description: description,
+                content_type_id: typeId,
+                created_at: createdAt,
+            }).save().then(function(saved){
+                context = {
+                    imgPath: '/images/' + saved.id,
+                    contentId: saved.id,
+                    res: res
+                }
+
+                return parseContent(req.body.content, typeId, context)
             })
         }
     })
@@ -225,6 +269,27 @@ router.post('/like/:id', function (req, res) {
     });
 });
 
+router.post('/dislike/:id', function (req, res) {
+    Dislike.where({
+        user_id: req.user.id,
+        content_id: req.params.id
+    }).fetch().then(function (dislike) {
+        if(dislike) {
+            return Dislike.where({
+                user_id: req.user.id,
+                content_id: req.params.id
+            }).destroy();
+        } else {
+            return Dislike.forge({
+                user_id: req.user.id,
+                content_id: req.params.id
+            }).save()
+        }
+    }).then(function () {
+        res.end();
+    });
+});
+
 router.get('/likes/:id', function (req, res) {
     Like.query(function(qb) {
         qb.join('user', 'user.id', 'like.user_id')
@@ -235,10 +300,61 @@ router.get('/likes/:id', function (req, res) {
     })
 });
 
-function parseContent(content, type){
+router.get('/dislikes/:id', function (req, res) {
+    Dislike.query(function(qb) {
+        qb.join('user', 'user.id', 'dislike.user_id')
+            .where('content_id', req.params.id)
+            .columns(['first_name', 'last_name', 'middle_name', 'username']);
+    }).fetchAll().then(function (users) {
+        res.json({users: users});
+    })
+});
+
+function parseContent(content, type, context){
     if (type == 1){
         return content;
     }
+
+    if (type == 2){
+        return handleImg(content, context.imgPath, context.contentId, context.res, context.extension);
+    }
+}
+
+// not yet tested
+function handleImg(content, imgPath, contentId, res){
+    fs.writeFile(imgPath.toString(), req.body.content, function(err){
+        if (err){
+            return general.sendMessage(res, "Failed to write the image.", 500);
+        }
+
+        gm(imgPath)
+            .resize(125, 125)
+            .autoOrient()
+            .write(imgPath + 'small', function (err) {
+                if (err) return general.sendMessage(res, "Failed to resize the image.", 500);
+                gm(imgPath)
+                    .resize(500)
+                    .autoOrient()
+                    .write(imgPath + 'medium', function(err){
+                        if (err) return general.sendMessage(res, "Failed to resize the image.", 500);
+                        gm(imgPath)
+                            .resize(1280)
+                            .autoOrient()
+                            .write(imgPath + 'large', function(err){
+                                if (err) return general.sendMessage(res, "Failed to resize the image.", 500);
+                                Content.forge({
+                                    id: contentId,
+                                    content: imgPath,
+                                }).then(function(finished){
+                                    res.status(200);
+                                    return res.json(finished);
+                                })
+                            })
+                    })
+            });
+
+    })
+
 }
 
 module.exports = router;

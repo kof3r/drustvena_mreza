@@ -15,7 +15,8 @@ var Content = orm.Model.extend({
     bubble : function() { return this.belongsTo('Bubble'); },
     contentType : function() { return this.belongsTo('ContentType'); },
     comments : function() { return this.hasMany('Comment'); },
-    likes: function() { return this.belongsToMany('Like', 'like', 'content_id', 'user_id') }
+    likes: function() { return this.belongsToMany('Like', 'like', 'content_id', 'user_id') },
+    dislikes: function() { return this.belongsToMany('Dislike', 'dislike', 'content_id', 'user_id') }
 
 });
 
