@@ -239,7 +239,9 @@ paths:
           type: string
       responses:
         '200':
-          description: Uspješno spremanje u bazu.
+          description: Uspješno spremanje u bazu. Vraća netom stvoreni bubble.
+          schema:
+            $ref: '#/definitions/Bubble'
         '400':
           description: Nevaljani formData.
           schema:
@@ -264,7 +266,7 @@ paths:
           type: string
       responses:
         '200':
-          description: Uspješna promjena podataka.
+          description: Uspješna promjena podataka. Vraća netom izmijenjeni bubble.
           schema:
             $ref: '#/definitions/Bubble'
         '400':
