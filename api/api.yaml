@@ -227,7 +227,7 @@ paths:
     post:
       tags:
         - Bubble
-      summary: Stvara novi bubble za aktualnog vlasnika session-a
+      summary: Stvara novi bubble za aktualnog vlasnika session-a.
       parameters:
         - name: title
           in: formData
@@ -239,9 +239,9 @@ paths:
           type: string
       responses:
         '200':
-          description: Kod uspješnog spremanja u bazu.
-        default:
-          description: Ako dođe do greške tokom spremanja.
+          description: Uspješno spremanje u bazu.
+        '400':
+          description: Nevaljani formData.
           schema:
             $ref: '#/definitions/ValidationError'
   '/bubble/edit/{id}':
@@ -268,7 +268,7 @@ paths:
           schema:
             $ref: '#/definitions/Bubble'
         '400':
-          description: Nedozvoljeni podaci.
+          description: Nevaljani formData.
           schema:
             $ref: '#/definitions/ValidationError'
         '403':
@@ -279,6 +279,21 @@ paths:
           description: Pokušaj promjene nepostojećeg bubble-a.
           schema:
             $ref: '#/definitions/Error'
+  '/bubble/{id}':
+    post:
+      tags:
+        - Bubble
+      summary: Dohvat contenta bubble-a sa id-em id.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: integer
+      responses:
+        '200':
+          description: Dohvaćeni contenti.
+          schema:
+            $ref: '#/definitions/Content'
   /home/feed:
     get:
       tags:
@@ -600,6 +615,23 @@ definitions:
       title:
         type: string
       description:
+        type: string
+  Content:
+    type: object
+    properties:
+      id:
+        type: integer
+      bubble_id:
+        type: integer
+      content_type_id:
+        type: integer
+      created_at:
+        type: string
+      updated_at:
+        type: string
+      title:
+        type: string
+      content:
         type: string
   Post:
     type: object
