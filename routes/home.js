@@ -28,11 +28,17 @@ router.get('/feed', function(req, res) {
             .leftJoin('like as myLike', function() {
                 this.on('like.content_id', 'myLike.content_id').andOn('like.user_id', 'myLike.user_id').andOn('like.user_id', user.get('id'));
             })
+            .leftJoin('dislike', 'content.id', 'dislike.content_id')
+            .leftJoin('dislike as myDislike', function() {
+                this.on('dislike.content_id', 'myDislike.content_id').andOn('dislike.user_id', 'myDislike.user_id').andOn('dislike.user_id', user.get('id'));
+            })
             .where('privilege.permittee_id', req.user.id)
             .columns('content.*', 'user.username')
             .groupBy('bubble_id', 'id', 'created_at', 'updated_at', 'title', 'content', 'description', 'username')
             .count('like.user_id as likes')
-            .count('myLike.user_id as iLike').union(function () {
+            .count('dislike.user_id as dislikes')
+            .count('myLike.user_id as iLike')
+            .count('myDislike.user_id as iDislike').union(function () {
                 this.from('bubble')
                     .join('content', 'content.bubble_id', 'bubble.id')
                     .join('user', 'bubble.user_id', 'user.id')
@@ -40,11 +46,17 @@ router.get('/feed', function(req, res) {
                     .leftJoin('like as myLike', function() {
                         this.on('like.content_id', 'myLike.content_id').andOn('like.user_id', 'myLike.user_id').andOn('like.user_id', user.get('id'));
                     })
+                    .leftJoin('dislike', 'content.id', 'dislike.content_id')
+                    .leftJoin('dislike as myDislike', function() {
+                        this.on('dislike.content_id', 'myDislike.content_id').andOn('dislike.user_id', 'myDislike.user_id').andOn('dislike.user_id', user.get('id'));
+                    })
                     .where('bubble.user_id', req.user.id)
                     .columns('content.*', 'user.username')
                     .groupBy('bubble_id', 'id', 'created_at', 'updated_at', 'title', 'content', 'description', 'username')
                     .count('like.user_id as likes')
+                    .count('dislike.user_id as dislikes')
                     .count('myLike.user_id as iLike')
+                    .count('myDislike.user_id as iDislike')
                     .orderBy('created_at', 'DESC');
             })
     }).fetchAll().then(function (contents) {
