@@ -19,6 +19,7 @@ require('./gender');
 var User = orm.Model.extend({
 
     tableName: 'user',
+    hidden: ['password_hash'],
     hasTimestamps : true,
 
     country : function () { return this.belongsTo('Country'); },
