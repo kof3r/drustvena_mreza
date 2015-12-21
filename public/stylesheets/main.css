@@ -325,14 +325,6 @@
 	margin-right: 5px;
 }
 
-.post > .comments ul li .actions a.remove {
-	color: red;
-}
-
-.post > .comments ul li .actions a:hover.remove {
-	color: darkred;
-}
-
 @media (pointer:none) {
 	.post > .comments ul li .actions {
 		visibility: visible !important;
@@ -373,9 +365,15 @@
     color: grey;
 }
 
-.post > .actions li a:link, .post > .action li a:visited {
+.post > .actions li a.like.active {
+	color: green;
 }
-.post > .actions li a.active {
+
+.post > .actions li a.dislike.active {
+	color: red;
+}
+
+.post > .actions li a.comment.active {
     color: darkblue;
 }
 
