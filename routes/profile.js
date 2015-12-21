@@ -15,7 +15,7 @@ router.all('*' , requireAuthentication);
 
 router.get('/view', function(req, res, next) {
     User.where({id: req.user.id}).fetch().then(function (user) {
-        res.render('edit-profile.ejs', {user: user.toJSON()});
+        res.render('view-profile.ejs', {user: user.toJSON()});
     })
 });
 

@@ -19,9 +19,7 @@ router.get('/isContact', function (req, res) {
 });
 
 router.get('/info', function (req, res) {
-    User.where({id: req.query.id}).fetch({
-        columns: ['id', 'username', 'email', 'first_name', 'last_name', 'middle_name', 'country_id', 'city', 'address', 'relationship_status_id', 'gender_id']
-    }).then(function (user) {
+    User.where({id: req.query.id}).fetch().then(function (user) {
         res.json(user);
     });
 });
