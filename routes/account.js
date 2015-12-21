@@ -9,12 +9,16 @@ var ValidationError = require('../models/errors/validationError');
 router.all('*', require('../utils/authentication'));
 
 router.post('/changePassword', function(req, res) {
+
     var user = req.user;
     var form = req.body;
 
-    user.set('password_hash', form.password);
+    if(!user.validPassword(form.oldPassword)){
+        return res.status(403).json({error: 'Invalid password.'})
+    }
+
+    user.set('password_hash', form.newPassword);
     user.save().then(function (user) {
-        user.unset('password_hash');
         res.json(user);
     }).catch(ValidationError, function(error) {
         res.status(400).json({errors: error.messages});

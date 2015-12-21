@@ -6,7 +6,7 @@ info:
 produces:
   - application/json
 paths:
-  '/isUsernameAvailable':
+  /isUsernameAvailable:
     get:
       tags:
         - Android
@@ -21,7 +21,7 @@ paths:
           description: true ili false
           schema:
             $ref: '#/definitions/Available'
-  '/isEmailAvailable':
+  /isEmailAvailable:
     get:
       tags:
         - Android
@@ -36,7 +36,7 @@ paths:
           description: true ili false
           schema:
             $ref: '#/definitions/Available'
-  '/sign-up':
+  /sign-up:
     post:
       tags:
         - General
@@ -85,7 +85,7 @@ paths:
           description: Vraća kolekciju pogreški vezane uz poejdino polje
           schema:
             $ref: '#/definitions/ValidationError'
-  '/sign-in':
+  /sign-in:
     post:
       tags:
         - General
@@ -106,7 +106,7 @@ paths:
           description: Poruka vezana uz neuspješnu prijavu.
           schema:
             $ref: '#/definitions/Error'
-  '/sign-out':
+  /sign-out:
     post:
       tags:
         - General
@@ -114,7 +114,7 @@ paths:
       responses:
         '200':
           description: Uspješna odjava
-  '/content/timeline':
+  /content/timeline:
     get:
       tags:
         - Content
@@ -129,7 +129,7 @@ paths:
                 type: array
                 items:
                   $ref: '#/definitions/Post'
-  '/content/myBubbles':
+  /content/myBubbles:
     get:
       tags:
         - Content
@@ -223,7 +223,7 @@ paths:
                       type: string
                     username:
                       type: string
-  '/bubble/create':
+  /bubble/create:
     post:
       tags:
         - Bubble
@@ -256,7 +256,7 @@ paths:
           type: integer
         - name: title
           in: formData
-          required:  true
+          required: true
           type: string
         - name: description
           in: formData
@@ -271,15 +271,15 @@ paths:
           description: Nedozvoljeni podaci.
           schema:
             $ref: '#/definitions/ValidationError'
-        '404':
-          description: Pokušaj promjene nepostojećeg bubble-a.
-          schema:
-            $ref: '#/definitions/Error'
         '403':
           description: Pokušaj promjene tuđeg bubble-a.
           schema:
             $ref: '#/definitions/Error'
-  '/home/feed':
+        '404':
+          description: Pokušaj promjene nepostojećeg bubble-a.
+          schema:
+            $ref: '#/definitions/Error'
+  /home/feed:
     get:
       tags:
         - Home
@@ -314,7 +314,7 @@ paths:
                     likes:
                       type: integer
                       format: "int32'"
-  '/user/isContact':
+  /user/isContact:
     get:
       tags:
         - User
@@ -333,7 +333,7 @@ paths:
               isContact:
                 type: boolean
                 description: true ako je osoba sa id-em id prijatelj vlasnika session-a
-  '/user/info':
+  /user/info:
     get:
       tags:
         - User
@@ -348,7 +348,7 @@ paths:
           description: Uspješan dohvat
           schema:
             $ref: '#/definitions/User'
-  '/user/contactRequest':
+  /user/contactRequest:
     post:
       tags:
         - User
@@ -361,7 +361,7 @@ paths:
       responses:
         '200':
           description: Uspješno dodavanje
-  '/user/contacts':
+  /user/contacts:
     get:
       tags:
         - User
@@ -386,7 +386,7 @@ paths:
                       type: integer
                     username:
                       type: string
-  '/profile/edit':
+  /profile/edit:
     post:
       tags:
         - Profile
@@ -433,7 +433,7 @@ paths:
           description: Vraća kolekciju pogreški vezane uz poejdino polje.
           schema:
             $ref: '#/definitions/ValidationError'
-  '/util/countries':
+  /util/countries:
     get:
       tags:
         - Util
@@ -453,7 +453,7 @@ paths:
                       type: string
                     name:
                       type: string
-  '/util/genders':
+  /util/genders:
     get:
       tags:
         - Util
@@ -496,21 +496,25 @@ paths:
           description: Nedozvoljeni podaci.
           schema:
             $ref: '#/definitions/ValidationError'
-        '404':
-          description: Pokušaj promjene nepostojećeg komentara.
-          schema:
-            $ref: '#/definitions/Error'
         '403':
           description: Pokušaj promjene tuđeg komentara.
           schema:
             $ref: '#/definitions/Error'
-  '/account/changePassword':
+        '404':
+          description: Pokušaj promjene nepostojećeg komentara.
+          schema:
+            $ref: '#/definitions/Error'
+  /account/changePassword:
     post:
       tags:
         - Account
       summary: Omogućava vlasniku session-a promjenu lozinke.
       parameters:
-        - name: password
+        - name: oldPassword
+          in: formData
+          required: true
+          type: string
+        - name: newPassword
           in: formData
           required: true
           type: string
@@ -519,8 +523,12 @@ paths:
           description: Uspješna promjena lozinke.
           schema:
             $ref: '#/definitions/User'
+        '403':
+          description: Neispravna aktualna lozinka.
+          schema:
+            $ref: '#/definitions/Error'
         '400':
-          description: 'Neispravni podaci.'
+          description: Neispravni podaci.
           schema:
             $ref: '#/definitions/ValidationError'
 definitions:
