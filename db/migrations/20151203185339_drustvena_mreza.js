@@ -84,6 +84,13 @@ exports.up = function(knex, Promise) {
         t.primary(['user_id', 'content_id']);
     });
 
+    var createDislike = knex.schema.createTable('dislike', function (t) {
+        t.integer('user_id').unsigned().references('id').inTable('user').notNullable();
+        t.integer('content_id').unsigned().references('id').inTable('content').notNullable();
+        t.timestamps();
+        t.primary(['user_id', 'content_id']);
+    });
+
     return Promise.all([
         createCountry,
         createRelationshipStatus,
