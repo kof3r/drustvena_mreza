@@ -310,6 +310,13 @@
 	border-top: 1px dotted;
 }
 
+.post > .comments ul li > div > textarea {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	width: 100% !important;
+}
+
 .post > .comments ul li .actions {
 	float: right;
 	visibility: hidden;
@@ -343,9 +350,14 @@
 	color: grey;
 }
 
-.post > .comments textarea {
-	min-width: 300px !important;
+.post > .comments > form > textarea {
+	width: 100% !important;
 	margin-bottom: 30px;
+}
+
+.post > .comments button, .post > .comments input {
+	width: 100%;
+	margin: 1px 0;
 }
 
 .post > .actions {

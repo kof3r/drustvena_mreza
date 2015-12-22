@@ -174,10 +174,23 @@ function postComment(content_id) {
 	}
 }
 
-function editComment(content_id) {
-	var comment = $('#post-' + content_id + ' .comments textarea');
-	comment.html(value);
+function editComment(comment_id) {
+	var commentIdn = '#comment-' + comment_id;
+	var commentTxt = $(commentIdn).html();
+	//(($(commentIdn).siblings('.header')).children('.actions')).children('.edit').html();
+	$(commentIdn).html('<textarea>' + commentTxt + '</textarea>');
+	var editor = $(commentIdn + ' textarea');
+	editor.select();
+	$(commentIdn).keypress(function(e) {
+		if(e.which == 13) {
+			var newCommentTxt = editor.val();
+			$.post('/comment/edit/' + comment_id, {comment: newCommentTxt }, function() {
+				$(commentIdn).html(newCommentTxt);
+			});
+		}
+	});
 }
+
 
 function initializeVideos() {
 
