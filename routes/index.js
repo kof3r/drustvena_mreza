@@ -19,7 +19,7 @@ router.use('/profile', require('./profile'));
 // GET
 router.get('/', function(req, res, next) {
     if(req.isAuthenticated()){
-        res.redirect('/home/homepage');
+        res.redirect('/homepage');
     }
     else {
         res.render('index.ejs');
@@ -28,7 +28,7 @@ router.get('/', function(req, res, next) {
 // GET
 router.get('/sign-in', function(req, res, next){
     if(req.isAuthenticated()){
-        res.redirect('/home/homepage');
+        res.redirect('/homepage');
     }
     else {
         res.render('index.ejs', {title: 'Sign in', signIn: true});
@@ -66,7 +66,7 @@ router.post('/sign-in', function(req, res, next) {
                 if(isAndroid) {
                     return res.end();
                 } else {
-                    return res.redirect('/home/homepage');
+                    return res.redirect('/homepage');
                 }
             }
         });
@@ -77,7 +77,7 @@ router.post('/sign-in', function(req, res, next) {
 // GET
 router.get('/sign-up', function(req, res, next) {
     if(req.isAuthenticated()){
-        res.redirect('/home/homepage');
+        res.redirect('/homepage');
     }
     else {
         res.render('index.ejs', {title: 'Sign up', signUp: true});
@@ -114,17 +114,6 @@ router.post('/sign-up', function(req, res, next) {
     });
 });
 
-router.get("/isUsernameAvailable", function(req, res, next) {
-    User.where({username: req.query.username}).fetch().then(function(model) {
-        res.json({available:(model ? false : true)});
-    });
-});
-
-router.get("/isEmailAvailable", function(req, res, next) {
-    User.where({email: req.query.email}).fetch().then(function(model) {
-        res.json({available:(model ? false : true)});
-    });
-});
 
 router.get("/emailverification",function(req,res,next){
     User.where({id: req.query.id}).fetch().then(function(user) {
@@ -157,8 +146,7 @@ router.get('/homepage', function(req, res, next) {
 /********************************/
 // 404 not found
 router.use(function(req, res, next) {
-    res.status(404);
-    res.render('404', {title: '404 Not Found'});
+    res.redirect('/homepage');
 });
 
 module.exports = router;

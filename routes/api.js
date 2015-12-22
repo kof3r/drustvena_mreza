@@ -65,5 +65,17 @@ module.exports=function (passport) {
         }
     });
 
+    router.get("/isUsernameAvailable", function(req, res, next) {
+        User.where({username: req.query.username}).fetch().then(function(model) {
+            res.json({available:(model ? false : true)});
+        });
+    });
+
+    router.get("/isEmailAvailable", function(req, res, next) {
+        User.where({email: req.query.email}).fetch().then(function(model) {
+            res.json({available:(model ? false : true)});
+        });
+    });
+
     return router;
 };
