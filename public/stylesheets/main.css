@@ -191,17 +191,24 @@
 }
 
 .post > .header > .stats {
-	float: right;
+	position: absolute;
+	top: -10px;
+	right: 20px;
 	margin-right: 5px;
 	font: 'Comfortaa', cursive;
+	font-weight: bold;
 }
 
 .post > .header > .stats > .likes {
-	color: darkgreen;
+	background-color: darkgreen;
 }
 
 .post > .header > .stats > .dislikes {
-	color: darkred;
+	background-color: darkred;
+}
+
+.post > .header > .stats > .karma {
+	background-color: darkblue;
 }
 
 .post > .header a.author {
@@ -318,14 +325,6 @@
 	margin-right: 5px;
 }
 
-.post > .comments ul li .actions a.remove {
-	color: red;
-}
-
-.post > .comments ul li .actions a:hover.remove {
-	color: darkred;
-}
-
 @media (pointer:none) {
 	.post > .comments ul li .actions {
 		visibility: visible !important;
@@ -366,9 +365,15 @@
     color: grey;
 }
 
-.post > .actions li a:link, .post > .action li a:visited {
+.post > .actions li a.like.active {
+	color: green;
 }
-.post > .actions li a.active {
+
+.post > .actions li a.dislike.active {
+	color: red;
+}
+
+.post > .actions li a.comment.active {
     color: darkblue;
 }
 
