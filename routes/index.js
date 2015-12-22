@@ -12,16 +12,8 @@ var User = require('../models/user');
 var Country = require('../models/country');
 
 router.use('/api', require('./api')(passport));
-router.use('/home', require('./home'));
-router.use('/search', require('./search'));
-router.use('/content', require('./content'));
 router.use('/partial', require('./partial'));
 router.use('/profile', require('./profile'));
-router.use('/bubble', require('./bubble'));
-router.use('/user', require('./user'));
-router.use('/util', require('./util'));
-router.use('/comment', require('./comment'));
-router.use('/account', require('./account'));
 
 // index - sign in and sign up
 // GET
@@ -155,6 +147,11 @@ router.post('/sign-out', function(req, res, next) {
         res.redirect('/');
     }
 });
+
+router.get('/homepage', function(req, res, next) {
+    res.render('homepage.ejs', {title: 'Home', user: req.user.toJSON()});
+});
+
 
 
 /********************************/

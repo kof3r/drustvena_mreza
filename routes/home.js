@@ -16,10 +16,6 @@ var requireAuthentication = require('../utils/authentication');
 
 router.all('*', requireAuthentication);
 
-router.get('/homepage', function(req, res, next) {
-    res.render('homepage.ejs', {title: 'Home', user: req.user.toJSON()});
-});
-
 router.get('/feed', function(req, res) {
     var user = req.user;
 

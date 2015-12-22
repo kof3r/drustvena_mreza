@@ -8,6 +8,15 @@ var User = require('../models/user');
 
 module.exports=function (passport) {
 
+    router.use('/content', require('./content'));
+    router.use('/home', require('./home'));
+    router.use('/search', require('./search'));
+    router.use('/bubble', require('./bubble'));
+    router.use('/user', require('./user'));
+    router.use('/comment', require('./comment'));
+    router.use('/account', require('./account'));
+    router.use('/util', require('./util'));
+
     router.post('/sign-up', function(req, res, next) {
         var form = req.body;
         User.forge({
