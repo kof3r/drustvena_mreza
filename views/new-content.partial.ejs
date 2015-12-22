@@ -118,7 +118,7 @@ $('#post-form').on('submit', function(event) {
 	else if (content == '') { $('#editor').focus();}
 					
 	else {
-		$.post('/content/post', postData, function(success) {
+		$.post('/api/content/post', postData, function(success) {
 			window.history.back();
 		});
 	}
