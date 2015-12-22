@@ -1,6 +1,9 @@
 /**
  * Created by Mislav on 11/27/2015.
  */
+
+var Promise = require('bluebird');
+
 var User = require('../models/user');
 var Bubble = require('../models/bubble');
 var Content = require('../models/content');
@@ -20,50 +23,72 @@ router.get('/homepage', function(req, res, next) {
 router.get('/feed', function(req, res) {
     var user = req.user;
 
-    Privilege.query(function (qb) {
-        qb.join('bubble', 'privilege.permitter_id', 'bubble.user_id')
-            .join('content', 'content.bubble_id', 'bubble.id')
-            .join('user', 'bubble.user_id', 'user.id')
-            .leftJoin('like', 'content.id', 'like.content_id')
-            .leftJoin('like as myLike', function() {
-                this.on('like.content_id', 'myLike.content_id').andOn('like.user_id', 'myLike.user_id').andOn('like.user_id', user.get('id'));
-            })
-            .leftJoin('dislike', 'content.id', 'dislike.content_id')
-            .leftJoin('dislike as myDislike', function() {
-                this.on('dislike.content_id', 'myDislike.content_id').andOn('dislike.user_id', 'myDislike.user_id').andOn('dislike.user_id', user.get('id'));
-            })
-            .where('privilege.permittee_id', req.user.id)
-            .columns('content.*', 'user.username')
-            .groupBy('bubble_id', 'id', 'created_at', 'updated_at', 'title', 'content', 'description', 'username')
-            .count('like.user_id as likes')
-            .count('dislike.user_id as dislikes')
-            .count('myLike.user_id as iLike')
-            .count('myDislike.user_id as iDislike').union(function () {
-                this.from('bubble')
-                    .join('content', 'content.bubble_id', 'bubble.id')
-                    .join('user', 'bubble.user_id', 'user.id')
-                    .leftJoin('like', 'content.id', 'like.content_id')
-                    .leftJoin('like as myLike', function() {
-                        this.on('like.content_id', 'myLike.content_id').andOn('like.user_id', 'myLike.user_id').andOn('like.user_id', user.get('id'));
-                    })
-                    .leftJoin('dislike', 'content.id', 'dislike.content_id')
-                    .leftJoin('dislike as myDislike', function() {
-                        this.on('dislike.content_id', 'myDislike.content_id').andOn('dislike.user_id', 'myDislike.user_id').andOn('dislike.user_id', user.get('id'));
-                    })
-                    .where('bubble.user_id', req.user.id)
-                    .columns('content.*', 'user.username')
-                    .groupBy('bubble_id', 'id', 'created_at', 'updated_at', 'title', 'content', 'description', 'username')
-                    .count('like.user_id as likes')
-                    .count('dislike.user_id as dislikes')
-                    .count('myLike.user_id as iLike')
-                    .count('myDislike.user_id as iDislike')
-                    .orderBy('created_at', 'DESC');
-            })
-    }).fetchAll().then(function (contents) {
-        res.json({contents: contents});
+    Promise.join(
+        getContents(),
+        getLikesOrDislikes('like', 'myLike', 'likes', 'iLike'),
+        getLikesOrDislikes('dislike', 'myDislike', 'dislikes', 'iDislike'),
+        function (_contents, _likes, _dislikes){
+            var contents = _contents.toJSON();
+            var likes = _likes.toJSON();
+            var dislikes = _dislikes.toJSON();
+            for(var i = 0; i < _contents.length; i++) {
+                contents[i]['likes'] = likes[i].count;
+                contents[i]['dislikes'] = dislikes[i].count;
+                contents[i]['iLike'] = likes[i].bool;
+                contents[i]['iDislike'] = dislikes[i].bool;
+            }
+
+            res.json({contents: contents});
     }).catch(function (error) {
         console.log(error.stack);
     });
+
+    function getContents() {
+        return Privilege.query(function (qb) {
+            qb.join('bubble', 'privilege.permitter_id', 'bubble.user_id')
+                .join('content', 'content.bubble_id', 'bubble.id')
+                .join('user', 'bubble.user_id', 'user.id')
+                .where('privilege.permittee_id', user.get('id'))
+                .columns('content.*', 'username').union(function () {
+                this.from('bubble')
+                    .join('content', 'content.bubble_id', 'bubble.id')
+                    .join('user', 'bubble.user_id', 'user.id')
+                    .where('user.id', user.get('id'))
+                    .columns('content.*', 'username')
+                    .orderBy('created_at', 'DESC');
+            })
+        }).fetchAll();
+    }
+
+    function getLikesOrDislikes(tableName) {
+        return Privilege.query(function (qb) {
+            qb.join('bubble', 'privilege.permitter_id', 'bubble.user_id')
+                .join('content', 'content.bubble_id', 'bubble.id')
+                .leftJoin(tableName, tableName + '.content_id', 'content.id')
+                .leftJoin(tableName + ' as alias', function () {
+                    this.on('alias.content_id', tableName + '.content_id').andOn('alias.user_id', tableName + '.user_id').andOn('alias.user_id', user.get('id'))
+                })
+                .where('privilege.permittee_id', user.get('id'))
+                .groupBy('content.bubble_id', 'content.id', 'content.content_type_id', 'content.created_at', 'content.title', 'content.content')
+                .columns('content.created_at')
+                .count(tableName + '.user_id as count')
+                .count('alias.user_id as bool').union(function () {
+                this.from('bubble')
+                    .join('content', 'content.bubble_id', 'bubble.id')
+                    .join('user', 'bubble.user_id', 'user.id')
+                    .leftJoin(tableName, tableName + '.content_id', 'content.id')
+                    .leftJoin(tableName + ' as alias', function () {
+                        this.on('alias.content_id', tableName + '.content_id').andOn('alias.user_id', tableName + '.user_id').andOn('alias.user_id', user.get('id'))
+                    })
+                    .where('user.id', user.get('id'))
+                    .groupBy('content.bubble_id', 'content.id', 'content.content_type_id', 'content.created_at', 'content.title', 'content.content')
+                    .columns('content.created_at')
+                    .count(tableName + '.user_id as count')
+                    .count('alias.user_id as bool')
+                    .orderBy('created_at', 'DESC');
+            })
+        }).fetchAll();
+    }
 });
 
 module.exports=router;
