@@ -14,6 +14,26 @@
 		margin-right: 3%;
 		border-bottom: groove;
 	}
+    
+    .personal_info {
+        width: 85%;
+        margin: auto;
+        margin-top: 2.5%;
+    }
+    
+    div[class="pinfo_part"] {
+        margin: 5%;
+    }
+    
+    .pinfo_part > h4 {
+        color: dodgerblue;
+        font-weight: bold;
+    }
+    
+    .pinfo_part > p {
+        text-indent: 5%;
+        font-weight: bold;
+    }
 	
 	.avatar {
 		margin: -160px 10px 20px 0px;
@@ -23,66 +43,54 @@
 	.profile-name {
 		color: white;
 		padding: 25px;
-		text-shadow: 3px 3px 4px #000000;
+		text-shadow: 4px 4px 5px #000000;
 	}
 	
 	.profile-name > h1 {
 		font-size: 40px;
 		font-weight: bold;
 	}
+    .profile-name > p {
+        font-size: 16px;
+        font-style: italic;
+	}
     
-   .profile-tabs {
-        color: black;
-        font-size: 14px;
-        font-weight: 200;
+    .btn-primary {
+        background-color: dodgerblue;
+        font-weight: bold;
+        border: 0px;
     }
     
-    .nav-pills > li.active > a {
-        background-color: red;
+    .btn-primary:hover {
+        background-color: lightblue;
     }
     
-    .nav-pills > li.active > a:focus {
-        background-color: orangered;
-    }
-    
-    /*
-    .nav-pills > li.active > a:hover {
-        background-color: red;
+    #edit_btn {
+        float: right;
+        margin: 2% 5%;
     }
     
     .nav-pills a, .nav-pills a:hover, .nav-pills a:focus {
-        outline: 0;
+            outline: 0;
+            color: black;
+            font-size: 1.2em;
+        }
+    
+    .nav-pills > li.active > a:focus {
+        background-color: darkorange;
+        color: white;
     } 
-    .nav-pills a {
-		color: #ffffff
-	} 
-
-	.nav-pills a:hover {
-		color: #560000;
-		border-radius: 0px;
-	}
-
-	.nav-pills .active a:hover {
-		color: #560000;
-		border-radius: 0px;
-	}
-	
-	.nav>li>a:hover,
-	.nav>li>a:focus {
-		text-decoration: none;
-		background-color: #560000;
-	}
-	*/
 </style>
 
 <div class="jumbotron">
+    <div align="right"  class="profile-name"><p>Been with us since <% if(locals.user) { %><%= user.created_at %> <% } %></p></div>
 </div>
 <div class="container">
 	<div class="avatar">
 		<img align="left" class="image-profile img-circle" src="/images/profile.jpg" alt="Profile image"/>
 		<div class="profile-name">
-			<h1>mrbean223</h1>
-			<h4>Mirko Mirić</h4>
+			<h1><% if(locals.user) { %><%= user.username %><% } %></h1>
+			<h4><% if(locals.user) { %><%= user.first_name %> <%= user.last_name %><% } %></h4>
 		</div>
 	</div>
     <ul class="nav nav-pills profile-tabs">
@@ -95,6 +103,36 @@
     
     <div class="tab-content">
         <div class="tab-pane fade in active" id="profile-account_info">
+            <div class="well personal_info">
+                <a id="edit_btn" href="/profile/edit" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-wrench"></span> Edit personal info</a>
+                <div class="pinfo_part">
+                    <h4>Full name:</h4>
+                    <p><% if(locals.user) { %><%= user.first_name %> <%= user.middle_name %> <%= user.last_name %><% } %></p>
+                    <h4>E-mail:</h4>
+                    <p><% if(locals.user) { %><%= user.email %><% } %></p>
+                    <h4>Birthday:</h4>
+                    <p><% if(locals.user) { %><%= user.date_of_birth %><% } %></p>
+                </div>
+                
+                <div class="pinfo_part">
+                    <h4>Gender:</h4>
+                    <p><% if(user.gender_id==2){%>Male<%}%><% if(user.gender_id==1){%>Female<%}%><% if(user.gender_id==''){%>Unknown<%}%></p>
+                    <h4>Relationship status:</h4>
+                    <p><% if(user.relationship_status_id==1){%>Single<%}%><% if(user.relationship_status_id==2){%>Complicated<%}%><%                                              if(user.relationship_status_id==3){%>In a relationship<%}%><% if(user.relationship_status_id==4){%>Other<%}%> </p>
+                </div>
+                
+                <div class="pinfo_part">
+                    <h4>Currently living at</h4>
+                    <p><% if(locals.user) { %><%= user.address %>, <%= user.city %>, <%= user.country_id %><% } %> </p>
+                </div>
+
+                <div class="pinfo_part">
+                    <h4>Account created:</h4>
+                    <p><% if(locals.user) { %><%= user.created_at %> <% } %> </p>
+                    <h4>Last account update:</h4>
+                    <p><% if(locals.user) { %><%= user.updated_at %> <% } %> </p>
+                </div>
+            </div>
         </div>
         <div class="tab-pane fade" id="profile-bubbles">
         </div>
