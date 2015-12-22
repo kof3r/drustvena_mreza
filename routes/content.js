@@ -98,11 +98,13 @@ router.post('/image/:bubble_id', upload.single('content'), function(req, res, ne
                 content_type_id: typeId
             }).save().then(function(saved){
                 var context = {
-                    imgPath: '/images/' + saved.id,
+                    imgPath: './images/' + saved.id,
                     contentId: saved.id,
                     res: res
                 }
-
+                console.log('Received file: ');
+                console.log(req.file);
+                console.log(' from: ' +  req.user.id);
                 return parseContent(req.file, typeId, context)
             })
         }
@@ -325,8 +327,11 @@ function parseContent(content, type, context){
 
 // not yet tested
 function handleImg(content, imgPath, contentId, res){
-    fs.writeFile(imgPath.toString(), content, 0, content.length, function(err){
+    console.log(content.size);
+    fs.writeFile(imgPath, content.buffer, { encoding: 'ascii', mode: 0666, flag: 'w'}, function(err){
+        console.log(content.size);
         if (err){
+            console.log(err);
             return general.sendMessage(res, "Failed to write the image.", 500);
         }
 
@@ -334,7 +339,10 @@ function handleImg(content, imgPath, contentId, res){
             .resize(125, 125)
             .autoOrient()
             .write(imgPath + 'small', function (err) {
-                if (err) return general.sendMessage(res, "Failed to resize the image.", 500);
+                if (err){
+                    console.log(err);
+                    return general.sendMessage(res, "Failed to resize the image.", 500);
+                }
                 gm(imgPath)
                     .resize(500)
                     .autoOrient()
