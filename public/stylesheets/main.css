@@ -350,8 +350,8 @@
 	color: grey;
 }
 
-.post > .comments > form > textarea {
-	width: 100% !important;
+.post > .comments > form > div > textarea {
+	resize: vertical;
 	margin-bottom: 30px;
 }
 
