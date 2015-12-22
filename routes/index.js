@@ -146,7 +146,7 @@ router.get('/homepage', function(req, res, next) {
 /********************************/
 // 404 not found
 router.use(function(req, res, next) {
-    res.redirect('/homepage');
+    res.render('homepage.ejs', {title: 'Home', user: req.user.toJSON()});
 });
 
 module.exports = router;
