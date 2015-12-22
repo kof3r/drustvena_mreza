@@ -94,14 +94,14 @@
 				<div class="comments">
 					<ul>
 					</ul>
-					<div class="col-sm-9">
-						<label>Your comment</label>
-						<textarea class="form-control"></textarea>
-					</div>
-					<div class="col-sm-3">
-						<label class="col-sm-12">Actions</label>
-						<button onclick="postComment({{= post.id }})" class="btn btn-default">Post</button>
-					</div>
+					<form onsubmit="postComment({{= post.id }}); return false;">
+						<div class="col-sm-9">
+							<textarea class="form-control"></textarea>
+						</div>
+						<div class="col-sm-3">
+							<input type="submit" class="btn btn-primary" value="Post" />
+						</div>
+					</form>
 				</div>
 				</div>
 			{{~}}
@@ -121,10 +121,10 @@
 					{{?}}
 					{{? comment.username == 'kolinda' }}
 						<span class="actions">
-							<a onclick="editComment('{{=comment.id}}')">
+							<a class="edit" onclick="editComment('{{=comment.id}}')">
 								<span class="glyphicon glyphicon-edit"></span>Edit
 							</a>
-							<a class="remove" onclick="editComment('{{=comment.id}}')">
+							<a class="remove" onclick="removeComment('{{=comment.content_id}}',' {{=comment.id}}')">
 								<span class="glyphicon glyphicon-remove-circle"></span>Remove
 							</a>
 						</span>
