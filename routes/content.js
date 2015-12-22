@@ -8,6 +8,7 @@ var express = require('express');
 var router = express.Router();
 var gm = require('gm');
 var fs = require('fs');
+var md5 = require('md5');
 
 var ValidationError = require('../models/errors/validationError');
 
@@ -37,7 +38,7 @@ router.post('/post', function(req, res, next) {
 
     // user submitted values
     var bubbleId = req.body.bubble_id;
-    var content = parseContent(req.body.content, 1, null);
+    var content = req.body.content;
     var title = req.body.title;
     var description = req.body.description;
 
@@ -72,43 +73,24 @@ router.post('/post', function(req, res, next) {
 // Not yet tested
 router.post('/image/:bubble_id', upload.single('content'), function(req, res, next) {
 
-    // user submitted values
-    var bubbleId = req.params.bubble_id;
-    var title = req.body.title;
-    var description = req.body.description;
+    var context = {
+        bubbleId: req.params.bubble_id,
+        typeId: 2,
+        title: req.body.title,
+        description: req.body.description,
+        content: req.file,
+        imgPath: './res/img/',
+        filename:  md5(Date.now().toString() + req.file.originalname) + '_'
+        + req.file.originalname,
+        res: res,
+        req: req
+    }
 
-    console.log(bubbleId);
-    // inferred values
-    var typeId = 2;
+    console.log('Received file: ');
+    console.log(req.file);
+    console.log(' from: ' +  req.user.id);
+    return parseContent(context);
 
-    Bubble.where({id: bubbleId}).fetch().then(function (bubble){
-        if (!bubble){
-            general.sendMessage(res, "This bubble doesn't exist or it was deleted!", 404);
-        } else {
-
-            if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
-                return general.sendMessage(res, "You don't have permission to post in this bubble!", 403)
-            }
-
-            Content.forge({
-                bubble_id: bubbleId,
-                content: '',
-                title: title,
-                description: description,
-                content_type_id: typeId
-            }).save().then(function(saved){
-                var context = {
-                    imgPath: './images/' + saved.id,
-                    contentId: saved.id,
-                    res: res
-                }
-                console.log('Received file: ');
-                console.log(req.file);
-                console.log(' from: ' +  req.user.id);
-                return parseContent(req.file, typeId, context)
-            })
-        }
-    })
 });
 
 // Gets latest posts in the specified bubble
@@ -315,57 +297,78 @@ router.get('/dislikes/:id', function (req, res) {
     })
 });
 
-function parseContent(content, type, context){
-    if (type == 1){
-        return content;
-    }
+function parseContent(context){
 
-    if (type == 2){
-        return handleImg(content, context.imgPath, context.contentId, context.res, context.extension);
-    }
+    Bubble.where({id: context.bubbleId}).fetch().then(function (bubble){
+        if (!bubble){
+            return general.sendMessage(context.res, "This bubble doesn't exist or it was deleted!", 404);
+        }
+
+        if (!context.req.isAuthenticated() || bubble.attributes.user_id != context.req.user.id){
+            return general.sendMessage(context.res, "You don't have permission to post in this bubble!", 403);
+        }
+
+        if (context.typeId == 1){
+            //return handlePost(content, context);
+        }
+
+        if (context.typeId == 2){
+            return handleImg(context);
+        }
+    })
+
 }
 
 // not yet tested
-function handleImg(content, imgPath, contentId, res){
-    console.log(content.size);
-    fs.writeFile(imgPath, content.buffer, { encoding: 'ascii', mode: 0666, flag: 'w'}, function(err){
-        console.log(content.size);
+function handleImg(context){
+    var loc = context.imgPath + context.filename;
+    fs.writeFile(loc, context.content.buffer, { encoding: 'ascii', mode: 0666, flag: 'w+'}, function(err){
         if (err){
             console.log(err);
-            return general.sendMessage(res, "Failed to write the image.", 500);
+            return general.sendMessage(context.res, "Failed to write the image.", 500);
         }
 
-        gm(imgPath)
+        gm(loc)
             .resize(125, 125)
             .autoOrient()
-            .write(imgPath + 'small', function (err) {
-                if (err){
+            .write(context.imgPath + 'small' + context.filename, function (err) {
+                if (err) {
                     console.log(err);
-                    return general.sendMessage(res, "Failed to resize the image.", 500);
                 }
-                gm(imgPath)
-                    .resize(500)
-                    .autoOrient()
-                    .write(imgPath + 'medium', function(err){
-                        if (err) return general.sendMessage(res, "Failed to resize the image.", 500);
-                        gm(imgPath)
-                            .resize(1280)
-                            .autoOrient()
-                            .write(imgPath + 'large', function(err){
-                                if (err) return general.sendMessage(res, "Failed to resize the image.", 500);
-                                Content.forge({
-                                    id: contentId,
-                                    content: imgPath,
-                                }).then(function(finished){
-                                    res.status(200);
-                                    return res.json(finished);
-                                })
-                            })
-                    })
+            });
+        gm(loc)
+            .resize(500)
+            .autoOrient()
+            .write(context.imgPath + 'medium' + context.filename, function(err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        gm(loc)
+            .resize(1280)
+            .autoOrient()
+            .write(context.imgPath + 'large' + context.filename, function(err) {
+                if (err) {
+                    console.log(err);
+                }
             });
 
-    })
+        Content.forge({
+            content: loc,
+            bubble_id: context.bubbleId,
+            title: context.title,
+            description: context.description,
+            content_type_id: context.typeId
+        }).save().then(function(finished){
+            context.res.status(200);
+            return context.res.json(finished);
+        })
+    });
 
+}
+
+function replaceAll(string, toReplace, replacement){
+    return string.split(toReplace).join(replacement);
 }
 
 module.exports = router;
