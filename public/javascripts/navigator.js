@@ -1,3 +1,5 @@
+var globalUsername = document.getElementById('global-username').innerHTML;
+
 function loadPartial(name, callback) {
 	$.get('/partial/' + name, function(response) {
 		$('#main-content').html(response);
@@ -155,9 +157,9 @@ function loadComments(content_id) {
 
 function postComment(content_id) {
 	
-	var comment = $('#post-' + content_id + ' .comments textarea');
+	var comment = $('#post-' + content_id + ' > .comments > div > textarea');
 	if(comment.val().length) {
-		var pbtn = $('#post-' + content_id + ' .comments button');
+		var pbtn = $('#post-' + content_id + ' > .comments > div > button');
 		pbtn.attr('disabled', 'disabled');
 		pbtn.html('Posting... <span class="glyphicon glyphicon-refresh gly-spin"></span>');
 		
@@ -192,7 +194,7 @@ function editComment(comment_id) {
 		});
 	}
 	else {
-		$(commentIdn + ' textarea').select();
+		$(commentIdn + ' > textarea').select();
 	}
 }
 

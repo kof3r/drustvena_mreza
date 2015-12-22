@@ -94,14 +94,12 @@
 				<div class="comments">
 					<ul>
 					</ul>
-					<form onsubmit="postComment({{= post.id }}); return false;">
-						<div class="col-sm-9">
-							<textarea class="form-control"></textarea>
-						</div>
-						<div class="col-sm-3">
-							<input type="submit" class="btn btn-primary" value="Post" />
-						</div>
-					</form>
+					<div class="col-sm-9">
+						<textarea class="form-control"></textarea>
+					</div>
+					<div class="col-sm-3">
+						<button onclick="postComment({{= post.id }})" class="btn btn-primary">Post</button>
+					</div>
 				</div>
 				</div>
 			{{~}}
@@ -119,7 +117,7 @@
 					{{? comment.updated_at != comment.created_at }}
 						, <em>updated {{= comment.updated_at }}</em>
 					{{?}}
-					{{? comment.username == 'kolinda' }}
+					{{? comment.username == globalUsername }}
 						<span class="actions">
 							<a class="edit" onclick="editComment('{{=comment.id}}')">
 								<span class="glyphicon glyphicon-edit"></span>Edit
