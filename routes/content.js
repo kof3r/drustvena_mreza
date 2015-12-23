@@ -270,11 +270,11 @@ function parseContent(context){
             return general.sendMessage(context.res, "This bubble doesn't exist or it was deleted!", 404);
         }
 
-        if (bubble.bubble_type_id == 1 && context.typeId != 1){
+        if (bubble.attributes.bubble_type_id == 1 && context.typeId != 1){
             return general.sendMessage(context.res, "Only posts can be posted in timeline bubbles!", 403);
         }
 
-        if (bubble.bubble_type_id == 2 && context.typeId != 2){
+        if (bubble.attributes.bubble_type_id == 2 && context.typeId != 2){
             return general.sendMessage(context.res, "Only images can be posted in gallery bubbles!", 403);
         }
 
