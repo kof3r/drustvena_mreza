@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 
 var User = require('../models/user');
+var Bubble = require('../models/bubble');
 
 var requireAuthentication = require('../utils/authentication');
 router.all('*' , requireAuthentication);
@@ -11,7 +12,12 @@ router.get('/feed', function(req, res, next) {
     res.render('feed.partial.ejs');
 });
 router.get('/new-bubble', function(req, res, next) {
-    res.render('new-bubble.partial.ejs');
+    res.render('bubble-editor.partial.ejs');
+});
+router.get('/edit-bubble/:id', function(req, res, next) {
+    Bubble.where({id: req.params.id}).fetch().then(function(bubble){
+      res.render('bubble-editor.partial.ejs', bubble);
+    });
 });
 router.get('/new-content', function(req, res, next) {
     res.render('new-content.partial.ejs');
@@ -35,6 +41,8 @@ router.get('/edit-image/:id', function(req, res, next) {
 router.get('/manage-account', function(req, res, next) {
     res.render('manage-account.partial.ejs');
 });
+
+// 404
 router.get('/404', function(req, res, next) {
     res.render('404.partial.ejs');
 });
