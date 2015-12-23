@@ -69,11 +69,11 @@
 			opacity: 1 !important;
 		}
 
-        #register {
+        #sign-up {
             max-width: 600px;
         }
         
-        #register:hover {
+        #sign-up:hover {
 			opacity: 1 !important;
 		}
 
@@ -253,14 +253,14 @@
       $("#email").change(checkEmail);
       $("#register-button").click(register);
         
-      $("#register").click(function() {
-        $("#login").css("opacity", "0.25");
-        $("#register").css("opacity", "1");
+      $("#sign-up").click(function() {
+        $("#sign-in").css("opacity", "0.25");
+        $("#sign-up").css("opacity", "1");
       });
         
-      $("#login").click(function() {
-        $("#register").css("opacity", "0.25");
-        $("#login").css("opacity", "1");
+      $("#sign-in").click(function() {
+        $("#sign-up").css("opacity", "0.25");
+        $("#sign-in").css("opacity", "1");
       });
 		
       $(document).ready(function(){

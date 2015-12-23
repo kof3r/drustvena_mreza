@@ -24,6 +24,14 @@ router.get('/view-profile', function(req, res, next) {
 router.get('/edit-profile', function(req, res, next) {
     res.render('edit-profile.partial.ejs', {user: req.user.toJSON()});
 });
+// nova slika
+router.get('/edit-image/', function(req, res, next) {
+    res.render('edit-image.partial.ejs', {user: req.user.toJSON()});
+});
+// uređivanje postojeće
+router.get('/edit-image/:id', function(req, res, next) {
+    res.render('edit-image.partial.ejs', {user: req.user.toJSON()});
+});
 router.get('/manage-account', function(req, res, next) {
     res.render('manage-account.partial.ejs');
 });
