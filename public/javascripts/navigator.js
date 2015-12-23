@@ -259,17 +259,16 @@ page('/bubble/:id', function(context) {
 	loadFeed('/api/bubble/' + context.params.id, 'main-content');
 });
 
-<<<<<<< HEAD
 page('/image/edit/:id', function(context) {
   loadPartial('edit-image?imageID=' + context.params.id);
-=======
+});
+
 page('/image/edit/', function(context) {
 	loadPartial('edit-image/');
 });
 
 page('/image/edit/:id', function(context) {
   loadPartial('edit-image/' + context.params.id);
->>>>>>> 1d755588574ee5517797a80d8c5d517187ca1da1
 });
 
 page('/new/:type', function(context){
@@ -297,7 +296,7 @@ page('/sign-out', function() {
 
 page('/*', function(){
   loadPartial('404');
-})
+});
 
 page.start();
 
