@@ -1,4 +1,5 @@
 var globalUsername = document.getElementById('global-username').innerHTML;
+//var globalUserId = document.getElementById('global-user-id').innerHTML;
 
 function loadPartial(name, callback) {
 	$.get('/partial/' + name, function(response) {
@@ -27,12 +28,13 @@ function loadFeed(url, element) {
 
 }
 
-function renderTemplate(url, template, element) {
+function renderTemplate(url, template, element, callback) {
 	
 	$.get(url, function(data) {
 		var templateFunction = doT.template(document.getElementById(template).text);
 		document.getElementById(element).innerHTML = templateFunction(data);
 	});
+	if(callback) { callback(); }
 	
 }
 
@@ -52,11 +54,8 @@ function initialize() {
 		$('#my-bubbles').html(html);
 	});
 	
-	$('#new-bubble-menu-item').magnificPopup({
-		type: 'ajax',
-		alignTop: true,
-		overflowY: 'scroll',
-		mainClass: 'mfp-fade'
+	$('.popup-ajax').magnificPopup({
+		type: 'ajax'
 	});
 
 	$('#new-bubble-form').magnificPopup({
@@ -255,8 +254,8 @@ page('/homepage', function(){
 	loadFeed('/api/home/feed', 'main-content');
 });
 
-page('/bubble/:id', function(context) {
-	loadFeed('/api/bubble/' + context.params.id, 'main-content');
+page('/bubble/:id/', function(context) {
+  loadFeed('/api/bubble/' + context.params.id + '/content', 'main-content');
 });
 
 page('/image/edit/:id', function(context) {

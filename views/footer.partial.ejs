@@ -30,19 +30,40 @@
 	
 	<!-- My Bubbles -->
     <script id="my-bubbles-tmp" type="text/x-dot-template">
-    
-		{{? it.bubbles.length > 0 }}
-			{{~it.bubbles :bubble:index}}
-				<li><a href="/bubble/{{= bubble.id }}">{{= bubble.title }}</a></li>
-			{{~}}
-		{{??}}
-			<li class="dropdown-header">No bubbles</li>
-		{{?}}
-	</script>
+      
+      {{? it.bubbles.length > 0 }}
+        {{~it.bubbles :bubble:index}}
+          <li><a href="/bubble/{{= bubble.id }}">{{= bubble.title }}</a></li>
+        {{~}}
+      {{??}}
+        <li class="dropdown-header">No bubbles</li>
+      {{?}}
+		
+		</script>
+	
+    <script id="bubble-tmp" type="text/x-dot-template">
+      
+        <div>
+            <h2>{{= it.title }}</h2>
+            <p>{{= it.description }}</p>
+        </div>
+      
+    </script>
 	
 	<!-- Feed -->
     <script id="feed-tmp" type="text/x-dot-template">
-    
+    {{? it.attributes }}
+        <div class="header">
+            <h3>{{= it.attributes.title }}</h3>
+            {{? it.attributes.description }}
+                <p>{{= it.attributes.description }}</p>
+            {{?}}
+            <span class="time">Created {{= it.attributes.created_at }}</span>
+            {{? 1==1 }}
+                <a class="btn btn-success popup-ajax" href="/partial/edit-bubble/{{= it.attributes.id }}">Edit bubble</a>
+            {{?}}
+        </div>
+    {{?}}
 		{{? it.contents.length > 0 }}
 			{{~it.contents :post:index}}
 				<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
@@ -108,6 +129,9 @@
 		{{??}}
 			<div class="alert alert-info">There is currently no content to show</div>
 		{{?}}
+		<script>$('.popup-ajax').magnificPopup({
+		type: 'ajax'
+	});</script>
 	</script>
 	
 	<!-- Comments -->

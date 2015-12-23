@@ -154,6 +154,23 @@
     margin: 75px auto;
 }
 
+#main-content > .header {
+    padding: 10px 10px 30px 10px;
+    border: 2px dashed;
+    color: darkorange;
+    border-radius: 25px;
+    position: relative;
+    bottom: -15px;
+}
+
+#main-content > .header h3 {
+    float: left;
+    margin: 10px 20px;
+    padding: 5px;
+    background-color: darkorange;
+    color: white;
+}
+
 /* POST */
 
 #controls {
