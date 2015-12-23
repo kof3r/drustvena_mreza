@@ -115,13 +115,41 @@ $(document).click(function(event) {
 
 function toggleOpinion(opinion, content_id) {
 	$.post('/api/content/' + opinion + '/' + content_id, function() {
-		var btn = $('#post-' + content_id + ' .actions .' + opinion);
+    var postIdn = '#post-' + content_id;
+		var btn = $(postIdn + ' .actions .' + opinion);
+		
+		var statsIdn = postIdn + ' > .header > .stats';
+		var karma = $(statsIdn + ' > .karma');
+		
 		if(btn.hasClass('active')) {
 			btn.removeClass('active');
+			
+      if(opinion == 'like') {
+        var likes = $(statsIdn + ' > .likes')
+        likes.html(parseInt(likes.html()) - 1);
+        karma.html(parseInt(karma.html()) - 1);
+      }
+      else if(opinion == 'dislike') {
+        var dislikes = $(statsIdn + ' > .dislikes');
+        dislikes.html(parseInt(dislikes.html()) - 1);
+        karma.html(parseInt(karma.html()) + 1);
+      }
 		}
 		else {
 			btn.addClass('active');
+			
+      if(opinion == 'like') {
+        var likes = $(statsIdn + ' > .likes')
+        likes.html(parseInt(likes.html()) + 1);
+        karma.html(parseInt(karma.html()) + 1);
+      }
+      else if(opinion == 'dislike') {
+        var dislikes = $(statsIdn + ' > .dislikes');
+        dislikes.html(parseInt(dislikes.html()) + 1);
+        karma.html(parseInt(karma.html()) - 1);
+      }
 		}
+      
 	});
 }
 
@@ -227,6 +255,10 @@ page('/homepage', function(){
 
 page('/bubble/:id', function(context) {
 	loadFeed('/api/bubble/' + context.params.id, 'main-content');
+});
+
+page('/content/image/:id', function(context) {
+  loadPartial('edit-image?imageID=' + context.params.id);
 });
 
 page('/new/:type', function(context){
