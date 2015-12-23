@@ -14,6 +14,7 @@ var Country = require('../models/country');
 router.use('/api', require('./api')(passport));
 router.use('/partial', require('./partial'));
 router.use('/profile', require('./profile'));
+router.use('/res', require('./res'));
 
 // index - sign in and sign up
 // GET

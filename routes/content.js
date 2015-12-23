@@ -34,43 +34,28 @@ router.all("*", requireAuhentication);
 
 // post post with post :P
 // POST
-router.post('/post', function(req, res, next) {
+router.post('/post/:bubble_id', function(req, res, next) {
 
-    // user submitted values
-    var bubbleId = req.body.bubble_id;
-    var content = req.body.content;
-    var title = req.body.title;
-    var description = req.body.description;
+    var context = {
+        bubbleId: req.params.bubble_id,
+        typeId: 1,
+        title: req.body.title,
+        description: req.body.description,
+        content: req.body.content,
+        res: res,
+        req: req
+    }
 
-    // inferred values
-    var typeId = 1;
-    var createdAt = convert.dateToSqlFormat(new Date());
-
-    Bubble.where({id: bubbleId}).fetch().then(function (bubble){
-        if (!bubble){
-            general.sendMessage(res, "This bubble doesn't exist or it was deleted!", 404);
-        } else {
-
-            if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
-                return general.sendMessage(res, "You don't have permission to post in this bubble!", 403)
-            }
-
-            Content.forge({
-                bubble_id: bubbleId,
-                content: content,
-                title: title,
-                description: description,
-                content_type_id: typeId,
-                created_at: createdAt,
-            }).save().then(function(saved){
-                res.status(200);
-                return res.json(saved);
-            })
-        }
-    })
+    return parseContent(context);
 });
 
-// Not yet tested
+// POST api/content/image/:bubble_id
+// ubacuje sliku u dani bubble
+// očekuje sljedeće form parametre:
+// - title - naslov slike
+// - description - opis slike
+// - content - binarni sadržaj slike
+// slati kao multipart/form-data, a ne obični form!
 router.post('/image/:bubble_id', upload.single('content'), function(req, res, next) {
 
     var context = {
@@ -94,76 +79,40 @@ router.post('/image/:bubble_id', upload.single('content'), function(req, res, ne
 });
 
 // Gets latest posts in the specified bubble
-// parameters:  bubble_id - id of the target bubble
-//              from - number of latest posts to skip
-//              size - total number of posts to return
-// GET
-router.get('/post', function(req, res, next) {
+// parameters:  post_id - id of the post to get
 
-    var bubbleId = req.query.bubble_id;
-    var typeId = 1;
-    var context = {
-        size: req.query.size,
-        from: req.query.from,
-        res: res
-    }
+// GET api/post/:post_id
+router.get('/post/:post_id', function(req, res, next) {
 
-    if (!params.checkInitSizeAndFrom(context, 5, 0)){
-        return
-    }
-
-    Bubble.where({id: bubbleId}).fetch().then(function (bubble){
-        if (!bubble){
-            general.sendMessage(res, "This bubble doesn't exist or it was deleted!", 404);
-        } else {
-
-            var results = {
-                posts: []
-            }
-
-            Content
-                .where({bubble_id: bubbleId, content_type_id:typeId})
-                .query(function(qb){
-                    qb.orderBy('created_at','DESC');
-                })
-                .fetchAll()
-                .then(function(collection){
-                    arrays.rangeCopy(collection.models, results.posts, context.from, context.size);
-                    res.status(200);
-                    return res.send(results);
-                })
+    Content.where({id: req.params.post_id, content_type_id: 1}).fetch().then(function (post){
+        if (!post){
+            return general.sendMessage(res, "This post doesn't exist or it was deleted!", 404);
         }
+
+        return res.status(200).json(post);
     })
 });
 
-router.post('/edit/:id', function(req, res, next){
+// GET api/image/:image_id
+// vraća OPISNIK slike s danim id-em
+// opisnik slike je json koji u potpunosti odgovara opisu slike u bazi.
+router.get('/image/:image_id', function(req, res, next) {
 
-    var contentId = req.params.id;
-    var newTitle = req.body.title;
-    var newDescription = req.body.description;
-
-    Content.where({id: contentId}).fetch().then(function(content){
-        if(!content){
-            general.sendMessage(res, "This post doesn't exist or it was deleted!", 404);
-        } else {
-            Bubble.where({id: content.attributes.bubble_id}).fetch().then(function(bubble){
-                if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
-                    return general.sendMessage(res, "You don't have permission to edit this content!", 403)
-                } else {
-                    var newContent = parseContent(req.body.content, content.attributes.content_type_id);
-                    Content.forge({
-                        id: contentId,
-                        title: newTitle,
-                        description: newDescription,
-                        content: newContent
-                    }).save().then(function(saved){
-                        res.status(200);
-                        return res.json(saved);
-                    });
-                }
-            })
+    Content.where({id: req.params.image_id, content_type_id: 2}).fetch().then(function (image){
+        if (!image){
+            return general.sendMessage(res, "This image doesn't exist or it was deleted!", 404);
         }
+
+        return res.status(200).json(image);
     })
+});
+
+router.post('/edit/post/:id', function(req, res, next){
+    return editContent(req, res, 1);
+})
+
+router.post('/edit/image/:id', upload.single('content'), function(req, res, next){
+    return editContent(req, res, 2);
 })
 
 router.post('/delete/:id', function(req, res, next){
@@ -196,6 +145,23 @@ router.get('/timeline', function(req, res) {
             .where('bubble.user_id', user.id)
             .andWhere(function () {
                 this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
+            }).groupBy('content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
+            .columns('content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
+            .count('like.content_id as likes')
+            .orderBy('created_at', 'DESC');
+    }).fetchAll().then(function (posts) {
+        res.json( {posts: posts} );
+    });
+});
+
+router.get('/gallery', function(req, res) {
+    var user = req.user;
+    Content.query(function (qb) {
+        qb.join('bubble', 'content.bubble_id', 'bubble.id')
+            .leftJoin('like', 'like.content_id', 'content.id')
+            .where('bubble.user_id', user.id)
+            .andWhere(function () {
+                this.where('bubble_type_id', 2);
             }).groupBy('content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
             .columns('content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
             .count('like.content_id as likes')
@@ -304,12 +270,20 @@ function parseContent(context){
             return general.sendMessage(context.res, "This bubble doesn't exist or it was deleted!", 404);
         }
 
+        if (bubble.bubble_type_id == 1 && context.typeId != 1){
+            return general.sendMessage(context.res, "Only posts can be posted in timeline bubbles!", 403);
+        }
+
+        if (bubble.bubble_type_id == 2 && context.typeId != 2){
+            return general.sendMessage(context.res, "Only images can be posted in gallery bubbles!", 403);
+        }
+
         if (!context.req.isAuthenticated() || bubble.attributes.user_id != context.req.user.id){
             return general.sendMessage(context.res, "You don't have permission to post in this bubble!", 403);
         }
 
         if (context.typeId == 1){
-            //return handlePost(content, context);
+            return handlePost(context);
         }
 
         if (context.typeId == 2){
@@ -353,13 +327,22 @@ function handleImg(context){
                 }
             });
 
-        Content.forge({
+        var image = {
             content: loc,
             bubble_id: context.bubbleId,
             title: context.title,
             description: context.description,
             content_type_id: context.typeId
-        }).save().then(function(finished){
+        }
+
+        if (context.content_id){
+            image.id = context.content_id;
+        }
+
+        Content.forge().save().then(function(finished, err){
+            if (err){
+                return general.sendMessage(context.res, "Failed to save the post.", 500);
+            }
             context.res.status(200);
             return context.res.json(finished);
         })
@@ -367,7 +350,70 @@ function handleImg(context){
 
 }
 
-function replaceAll(string, toReplace, replacement){
+function handlePost(context){
+
+    console.log(context.content);
+
+    var post = {
+        content: context.content,
+        bubble_id: context.bubbleId,
+        title: context.title,
+        description: context.description,
+        content_type_id: context.typeId
+    }
+
+    if (context.content_id){
+        post.id = context.content_id;
+    }
+
+    Content.forge(post).save().then(function(finished, err){
+        if (err){
+            return general.sendMessage(context.res, "Failed to save the post.", 500);
+        }
+        context.res.status(200);
+        return context.res.json(finished);
+    })
+}
+
+function editContent(req, res, type){
+    Content.where({id: req.params.id, content_type_id: type}).fetch().then(function(content){
+        if(!content) {
+            return general.sendMessage(res, "This content doesn't exist or it was deleted!", 404);
+        }
+
+        Bubble.where({id: content.attributes.bubble_id}).fetch().then(function(bubble){
+            if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
+                    return general.sendMessage(res, "You don't have permission to edit this content!", 403)
+            }
+
+            var context = {
+                content_id: content.id,
+                bubbleId: bubble.id,
+                typeId: type,
+                title: req.body.title,
+                description: req.body.description,
+                res: res,
+                req: req
+            }
+
+            if (type == 1){
+                context.content = req.body.content;
+            }
+
+
+            if (type == 2){
+                context.content = req.file;
+                context.imgPath = './res/img/';
+                context.filename = md5(Date.now().toString() + req.file.originalname) + '_'
+                    + req.file.originalname
+            }
+
+            return parseContent(context);
+            })
+    })
+}
+
+function replaceAll(string, toReplace, replacement) {
     return string.split(toReplace).join(replacement);
 }
 
