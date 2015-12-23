@@ -160,6 +160,8 @@
             </div>
         </div>
     </div>
+    
+    <p style="display : none;" id="usernameTag"><%=user.username%></p>
 </div>
 
 <!--gallery tab script-->
@@ -172,7 +174,7 @@
     var nextRowIndex = 0;
     //kako ovo dohvatiti - ejs atributi ili
     //neki zahtjev za ovo
-    var username = user.username;
+    var username = $("#usernameTag").text();
     
     $("#newImageButton").click(function(){
                                     document.location.href="/image/edit/";

@@ -50,7 +50,7 @@
 <script>
     var bubbleID = "";
     var url = document.location.href;
-    var imageID = url.substring(url.lastIndexOf("/"));
+    var imageID = url.substring(url.lastIndexOf("/")+1);
 
     if(imageID == "") {
         $("deleteImageButton").hide();
