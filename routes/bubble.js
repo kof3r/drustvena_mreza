@@ -54,7 +54,7 @@ router.get('/:id/content', function (req, res) {
     Bubble.where({id: req.params.id}).fetch().then(function(bubble, err){
         if (!bubble || err){
             console.log(err);
-            return general.sendMessage(res, "This bubble doesn't exist or it was deleted");
+            return general.sendMessage(res, "This bubble doesn't exist or it was deleted", 404);
         }
         Content.where({bubble_id: req.params.id}).fetchAll().then(function (contents) {
             res.json({attributes: bubble.attributes, contents: contents});
@@ -68,9 +68,9 @@ router.get('/:id', function (req, res) {
     Bubble.where({id: req.params.id}).fetch().then(function(bubble, err){
         if (!bubble || err){
             console.log(err);
-            return general.sendMessage(res, "This bubble doesn't exist or it was deleted");
+            return general.sendMessage(res, "This bubble doesn't exist or it was deleted", 404);
         }
-        
+
         res.json(bubble);
     })
 });
