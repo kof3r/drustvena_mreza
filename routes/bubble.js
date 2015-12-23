@@ -6,6 +6,7 @@ var ValidationError = require('../models/errors/validationError');
 
 var express = require('express');
 var router = express.Router();
+var general = require('../utils/general');
 
 var Bubble = require('../models/bubble');
 var Content = require('../models/content');
@@ -49,10 +50,30 @@ router.post('/edit/:id', function(req, res) {
     });
 });
 
+router.get('/:id/content', function (req, res) {
+    Bubble.where({id: req.params.id}).fetch().then(function(bubble, err){
+        if (!bubble || err){
+            console.log(err);
+            return general.sendMessage(res, "This bubble doesn't exist or it was deleted");
+        }
+        Content.where({bubble_id: req.params.id}).fetchAll().then(function (contents) {
+            res.json({attributes: bubble.attributes, contents: contents});
+        })
+
+    });
+
+});
+
 router.get('/:id', function (req, res) {
-    Content.where({bubble_id: req.params.id}).fetchAll().then(function (contents) {
-        res.json({contents: contents});
+    Bubble.where({id: req.params.id}).fetch().then(function(bubble, err){
+        if (!bubble || err){
+            console.log(err);
+            return general.sendMessage(res, "This bubble doesn't exist or it was deleted");
+        }
+        
+        res.json(bubble);
     })
 });
+
 
 module.exports = router;
