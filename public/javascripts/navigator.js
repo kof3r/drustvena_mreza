@@ -259,7 +259,7 @@ page('/bubble/:id', function(context) {
 	loadFeed('/api/bubble/' + context.params.id, 'main-content');
 });
 
-page('/content/image/:id', function(context) {
+page('/image/edit/:id', function(context) {
   loadPartial('edit-image?imageID=' + context.params.id);
 });
 
