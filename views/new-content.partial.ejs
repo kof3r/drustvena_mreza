@@ -108,17 +108,16 @@ $('#post-form').on('submit', function(event) {
 	var title = document.getElementById('post-title').value;
 	var bubble = $('#bubble-to-post-in').val();
 	var content = $("#editor").bbcode();
-	var postData = {bubble_id: bubble,
-					content: content,
-					title: title,
-					description: ''};
+	var postData = {content: content,
+                  title: title,
+                  description: ''};
 	
 	if (title == '')	{ $('#post-title').focus();}
 	else if (bubble == '') { $('#bubble-to-post-in').focus();}
 	else if (content == '') { $('#editor').focus();}
 					
 	else {
-		$.post('/api/content/post', postData, function(success) {
+		$.post('/api/content/post/' + bubble, postData, function(success) {
 			window.history.back();
 		});
 	}
