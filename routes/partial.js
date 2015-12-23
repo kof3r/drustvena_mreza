@@ -27,5 +27,8 @@ router.get('/edit-profile', function(req, res, next) {
 router.get('/manage-account', function(req, res, next) {
     res.render('manage-account.partial.ejs');
 });
+router.get('/404', function(req, res, next) {
+    res.render('404.partial.ejs');
+});
 
 module.exports=router;

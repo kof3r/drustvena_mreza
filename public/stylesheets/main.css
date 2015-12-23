@@ -1,7 +1,7 @@
 #navbar-main {
   background-color: #ffa500;
 /*  border-color: #ffffff; */
-  font-family: 'Open Sans', sans-serif;
+  /*font-family: 'Open Sans', sans-serif;*/
   border: 0;
   font-weight: bold;
 }
@@ -350,8 +350,8 @@
 	color: grey;
 }
 
-.post > .comments > form > div > textarea {
-	resize: vertical;
+.post > .comments > div > textarea {
+  resize: vertical;
 	margin-bottom: 30px;
 }
 

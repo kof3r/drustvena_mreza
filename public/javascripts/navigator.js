@@ -3,7 +3,9 @@ var globalUsername = document.getElementById('global-username').innerHTML;
 function loadPartial(name, callback) {
 	$.get('/partial/' + name, function(response) {
 		$('#main-content').html(response);
-		callback();
+		if (callback) {
+      callback();
+    }
 	});
 }
 
@@ -115,13 +117,41 @@ $(document).click(function(event) {
 
 function toggleOpinion(opinion, content_id) {
 	$.post('/api/content/' + opinion + '/' + content_id, function() {
-		var btn = $('#post-' + content_id + ' .actions .' + opinion);
+    var postIdn = '#post-' + content_id;
+		var btn = $(postIdn + ' .actions .' + opinion);
+		
+		var statsIdn = postIdn + ' > .header > .stats';
+		var karma = $(statsIdn + ' > .karma');
+		
 		if(btn.hasClass('active')) {
 			btn.removeClass('active');
+			
+      if(opinion == 'like') {
+        var likes = $(statsIdn + ' > .likes')
+        likes.html(parseInt(likes.html()) - 1);
+        karma.html(parseInt(karma.html()) - 1);
+      }
+      else if(opinion == 'dislike') {
+        var dislikes = $(statsIdn + ' > .dislikes');
+        dislikes.html(parseInt(dislikes.html()) - 1);
+        karma.html(parseInt(karma.html()) + 1);
+      }
 		}
 		else {
 			btn.addClass('active');
+			
+      if(opinion == 'like') {
+        var likes = $(statsIdn + ' > .likes')
+        likes.html(parseInt(likes.html()) + 1);
+        karma.html(parseInt(karma.html()) + 1);
+      }
+      else if(opinion == 'dislike') {
+        var dislikes = $(statsIdn + ' > .dislikes');
+        dislikes.html(parseInt(dislikes.html()) + 1);
+        karma.html(parseInt(karma.html()) - 1);
+      }
 		}
+      
 	});
 }
 
@@ -229,6 +259,10 @@ page('/bubble/:id', function(context) {
 	loadFeed('/api/bubble/' + context.params.id, 'main-content');
 });
 
+page('/content/image/:id', function(context) {
+  loadPartial('edit-image?imageID=' + context.params.id);
+});
+
 page('/new/:type', function(context){
 	var type = context.params.type;
 	loadPartial('new-content', function() {
@@ -251,6 +285,10 @@ page('/account/manage', function() {
 page('/sign-out', function() {
 	signOut();
 });
+
+page('/*', function(){
+  loadPartial('404');
+})
 
 page.start();
 
