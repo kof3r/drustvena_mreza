@@ -70,7 +70,7 @@
         var imageJSON = {id : imageID, bubble_id:bubbleID, title:imageTitle, description:imageDescription};
 
 
-        $.post("/content/image", imageJSON);
+        $.post("/api/content/image", imageJSON);
         **/
 
         $("#submitButton").trigger("click");
@@ -80,7 +80,7 @@
 
     //delete button
     $("#deleteImageButton").click(function(){
-        $.post("/content/image/"+imageID+ "/delete/");
+        $.post("/api/content/image/"+imageID+ "/delete/");
 
         ///content/image/:imageID/delete/
         //vjer. će trebat neki redirect odradit, na homepage ili galeriju
@@ -107,13 +107,13 @@
 
             //get bubble info
             //get user info        
-            $.get("/bubble/info?id="+imageDescriptor.bubble_id, function(bubbleDescriptor, status) {
+            $.get("/api/bubble/info?id="+imageDescriptor.bubble_id, function(bubbleDescriptor, status) {
                 bubbleID = bubbleDescriptor.bubble_id;
 
                 //naslov bubblea
                 $("#bubbleNameButton").append(bubbleDescriptor.title);
 
-                $.get("/user/info?id="+bubbleDescriptor.user_id, function(userDescriptor, status) {
+                $.get("/api/user/info?id="+bubbleDescriptor.user_id, function(userDescriptor, status) {
                     //ime autora
                     $("#authorName").append(userDescriptor.username);
                 });
