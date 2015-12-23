@@ -35,9 +35,15 @@ router.get("/edit/:id",function(req,res,next){
 
             // ako treba za debug console.log(bubble);
 
-            return res.render('edit-image.ejs');
+            return res.render('edit-image.ejs', {user: req.user.toJSON()});
         });
     })
+});
+
+router.get("/edit/",function(req,res,next){
+
+    return res.render('edit-image.ejs', {user: req.user.toJSON()});
+
 });
 
 module.exports=router;

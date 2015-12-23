@@ -91,12 +91,12 @@
     if(imageID != "") {
         //popunjavanje naslova, opisa,...
         ///api/content/image/:image_id
-        $.get("api/content/image/"+imageID, function(imageDescriptor, status) {
+        $.get("/api/content/image/"+imageID, function(imageDescriptor, status) {
             //link na veliku sliku
-            //trenutno se radi o istoj slici, trebat će vidjet kako se veličina mijenja
-            $("#largeImageLink").attr("href", imageDescriptor.content);
+            //ovo bi trebao biti ok link, ali treba loadati partial za prikaz slike (samo slike) - Domagoj
+            $("#largeImageLink").attr("href",'/' + imageDescriptor.content + '?size=large');
             //link na samu sliku - pomocu ovog se dohvaća slika
-            $("#imageContainer").attr("src", imageDescriptor.content);
+            $("#imageContainer").attr("src",'/' + imageDescriptor.content);
             
             //naslov slike
             $("#titleArea").append(imageDescriptor.title);
