@@ -152,12 +152,10 @@
                 <div class="col-md-6">
                 </div>
                 
-                <!-- Upload slike na bubble -->
-                <div class="col-md-6">
-                    <form id="imageUploadForm" role="form" method="post" action="/bytes/image">
-                        <input type="file" name="picture" accept="image/*">
-                        <input type="submit">
-                    </form>
+                 <div class="col-md-6">
+                     <button class="btn btn-primary" id="newImageButton">
+                         Add new..
+                     </button>
                 </div>
             </div>
         </div>
@@ -175,6 +173,10 @@
     //kako ovo dohvatiti - ejs atributi ili
     //neki zahtjev za ovo
     var username = user.username;
+    
+    $("#newImageButton").click(function(){
+                                    document.location.href="/image/edit/";
+                               });
     
     //gets an array of image descriptors
     //for all the images of the current user
