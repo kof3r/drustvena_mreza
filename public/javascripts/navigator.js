@@ -3,7 +3,9 @@ var globalUsername = document.getElementById('global-username').innerHTML;
 function loadPartial(name, callback) {
 	$.get('/partial/' + name, function(response) {
 		$('#main-content').html(response);
-		callback();
+		if (callback) {
+      callback();
+    }
 	});
 }
 
@@ -283,6 +285,10 @@ page('/account/manage', function() {
 page('/sign-out', function() {
 	signOut();
 });
+
+page('/*', function(){
+  loadPartial('404');
+})
 
 page.start();
 
