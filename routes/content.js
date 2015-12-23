@@ -381,6 +381,7 @@ function editContent(req, res, type){
             return general.sendMessage(res, "This content doesn't exist or it was deleted!", 404);
         }
 
+        console.log(content);
         Bubble.where({id: content.attributes.bubble_id}).fetch().then(function(bubble){
             if (!req.isAuthenticated() || bubble.attributes.user_id != req.user.id){
                     return general.sendMessage(res, "You don't have permission to edit this content!", 403)
