@@ -91,7 +91,7 @@ function renderEditor() {
     }
     $("#editor").wysibb(wbbOpt);
     
-    $.get('/content/myBubbles', function(data) {
+    $.get('/api/content/myBubbles', function(data) {
     var templateFunction = doT.template(document.getElementById('new-post-bubble-select-tmp').text);
 		var html = templateFunction(data);
 		$('#bubble-to-post-in').html(html);
@@ -118,7 +118,7 @@ $('#post-form').on('submit', function(event) {
 	else if (content == '') { $('#editor').focus();}
 					
 	else {
-		$.post('/content/post', postData, function(success) {
+		$.post('/api/content/post', postData, function(success) {
 			window.history.back();
 		});
 	}

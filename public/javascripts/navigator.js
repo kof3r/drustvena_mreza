@@ -31,6 +31,7 @@ function renderTemplate(url, template, element) {
 		var templateFunction = doT.template(document.getElementById(template).text);
 		document.getElementById(element).innerHTML = templateFunction(data);
 	});
+	
 }
 
 function signOut() {
@@ -43,7 +44,7 @@ function initialize() {
 		loadPage();
 	}
 	*/
-	$.get('/content/myBubbles', function(data) {
+	$.get('/api/content/myBubbles', function(data) {
 		var templateFunction = doT.template(document.getElementById('my-bubbles-tmp').text);
 		var html = templateFunction(data);
 		$('#my-bubbles').html(html);
@@ -81,7 +82,7 @@ $('#search-form').on('submit', function(event){
 		sb.addClass('glyphicon-refresh');
 		sb.addClass('gly-spin');
 		
-		$.get('/search?query='+ st.val(), function (data, status) {
+		$.get('/api/search?query='+ st.val(), function (data, status) {
 			sr.html('<li class="dropdown-header"><span class="glyphicon glyphicon-user"> Contacts<li><li role="separator" class="divider"></li>');
 			$.each(data.users, function() {
 				itemLi = document.createElement('li');
@@ -113,7 +114,7 @@ $(document).click(function(event) {
 })
 
 function toggleOpinion(opinion, content_id) {
-	$.post('/content/' + opinion + '/' + content_id, function() {
+	$.post('/api/content/' + opinion + '/' + content_id, function() {
 		var btn = $('#post-' + content_id + ' .actions .' + opinion);
 		if(btn.hasClass('active')) {
 			btn.removeClass('active');
@@ -131,7 +132,7 @@ function loadComments(content_id) {
 		cmtbtn.removeClass('glyphicon-comment');
 		cmtbtn.addClass('gly-spin glyphicon-refresh');
 
-		$.get('/content/comments/' + content_id, function (data) {
+		$.get('/api/content/comments/' + content_id, function (data) {
 			if (data.comments.length) {
 				var templateFunction = doT.template(document.getElementById('comments-tmp').text);
 				$.each(data.comments, function() {
@@ -163,7 +164,7 @@ function postComment(content_id) {
 		pbtn.attr('disabled', 'disabled');
 		pbtn.html('Posting... <span class="glyphicon glyphicon-refresh gly-spin"></span>');
 		
-		$.post('/content/comment/' + content_id, {content_id: content_id, comment: comment.val()}, function (data) {
+		$.post('/api/content/comment/' + content_id, {content_id: content_id, comment: comment.val()}, function (data) {
 		
 		pbtn.html('Post');
 		pbtn.removeAttr('disabled');
@@ -187,7 +188,7 @@ function editComment(comment_id) {
 		$(commentIdn).keypress(function(e) {
 			if(e.which == 13) {
 				var newCommentTxt = editor.val();
-				$.post('/comment/edit/' + comment_id, {comment: newCommentTxt }, function() {
+				$.post('/api/comment/edit/' + comment_id, {comment: newCommentTxt }, function() {
 					$(commentIdn).html(newCommentTxt);
 				});
 			}
@@ -220,12 +221,12 @@ function initializeVideos() {
     });
 }
 
-page('/home/homepage', function(){
-	loadFeed('/home/feed', 'main-content');
+page('/homepage', function(){
+	loadFeed('/api/home/feed', 'main-content');
 });
 
 page('/bubble/:id', function(context) {
-	loadFeed('/bubble/' + context.params.id, 'main-content');
+	loadFeed('/api/bubble/' + context.params.id, 'main-content');
 });
 
 page('/new/:type', function(context){

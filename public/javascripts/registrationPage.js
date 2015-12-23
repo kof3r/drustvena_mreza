@@ -140,7 +140,7 @@ function showAlert(alertID) {
 
 //actual page code
 //urls
-var homepage = "/home/homepage";
+var homepage = "/homepage";
 
 var usernameAvailable = false;
 var usernameTimeoutStarted = false;
@@ -247,7 +247,7 @@ function checkUsernameDelayed() {
 			//check if the username is valid with ajax
 		} else {
 			if(!usernameTimeoutStarted) {
-				$.get("/isUsernameAvailable", {"username":username}, doUsernameAvailabilityResponse);
+				$.get("/api/isUsernameAvailable", {"username":username}, doUsernameAvailabilityResponse);
 			}
 
 			return true;
