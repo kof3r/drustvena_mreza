@@ -339,9 +339,9 @@ function handleImg(context){
             image.id = context.content_id;
         }
 
-        Content.forge().save().then(function(finished, err){
+        Content.forge(image).save().then(function(finished, err){
             if (err){
-                return general.sendMessage(context.res, "Failed to save the post.", 500);
+                return general.sendMessage(context.res, "Failed to save the image.", 500);
             }
             context.res.status(200);
             return context.res.json(finished);
