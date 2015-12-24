@@ -50,7 +50,7 @@ module.exports=function (passport) {
                 if(err) {
                     return res.json({error:'An error occurred.'});
                 } else {
-                    return res.end();
+                    return res.json({response: user});
                 }
             });
         })(req, res, next);
