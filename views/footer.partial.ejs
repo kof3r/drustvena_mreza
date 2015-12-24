@@ -95,7 +95,14 @@
 					{{?}}
 				</div>
 				<div class="content">
-					{{=post.content}}
+          {{? post.content_type_id == 1 }}
+              {{=post.content}}
+          {{?? post.content_type_id == 2}}
+              <a class="image-popup-no-margins" href="/{{= post.content }}?size=">
+                <img src="/{{= post.content }}?size=" />
+              </a>
+              <p>{{= post.description }}</p>
+          {{?}}
 				</div>
 				<ul class="actions">
 				  <li>
@@ -129,9 +136,6 @@
 		{{??}}
 			<div class="alert alert-info">There is currently no content to show</div>
 		{{?}}
-		<script>$('.popup-ajax').magnificPopup({
-		type: 'ajax'
-	});</script>
 	</script>
 	
 	<!-- Comments -->

@@ -14,7 +14,9 @@ function loadFeed(url, element) {
 
 	$.get(url, function(data) {
 		$.each(data.contents, function() {
-			this.content = BBC2HTML(this.content);
+      if(this.content_type_id == 1) {
+        this.content = BBC2HTML(this.content);
+      }
 			var dt = Date.parse(this.created_at);
 			this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
 			dt = Date.parse(this.updated_at);
@@ -58,8 +60,19 @@ function initialize() {
 		type: 'ajax'
 	});
 
-	$('#new-bubble-form').magnificPopup({
-		type: 'ajax'
+	$('.image-popup-no-margins').magnificPopup({
+		type: 'image',
+		closeOnContentClick: true,
+		closeBtnInside: false,
+		fixedContentPos: true,
+		mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+		image: {
+			verticalFit: true
+		},
+		zoom: {
+			enabled: true,
+			duration: 300 // don't foget to change the duration also in CSS
+		}
 	});
 }
 
