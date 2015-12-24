@@ -30,8 +30,8 @@ module.exports=function (passport) {
             city: form.city,
             country_name: form.country
         }).save().then(function (user) {
-            res.end();
-        }, function(error) {
+            res.json({response: user});
+        }).catch(function(error) {
             res.json({errors: error.messages});
         });
     });
