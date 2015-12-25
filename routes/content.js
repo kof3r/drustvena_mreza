@@ -64,7 +64,7 @@ router.post('/image/:bubble_id', upload.single('content'), function(req, res, ne
         title: req.body.title,
         description: req.body.description,
         content: req.file,
-        imgPath: './res/img/',
+        imgPath: '/res/img/',
         filename:  md5(Date.now().toString() + req.file.originalname) + '_'
         + req.file.originalname,
         res: res,
@@ -295,7 +295,8 @@ function parseContent(context){
 
 // not yet tested
 function handleImg(context){
-    var loc = context.imgPath + context.filename;
+    var loc = '.' + context.imgPath + context.filename; // save locally in folder relative to local project root
+    var linkloc = context.imgPath + context.filename; // generate link that is relative to host root
     fs.writeFile(loc, context.content.buffer, { encoding: 'ascii', mode: 0666, flag: 'w+'}, function(err){
         if (err){
             console.log(err);
@@ -305,7 +306,7 @@ function handleImg(context){
         gm(loc)
             .resize(125, 125)
             .autoOrient()
-            .write(context.imgPath + 'small' + context.filename, function (err) {
+            .write('.' + context.imgPath + 'small' + context.filename, function (err) {
                 if (err) {
                     console.log(err);
                 }
@@ -313,7 +314,7 @@ function handleImg(context){
         gm(loc)
             .resize(500)
             .autoOrient()
-            .write(context.imgPath + 'medium' + context.filename, function(err) {
+            .write('.' + context.imgPath + 'medium' + context.filename, function(err) {
                 if (err) {
                     console.log(err);
                 }
@@ -321,14 +322,14 @@ function handleImg(context){
         gm(loc)
             .resize(1280)
             .autoOrient()
-            .write(context.imgPath + 'large' + context.filename, function(err) {
+            .write('.' + context.imgPath + 'large' + context.filename, function(err) {
                 if (err) {
                     console.log(err);
                 }
             });
 
         var image = {
-            content: loc,
+            content: linkloc,
             bubble_id: context.bubbleId,
             title: context.title,
             description: context.description,
@@ -404,7 +405,7 @@ function editContent(req, res, type){
 
             if (type == 2){
                 context.content = req.file;
-                context.imgPath = './res/img/';
+                context.imgPath = '/res/img/';
                 context.filename = md5(Date.now().toString() + req.file.originalname) + '_'
                     + req.file.originalname
             }

@@ -11,7 +11,7 @@ router.all("*", requireAuthentication);
 router.get('/img/:img_file', function(req, res, next) {
     var file = req.params.img_file;
     if (req.query.size && req.query.size != 'original'){
-        file = size + file;
+        file = req.query.size.toString() + file.toString();
     }
 
     console.log(file);
