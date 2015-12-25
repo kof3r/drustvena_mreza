@@ -30,8 +30,8 @@ module.exports=function (passport) {
             city: form.city,
             country_name: form.country
         }).save().then(function (user) {
-            res.end();
-        }, function(error) {
+            res.json({response: user});
+        }).catch(function(error) {
             res.json({errors: error.messages});
         });
     });
@@ -50,7 +50,7 @@ module.exports=function (passport) {
                 if(err) {
                     return res.json({error:'An error occurred.'});
                 } else {
-                    return res.end();
+                    return res.json({response: user});
                 }
             });
         })(req, res, next);
