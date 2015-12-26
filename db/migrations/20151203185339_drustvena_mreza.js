@@ -30,6 +30,15 @@ exports.up = function(knex, Promise) {
         t.string('avatar').defaultsTo('/images/avatar.jpg');
     });
 
+    var createMessage = knex.schema.createTable('message', function(t) {
+        t.increments().primary();
+        t.string('sender', 32).references('username').inTable('user').notNullable();
+        t.string('recipient', 32).references('username').inTable('user').notNullable();
+        t.text('message').notNullable();
+        t.timestamps();
+        t.date('read').defaultsTo(null);
+    });
+
     var createBubbleType = knex.schema.createTable('bubble_type', function(t){
         t.increments().primary();
         t.string('description', 32).notNullable().unique();
@@ -109,7 +118,8 @@ exports.up = function(knex, Promise) {
             createComment,
             createPrivilege,
             createLike,
-            createDislike
+            createDislike,
+            createMessage
         ]);
     });
 
@@ -121,7 +131,9 @@ exports.down = function(knex, Promise) {
 
         knex.schema.dropTable('comment'),
         knex.schema.dropTable('privilege'),
-        knex.schema.dropTable('like')
+        knex.schema.dropTable('like'),
+        knex.schema.dropTable('dislike'),
+        knex.schema.dropTable('message')
 
     ]).then(function () {
 
