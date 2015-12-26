@@ -4,11 +4,14 @@
 /**
  * Created by Domagoj on 3.12.2015..
  */
+var knex = require('../config/knex');
+
 var express = require('express');
 var router = express.Router();
 var gm = require('gm');
 var fs = require('fs');
 var md5 = require('md5');
+
 
 var ValidationError = require('../models/errors/validationError');
 
@@ -139,18 +142,30 @@ router.post('/delete/:id', function(req, res, next){
 
 router.get('/timeline', function(req, res) {
     var user = req.user;
-    Content.query(function (qb) {
-        qb.join('bubble', 'content.bubble_id', 'bubble.id')
-            .leftJoin('like', 'like.content_id', 'content.id')
-            .where('bubble.user_id', user.id)
-            .andWhere(function () {
-                this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
-            }).groupBy('content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
-            .columns('content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
-            .count('like.content_id as likes')
-            .orderBy('created_at', 'DESC');
-    }).fetchAll().then(function (posts) {
-        res.json( {posts: posts} );
+    var user_id = user.get('id');
+    knex.raw('select content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content, COUNT(likes) as likes, COUNT(dislikes) as dislikes, COUNT(DISTINCT iLikeDislike.iLike) as iLike, COUNT(DISTINCT iLikeDislike.iDislike) as iDislike '
+        + ' from bubble '
+        + ' join content on content.bubble_id = bubble.id '
+        + ' left join ( '
+        +   ' SELECT `like`.user_id as likes, dislike.user_id as dislikes, `like`.content_id FROM `like` '
+        +   ' LEFT JOIN dislike ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
+        +   ' UNION '
+        +   ' SELECT `like`.user_id as likes, dislike.user_id as dislikes, dislike.content_id FROM dislike '
+        +   ' LEFT JOIN `like` ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
+        + ' ) as likeCount on likeCount.content_id = content.id '
+        + ' left join ( '
+        +   ' SELECT `like`.user_id as iLike, dislike.user_id as iDislike, `like`.content_id FROM `like` '
+        +   ' LEFT JOIN dislike ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
+        +   ' UNION '
+        +   ' SELECT `like`.user_id as likes, dislike.user_id as dislikes, dislike.content_id FROM dislike '
+        +   ' LEFT JOIN `like` ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
+        + ' ) as iLikeDislike on iLikeDislike.content_id = content.id and ((iLikeDislike.iLike = likeCount.likes and iLikeDislike.iLike = ' + user_id + ') or (iLikeDislike.iDislike = likeCount.dislikes and iLikeDislike.iDislike = ' + user_id +'))'
+        + ' where bubble.user_id = ' + user_id + ' and (bubble.bubble_type_id = 1 or bubble.bubble_type_id = 3)'
+        + ' group by content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content'
+        + ' order by content.created_at DESC').then(function (posts) {
+        res.json( {posts: posts[0]} );
+    }).catch(function(error) {
+        console.log(error);
     });
 });
 

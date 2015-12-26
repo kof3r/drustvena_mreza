@@ -1,6 +1,5 @@
 
-var config = require('../knexfile');
-var knex = require('knex')(config['development']);
+var knex = require('./knex');
 
 var orm = require('bookshelf')(knex);
 orm.plugin('registry');
