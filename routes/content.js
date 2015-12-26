@@ -319,7 +319,15 @@ function handleImg(context){
         }
 
         gm(loc)
-            .resize(125, 125)
+            .resize(64, 64, "!")
+            .autoOrient()
+            .write('.' + context.imgPath + 'avatar' + context.filename, function (err) {
+                if (err) {
+                    console.log(err);
+                }
+            });
+        gm(loc)
+            .resize(125, 125, "!")
             .autoOrient()
             .write('.' + context.imgPath + 'small' + context.filename, function (err) {
                 if (err) {
