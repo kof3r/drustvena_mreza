@@ -89,7 +89,7 @@
 						{{?}}
 					</span>
 					{{? post.location!=null }}
-						<a href="javascript:showOnMap({{=post.location}})" class="location">
+						<a onclick="showOnMap({{=post.location}})" class="location">
 							<span class="glyphicon glyphicon-map-marker"></span>
 						</a>
 					{{?}}
@@ -101,7 +101,9 @@
               <a class="image-popup-no-margins" href="/.{{= post.content }}?size=large">
                 <img src="/.{{= post.content }}?size=medium" />
               </a>
-              <p>{{= post.description }}</p>
+              {{? post.description }}
+                <p>{{= post.description }}</p>
+              {{?}}
           {{?}}
 				</div>
 				<ul class="actions">

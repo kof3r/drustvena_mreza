@@ -63,11 +63,6 @@ function initializeImagePopups() {
 }
 
 function initialize() {
-	/*
-	if (document.location.pathname == '/home/homepage') {
-		loadPage();
-	}
-	*/
 	$.get('/api/content/myBubbles', function(data) {
 		var templateFunction = doT.template(document.getElementById('my-bubbles-tmp').text);
 		var html = templateFunction(data);
@@ -81,8 +76,9 @@ function initialize() {
 
 function clearSearchResults() {
 	var sr = document.getElementById('search-results');
-	sr.innerHTML = '';
 	sr.style='display:none';
+	sr.innerHTML = '';
+	document.getElementById('search-term').value = "";
 }
 
 $('#search-form').on('submit', function(event){
@@ -125,7 +121,7 @@ $('#search-form').on('submit', function(event){
 $(document).click(function(event) { 
     if(!$(event.target).closest('#search-results').length) {
         if($('#search-results').css('display') == 'block') {
-            $('#search-results').css('display', 'none');
+            clearSearchResults();
         }
     }        
 })
