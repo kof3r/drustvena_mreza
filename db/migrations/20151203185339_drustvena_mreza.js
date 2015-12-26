@@ -27,6 +27,7 @@ exports.up = function(knex, Promise) {
         t.string('address', 128).defaultsTo(null);
         t.integer('relationship_status_id').unsigned().references('id').inTable('relationship_status').defaultsTo(null);
         t.integer('gender_id').unsigned().references('id').inTable('gender').defaultsTo(null);
+        t.string('avatar').defaultsTo('/images/avatar.jpg');
     });
 
     var createBubbleType = knex.schema.createTable('bubble_type', function(t){
