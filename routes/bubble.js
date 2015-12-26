@@ -4,6 +4,8 @@
 
 var ValidationError = require('../models/errors/validationError');
 
+var knex = require('../config/knex');
+
 var express = require('express');
 var router = express.Router();
 var general = require('../utils/general');
@@ -51,6 +53,34 @@ router.post('/edit/:id', function(req, res) {
 });
 
 router.get('/:id/content', function (req, res) {
+    var bubble_id = req.params.id;
+    var user_id = req.user.get('id');
+
+    knex.raw('select content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content, COUNT(likes) as likes, COUNT(dislikes) as dislikes, COUNT(DISTINCT iLikeDislike.iLike) as iLike, COUNT(DISTINCT iLikeDislike.iDislike) as iDislike '
+        + ' from content '
+        + ' left join ( '
+        +   ' SELECT `like`.user_id as likes, dislike.user_id as dislikes, `like`.content_id FROM `like` '
+        +   ' LEFT JOIN dislike ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
+        +   ' UNION '
+        +   ' SELECT `like`.user_id as likes, dislike.user_id as dislikes, dislike.content_id FROM dislike '
+        +   ' LEFT JOIN `like` ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
+        + ' ) as likeCount on likeCount.content_id = content.id '
+        + ' left join ( '
+        +   ' SELECT `like`.user_id as iLike, dislike.user_id as iDislike, `like`.content_id FROM `like` '
+        +   ' LEFT JOIN dislike ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
+        +   ' UNION '
+        +   ' SELECT `like`.user_id as likes, dislike.user_id as dislikes, dislike.content_id FROM dislike '
+        +   ' LEFT JOIN `like` ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
+        + ' ) as iLikeDislike on iLikeDislike.content_id = content.id and ((iLikeDislike.iLike = likeCount.likes and iLikeDislike.iLike = ' + user_id + ') or (iLikeDislike.iDislike = likeCount.dislikes and iLikeDislike.iDislike = ' + user_id +'))'
+        + ' where content.bubble_id = ' + bubble_id
+        + ' group by content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content'
+        + ' order by content.created_at DESC').then(function (posts) {
+        res.json( {posts: posts[0]} );
+    }).catch(function(error) {
+        console.log(error);
+    });
+
+    /**
     Bubble.where({id: req.params.id}).fetch().then(function(bubble, err){
         if (!bubble || err){
             console.log(err);
@@ -61,7 +91,7 @@ router.get('/:id/content', function (req, res) {
         })
 
     });
-
+     */
 });
 
 router.get('/:id', function (req, res) {
