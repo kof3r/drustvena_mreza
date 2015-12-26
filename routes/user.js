@@ -44,7 +44,7 @@ router.post('/avatar/:id', function (req, res, next) {
                 return general.sendMessage(res, "Only your own images can be used as your avatars!", 403)
             }
 
-            req.user.set('avatar', content.attributes.content + '?size=avatar');
+            req.user.set('avatar', content.attributes.content);
             req.user.save().then(function(user, err){
                 if (err){
                     console.log(err);
