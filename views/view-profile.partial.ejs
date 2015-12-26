@@ -34,6 +34,17 @@
         text-indent: 5%;
         font-weight: bold;
     }
+    
+    .friends-tab {
+        width: 30%;
+        margin: auto;
+        margin-top: 2.5%;
+    }
+    
+    .my-friends {
+        color: dodgerblue;
+        font-weight: bold;
+    }
 
     .avatar {
         margin: -160px 10px 20px 0px;
@@ -97,7 +108,7 @@
         <li role="presentation" class="active"><a data-toggle="pill" href="#profile-account_info">Profile</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-bubbles">Bubbles</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-posts">Posts</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#profile-friends">Friends</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#profile-friends" id="view-profile-friends-button">Friends</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-gallery-outer" id="galleryNavPill">Gallery</a></li>   
     </ul>
 
@@ -142,8 +153,18 @@
         </div>
         <div class="tab-pane fade" id="profile-posts">
         </div>
+        
+        
         <div class="tab-pane fade" id="profile-friends">
+            <div class="well friends-tab" >
+                <div class="my-friends" >
+                    <p> <span class="glyphicon glyphicon-user"></span> MY CONTACTS </p>
+                    <ul class = "friends-list"></ul>
+                </div>
+             </div>     
         </div>
+        
+        
         <div class="tab-pane fade" id="profile-gallery-outer">
             <div id="profile-gallery">
                 <!--  Ovdje će JQuery ubacit slike  -->
@@ -254,4 +275,27 @@
             return imageHTML;
         }
     });
+</script>
+
+
+<script id="view-profile-friends-tmp" type="text/x-dot-template">
+    {{? it.contacts.length > 0 }}
+        {{~it.contacts :contact:index}}
+            <li><a href="/profile/view/{{= contact.username }}">{{= contact.username }}</a></li>
+        {{~}}
+    {{??}}
+        <li>No contacts</li>
+    {{?}}
+</script>
+
+
+<script>
+    $(document).ready(function () {
+       $.get('/api/user/contacts',function(data){
+          var templateFunction = doT.template(document.getElementById('view-profile-friends-tmp').text);
+          var html = templateFunction(data);
+          $('#profile-friends ul.friends-list').html(html);
+       });
+    });
+
 </script>

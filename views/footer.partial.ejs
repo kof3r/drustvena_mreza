@@ -98,8 +98,8 @@
           {{? post.content_type_id == 1 }}
               {{=post.content}}
           {{?? post.content_type_id == 2}}
-              <a class="image-popup-no-margins" href="/{{= post.content }}?size=">
-                <img src="/{{= post.content }}?size=" />
+              <a class="image-popup-no-margins" href="/.{{= post.content }}?size=large">
+                <img src="/.{{= post.content }}?size=medium" />
               </a>
               <p>{{= post.description }}</p>
           {{?}}

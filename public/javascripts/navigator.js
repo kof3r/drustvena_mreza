@@ -25,6 +25,7 @@ function loadFeed(url, element) {
 		var templateFunction = doT.template(document.getElementById('feed-tmp').text);
 		var html = templateFunction( data );
 		document.getElementById(element).innerHTML = html;
+    initializeImagePopups();
 		initializeVideos();
 	});
 
@@ -44,6 +45,23 @@ function signOut() {
 	document.getElementById('sign-out-form').submit();
 }
 
+function initializeImagePopups() {
+  $('.image-popup-no-margins').magnificPopup({
+    type: 'image',
+    closeOnContentClick: true,
+    closeBtnInside: false,
+    fixedContentPos: true,
+    mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+    image: {
+      verticalFit: true
+    },
+    zoom: {
+      enabled: true,
+      duration: 300 // don't foget to change the duration also in CSS
+    }
+  });
+}
+
 function initialize() {
 	/*
 	if (document.location.pathname == '/home/homepage') {
@@ -58,21 +76,6 @@ function initialize() {
 	
 	$('.popup-ajax').magnificPopup({
 		type: 'ajax'
-	});
-
-	$('.image-popup-no-margins').magnificPopup({
-		type: 'image',
-		closeOnContentClick: true,
-		closeBtnInside: false,
-		fixedContentPos: true,
-		mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
-		image: {
-			verticalFit: true
-		},
-		zoom: {
-			enabled: true,
-			duration: 300 // don't foget to change the duration also in CSS
-		}
 	});
 }
 
