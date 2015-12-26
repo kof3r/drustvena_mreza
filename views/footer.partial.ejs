@@ -98,8 +98,8 @@
           {{? post.content_type_id == 1 }}
               {{=post.content}}
           {{?? post.content_type_id == 2}}
-              <a class="image-popup-no-margins" href="/{{= post.content }}?size=">
-                <img src="/{{= post.content }}?size=" />
+              <a class="image-popup-no-margins" href="/.{{= post.content }}?size=large">
+                <img src="/.{{= post.content }}?size=medium" />
               </a>
               <p>{{= post.description }}</p>
           {{?}}
@@ -136,6 +136,7 @@
 		{{??}}
 			<div class="alert alert-info">There is currently no content to show</div>
 		{{?}}
+		<script>imagePopups();</script>
 	</script>
 	
 	<!-- Comments -->
