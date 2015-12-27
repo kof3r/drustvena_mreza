@@ -69,4 +69,21 @@ router.get('/contacts', function(req, res, next) {
     });
 });
 
+router.get('/nonFriends', function(req, res) {
+    var id = req.user.id;
+
+    Privilege.where({permittee_id: id}).fetchAll().then(function (friends) {
+        return Promise.resolve(friends.map(function(friend) {
+            return friend.get('permitter_id');
+        }))
+    }).then(function (friendIds) {
+        friendIds.push(id);
+        return User.query(function (qb) {
+            qb.whereNotIn('id', friendIds);
+        }).fetchAll();
+    }).then(function (nonFriends) {
+        res.json({response: nonFriends});
+    });
+});
+
 module.exports=router;
