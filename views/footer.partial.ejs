@@ -33,7 +33,7 @@
       
       {{? it.bubbles.length > 0 }}
         {{~it.bubbles :bubble:index}}
-          <li><a href="/bubble/{{= bubble.id }}">{{= bubble.title }}</a></li>
+          <li><a href="/bubble/{{= bubble.id }}">{{= escapeHtml(bubble.title) }}</a></li>
         {{~}}
       {{??}}
         <li class="dropdown-header">No bubbles</li>
@@ -44,8 +44,8 @@
     <script id="bubble-tmp" type="text/x-dot-template">
       
         <div>
-            <h2>{{= it.title }}</h2>
-            <p>{{= it.description }}</p>
+            <h2>{{= escapeHtml(it.title) }}</h2>
+            <p>{{= escapeHtml(it.description) }}</p>
         </div>
       
     </script>
@@ -54,11 +54,11 @@
     <script id="feed-tmp" type="text/x-dot-template">
     {{? it.attributes }}
         <div class="header">
-            <h3>{{= it.attributes.title }}</h3>
+            <h3>{{= escapeHtml(it.attributes.title) }}</h3>
             {{? it.attributes.description }}
-                <p>{{= it.attributes.description }}</p>
+                <p>{{= escapeHtml(it.attributes.description) }}</p>
             {{?}}
-            <span class="time">Created {{= it.attributes.created_at }}</span>
+            <span class="time">Created {{= dateFormat(it.attributes.created_at, dateTimeFormat) }}</span>
             {{? 1==1 }}
                 <a class="btn btn-success popup-ajax" href="/partial/edit-bubble/{{= it.attributes.id }}">Edit bubble</a>
             {{?}}
@@ -81,11 +81,11 @@
 							</span>
 						</a>
 					{{?}}
-					<h4>{{=post.title}}</h4>
+					<h4>{{= escapeHtml(post.title) }}</h4>
 					<span class="date-time">
-						<span class="glyphicon glyphicon-time"></span> {{=post.created_at}}
+						<span class="glyphicon glyphicon-time"></span> {{= post.created_at}}
 						{{? post.updated_at != post.created_at }} 
-							<span title="Updated {{=post.updated_at}}" class="glyphicon glyphicon-pushpin"></span>
+							<span title="Updated {{= post.updated_at }}" class="glyphicon glyphicon-pushpin"></span>
 						{{?}}
 					</span>
 					{{? post.location!=null }}
@@ -96,13 +96,13 @@
 				</div>
 				<div class="content">
           {{? post.content_type_id == 1 }}
-              {{=post.content}}
+              {{= escapeHtml(post.content) }}
           {{?? post.content_type_id == 2}}
               <a class="image-popup-no-margins" href="/.{{= post.content }}?size=large">
                 <img src="/.{{= post.content }}?size=medium" />
               </a>
               {{? post.description }}
-                <p>{{= post.description }}</p>
+                <p>{{= escapeHtml(post.description) }}</p>
               {{?}}
           {{?}}
 				</div>
@@ -160,7 +160,7 @@
 						</span>
 					{{?}}
 				</div>
-				<div id="comment-{{=comment.id}}">{{= comment.comment }}</div>
+				<div id="comment-{{=comment.id}}">{{= escapeHtml(comment.comment) }}</div>
 			</li>
 		{{~}}
 	</script>

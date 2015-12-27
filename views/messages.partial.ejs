@@ -29,8 +29,8 @@
     text-decoration: none;
 }
 #contacts-box > ul > li > a > img {
-    width: 32px;
-    heigth: 32px;
+    width: 36px;
+    heigth: 36px;
     float: left;
     margin: 0 5px;
     border-radius: 2px;
@@ -38,6 +38,11 @@
 #contacts-box > ul > li > a > div.time {
     color: darkgrey;
     float: right;
+}
+#contacts-box > ul > li > a > div.message {
+    color: #666;
+    height: 1.2em;
+    overflow: hidden;
 }
 
 @media (max-width: 768px) {
@@ -75,8 +80,8 @@
 }
 
 #messages-box > ol.messages > li > div.header {
-    margin: 15px 20px -10px 20px;
-    font: 0.9em sans-serif;
+    margin: 5px 20px -10px 20px;
+    font: 0.8em sans-serif;
     color: grey;
 }
 
@@ -122,8 +127,9 @@
                     <span class="user">Maja Matijasevic</span>
                     <div class="time">
                         <span class="glyphicon glyphicon-time"></span>
-                        5.2.2015.
+                        01/02/2016 14:30
                     </div>
+                    <div class="message">Danas radimo TCP/IP stack u arhitekturi najnovijig NGE mreza</div>
                 </a>
             </li>
             <li>
@@ -188,33 +194,44 @@
 </div>
 
 <script>
-function escapeHtml(unsafe) {
-    return unsafe
-         .replace(/&/g, "&amp;")
-         .replace(/</g, "&lt;")
-         .replace(/>/g, "&gt;")
-         .replace(/"/g, "&quot;")
-         .replace(/'/g, "&#039;");
+var messages = $('#messages-box > ol.messages');
+var editor = $('#message-editor');
+
+function appendMessage(dt, msg) {
+        messages.append('<li class="my"><div class="header"><span class="time">' + dateFormat(dt, 'dd/mm/yyyy HH:MM') + '</span></div><div class="message">' + msg + '</div></li>');
+        messages.scrollTop(messages.prop('scrollHeight'));
 }
   
-var editor = $('#message-editor');
 editor.keypress(function(e) {
     if(e.which == 13) {
         e.preventDefault();
+        editor.attr('disabled', 'disabled');
         var newMessage = escapeHtml(editor.val());
         
         if (newMessage.length) {
-            var messages = $('#messages-box > ol.messages');
+            socket.emit(
+                'chat message', 
+                {sender: globalUsername,
+                recipient: globalUsername,
+                message: newMessage}
+            );
+            
             if (messages.prop('scrollHeight') > 1080) {
                 messages.children().slice(0, 2).remove();
             }
-            messages.append('<li class="my"><div class="header"><span class="time">' + dateFormat(Date.now(), 'dd/mm/yyyy HH:MM') + '</span></div><div class="message">' + newMessage + '</div></li>');
-            messages.scrollTop(messages.prop('scrollHeight'));
+            appendMessage(Date.now(), newMessage);
             editor.val('');
         }
         else {
             editor.focus();
         }
+        editor.removeAttr('disabled');
     }
-})
+});
+
+/*
+socket.on('chat message', function(msg){
+    alert(msg);
+});
+*/
 </script>

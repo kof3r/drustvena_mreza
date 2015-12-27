@@ -1,4 +1,5 @@
 var globalUsername = document.getElementById('global-username').innerHTML;
+var dateTimeFormat = 'dd/mm/yyyy HH:MM';
 //var globalUserId = document.getElementById('global-user-id').innerHTML;
 
 function loadPartial(name, callback) {
@@ -18,9 +19,9 @@ function loadFeed(url, element) {
         this.content = BBC2HTML(this.content);
       }
 			var dt = Date.parse(this.created_at);
-			this.created_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+			this.created_at = dateFormat(dt, dateTimeFormat);
 			dt = Date.parse(this.updated_at);
-			this.updated_at = dateFormat(dt, 'dd/mm/yyyy HH:MM');
+			this.updated_at = dateFormat(dt, dateTimeFormat);
 		});
 		var templateFunction = doT.template(document.getElementById('feed-tmp').text);
 		var html = templateFunction( data );
@@ -260,6 +261,15 @@ function initializeVideos() {
           fixedContentPos: false
         });
     });
+}
+
+function escapeHtml(unsafe) {
+    return unsafe
+         .replace(/&/g, "&amp;")
+         .replace(/</g, "&lt;")
+         .replace(/>/g, "&gt;")
+         .replace(/"/g, "&quot;")
+         .replace(/'/g, "&#039;");
 }
 
 page('/homepage', function(){
