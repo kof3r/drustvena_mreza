@@ -7,7 +7,6 @@ var passport = require('../config/passport');
 var Promise = require('bluebird');
 
 var ValidationError = require('../models/errors/validationError');
-
 var User = require('../models/user');
 var Country = require('../models/country');
 
@@ -142,10 +141,6 @@ router.post('/sign-out', function(req, res, next) {
 router.get('/homepage', function(req, res, next) {
     res.render('homepage.ejs', {title: 'Home', user: req.user.toJSON()});
 });
-
-
-
-
 
 /********************************/
 // 404 not found

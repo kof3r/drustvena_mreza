@@ -8,6 +8,7 @@ var app = require('../app');
 var debug = require('debug')('drustvena_mreza:server');
 var http = require('http');
 
+
 migrate();
 
 /**
@@ -22,7 +23,7 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
-
+var io = require('socket.io').listen(server);
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -112,3 +113,10 @@ function migrate() {
 
   });
 }
+
+// socket.io
+io.on('connection', function(socket){
+  console.log('a user connected');
+});
+
+module.exports = io;
