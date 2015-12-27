@@ -1,0 +1,192 @@
+<style>
+#main-content {
+    margin-bottom: 0;
+}
+#contacts-box {
+    background: #eee;
+    color: darkgrey;
+    margin: 0;
+    padding: 0;
+    heigth: 100%;
+    overflow-y: scroll;
+}
+#contacts-box > ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+#contacts-box > ul > li {
+    margin: 0;
+}
+#contacts-box > ul > li > a {
+    display: block;
+    padding: 15px 10px 15px 5px;
+}
+#contacts-box > ul > li > a:hover {
+    background: #fff;
+    text-decoration: none;
+}
+#contacts-box > ul > li > a > img {
+    width: 32px;
+    heigth: 32px;
+    float: left;
+    margin: 5px;
+    border-radius: 2px;
+}
+#contacts-box > ul > li > a > div.time {
+    color: darkgrey;
+    float: right;
+}
+
+@media (max-width: 768px) {
+    #messages-box {
+        margin: 0 20px;
+    }
+}
+#messages-box {
+    border: 1px;
+    border-color: black;
+    border-style: none solid;
+    padding-bottom: 10px;
+    word-wrap: break-word;
+}
+#messages-box .avatar {
+    position: absolute;
+    border-radius: 5px;
+    border: 1px solid;
+}
+#messages-box .avatar.contact {
+    left: -26px;
+}
+#messages-box .avatar.my {
+    right: -26px;
+}
+
+#messages-box > ol {
+    max-height: 480px;
+    overflow-y: scroll;
+}
+
+#messages-box > ol.messages {
+    list-style: none;
+    margin: 0 15px;
+    padding: 0;
+}
+#messages-box > ol.messages > li > div.message {
+    margin: 5px;
+    float: left;
+    clear: both;
+}
+#messages-box > ol.messages > li.my > div.message {
+    float: right;
+    background-color: #cba;
+}
+
+#messages-box > ol.messages > li > div.message {
+    background-color: #eee;
+    color: #333;
+    border-radius: 5px;
+    padding: 10px;
+    
+}
+
+#message-editor {
+    border: 1px solid;
+    padding: 15px;
+    resize: none;
+    overflow: none;
+}
+</style>
+
+
+<div>
+    <div id="contacts-box" class="col-sm-4">
+        <ul class="contacts">
+            <li>
+                <a href="#">
+                    <img src="/images/avatar.jpg" />
+                    <span class="user">Maja Matijasevic</span>
+                    <div class="time">
+                        <span class="glyphicon glyphicon-time"></span>
+                        5.2.2015.
+                    </div>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="/images/avatar.jpg" />
+                    <span class="user">Igor Cukrov</span>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="/images/avatar.jpg" />
+                    <span class="user">Neven Babek</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div id="messages-box" class="col-sm-8">
+    <img src="/images/avatar.jpg" class="avatar contact" />
+    <img src="/images/avatar.jpg" class="avatar my" />
+        <ol class="messages">
+            <li>
+                <div class="message">Evo jedne poruke</div>
+            </li>
+            <li>
+                <div class="message">All these bootstrap chat box templates are free to download. We collected few bootstrap chat box / room templates and we will update more chat room templates in future. Bootstrap chat room templates are easy to integrate with your website.</div>
+            </li>
+            <li class="my">
+                <div class="message">The bootstrap chat box template is a free to use template for personal and commercial use. Use this template for your projects and save your time.</div>
+            </li>
+            <li>
+                <div class="message">Evo i jo[ jedne jebeno dobre poruke poruke</div>
+            </li>
+            <li class="my">
+                <div class="message">Evo jedne poruke od mene!</div>
+            </li>
+            <li>
+                <div class="message">All these bootstrap chat box templates are free to download. We collected few bootstrap chat box / room templates and we will update more chat room templates in future. Bootstrap chat room templates are easy to integrate with your website. All these bootstrap chat box templates are free to download. We collected few bootstrap chat</div>
+            </li>
+            <li class="my">
+                <div class="message">The bootstrap chat box template is a free to use template for personal and commercial use. Use this template for your projects and save your time.</div>
+            </li>
+            <li>
+                <div class="message">All these bootstrap chat box templates are free to download. We collected few bootstrap chat box / room templates and we will update more chat room templates in future. Bootstrap chat room templates are easy to integrate with your website.</div>
+            </li>
+        </ol>
+    </div>
+    <textarea class="col-sm-offset-4 col-sm-8 col-xs-12" id="message-editor" placeholder="Type a message here and press return to send"></textarea>
+</div>
+
+<script src="https://cdn.socket.io/socket.io-1.3.7.js"></script>
+
+<script>
+  /*
+  var socket = io('http://localhost');
+  socket.on('news', function (data) {
+    console.log(data);
+    socket.emit('my other event', { my: 'data' });
+  });
+  */
+var editor = $('#message-editor');
+editor.keypress(function(e) {
+    if(e.which == 13) {
+        e.preventDefault();
+        var newMessage = editor.val();
+        
+        if (newMessage.length) {
+            var messages = $('#messages-box > ol.messages');
+            if (messages.prop('scrollHeight') > 1080) {
+                messages.children().slice(0, 2).remove();
+            }
+            messages.append('<li><div class="message">' + newMessage + '</div></li>');
+            messages.scrollTop(messages.prop('scrollHeight'));
+            editor.val('');
+        }
+        else {
+            editor.focus();
+        }
+    }
+})
+</script>
