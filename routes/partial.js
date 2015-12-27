@@ -19,6 +19,9 @@ router.get('/edit-bubble/:id', function(req, res, next) {
       res.render('bubble-editor.partial.ejs', bubble);
     });
 });
+router.get('/messages', function(req, res, next) {
+    res.render('messages.partial.ejs');
+});
 router.get('/new-content', function(req, res, next) {
     res.render('new-content.partial.ejs');
 });

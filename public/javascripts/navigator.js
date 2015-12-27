@@ -266,6 +266,14 @@ page('/homepage', function(){
 	loadFeed('/api/home/feed', 'main-content');
 });
 
+page('/messages', function(){
+  loadPartial('messages');
+});
+
+page('/messages/:username', function(context){
+  loadPartial('messages?username=' + context.params.username);
+});
+
 page('/bubble/:id/', function(context) {
   loadFeed('/api/bubble/' + context.params.id + '/content', 'main-content');
 });
