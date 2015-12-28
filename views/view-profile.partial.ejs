@@ -182,7 +182,7 @@
         </div>
     </div>
 
-    <p style="display : none;" id="usernameTag"><%=user.username%></p>
+    <p style="display : none;" id="userIDTag"><%=user.id%></p>
 </div>
 
 <!--gallery tab script-->
@@ -199,7 +199,13 @@
             var nextRowIndex = 0;
             //kako ovo dohvatiti - ejs atributi ili
             //neki zahtjev za ovo
-            var username = $("#usernameTag").text();
+            var userID = $("#userIDTag").text();
+            var bubbleID = 0;
+            alert(userID);
+            $.post("/api/gallery/id/"+userID, function(jsonData) {
+                bubbleID = jsonData.id;
+            });
+            alert(bubbleID);
 
             $("#newImageButton").click(function(){
                 window.location.href="/image/edit/";
@@ -214,7 +220,7 @@
             //there is probably a more intelligent way of checking this and we might implement it
             //the bubble number 9 is just for testing, real bubble id(gallery in this case)
             //goes here
-            $.get("/api/bubble/9/content/", addImages);
+            $.get("/api/bubble/"+ bubbleID + "/content/", addImages);
 
             //adds all the images of the user to the gallery
             function addImages(attrsAndContentJson, status) {
@@ -266,13 +272,13 @@
             }
 
             function constructImageHTML(imageDescriptor) {
-                var imageSRC = imageDescriptor.content;
+                var imageSRC = imageDescriptor.content + "?small";
                 //add image page src here
                 var imagePageSRC='/image/edit/' + imageDescriptor.id;
                 var imageHTML = '<div class="col-md-'+bootstrapOccupation+'">';
                 imageHTML+='<a href="'+imagePageSRC+'" class="thumbnail">';
                 imageHTML+='<p>'+imageDescriptor.title+'</p>';
-                imageHTML+='<img src="'+imageSRC+'" alt="Image" style="width:150px;height:150px">';
+                imageHTML+='<img src="'+imageSRC+'" alt="Image">';
                 imageHTML+='</a></div>';
                 return imageHTML;
             }

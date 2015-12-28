@@ -5,14 +5,27 @@
         font-weight: bold;
         color: #ffffff;
         vertical-align:middle;
+        line-height : 200%
     }
+
+    IMG.centered-horizontally {
+        display: block;
+        margin-left: auto;
+        margin-right: auto }
 </style>
 
 <div class="container">
     <br>
     <!-- Upload slike na gallery - 9 stoji cisto radi testiranja, dok backend ne omoguci galeriju -->
-    <form id="imageUploadForm" role="form" method="POST" enctype="multipart/form-data" action="/api/content/image/9">
-        <input type="file" name="content" accept="image/*">
+    <form id="imageUploadForm" role="form" method="POST" enctype="multipart/form-data" action="/api/content/image/">
+        <div class="row">
+            <div class="col-md-10">
+                <input type="file" name="content" accept="image/*">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-lg btn-primary" id="setAsAvatarButton">Set as avatar</button>
+            </div>
+        </div>
 
         <br>
         <!-- naslov slike -->
@@ -21,17 +34,18 @@
 
         <br>
         <!-- slika -->
-        <a href="" class="thumbnail" id="largeImageLink">
-            <img src="" alt="Medium Image" style="width:500px;height:500px" id="imageContainer">
+        <a href="" class="image-popup-no-margins" id="largeImageLink">
+            <img src="" class="centered-horizontally" alt="Medium Image" style="" id="imageContainer">
         </a>
 
+        <br>
         <!-- opis ispod slike -->
         <div class="row">
             <div class="col-md-4 text-center " id="dateColumn">
                 <p class="bg-orange" id="dateModified"></p>
             </div>
             <div class="col-md-4 text-center">
-                <button type="button" class="btn btn-info" id="bubbleNameButton"></button>
+                <button type="button" class="btn btn-lg btn-info" id="bubbleNameButton"></button>
             </div>
             <div class="col-md-4 text-center" id="authorNameColumn">
                 <i><p class="bg-orange" id="authorName"></p></i>
@@ -61,20 +75,28 @@
         </div>
     </form>
 
-    <p style="display : none;"></p>
+    <p style="display : none;" id="usernameTag"><%=user.id%></p>
 </div>
 
 <script>
     var bubbleID = "";
     var url = document.location.href;
     var imageID = url.substring(url.lastIndexOf("/")+1);
+    var userID = $("#usernameTag").text();
 
     //new image, no reason to show delete button
     if(imageID == "") {
         $("deleteImageButton").hide();
+        $("setAsAvatarButton").hide();
     }
 
     //upravljanje gumbima
+    $("#setAsAvatarButton").click(function() {
+        //api/user/avatar/:image_id?
+        $.post("/api/user/avatar/" + imageID);
+        window.location.href="/profile/view/";
+    });
+
     //bubble name
     $("#bubbleNameButton").click(function(){
         //alert(bubbleID);
@@ -113,9 +135,24 @@
         $.get("/api/content/image/"+imageID, function(imageDescriptor, status) {
             //link na veliku sliku
             //ovo bi trebao biti ok link, ali treba loadati partial za prikaz slike (samo slike) - Domagoj
-            $("#largeImageLink").attr("href",'/' + imageDescriptor.content + '?size=large');
+            $("#largeImageLink").attr("href",imageDescriptor.content + '?large');
             //link na samu sliku - pomocu ovog se dohvaća slika
-            $("#imageContainer").attr("src",imageDescriptor.content);
+            $("#imageContainer").attr("src",imageDescriptor.content + "?medium");
+
+            $('.image-popup-no-margins').magnificPopup({
+                type: 'image',
+                closeOnContentClick: true,
+                closeBtnInside: false,
+                fixedContentPos: true,
+                mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+                image: {
+                    verticalFit: true
+                },
+                zoom: {
+                    enabled: true,
+                    duration: 300 // don't foget to change the duration also in CSS
+                }
+            });
 
             //naslov slike
             $("#titleArea").text(imageDescriptor.title);
