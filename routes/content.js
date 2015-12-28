@@ -11,7 +11,7 @@ var router = express.Router();
 var gm = require('gm');
 var fs = require('fs');
 var md5 = require('md5');
-
+var Promise = require('bluebird');
 
 var ValidationError = require('../models/errors/validationError');
 
@@ -26,6 +26,7 @@ var convert = require('../utils/convert');
 var arrays = require('../utils/arrays');
 var params = require('../utils/params');
 var general = require('../utils/general');
+var contUtils = require('../utils/content');
 
 var multer  = require('multer');
 var storage = multer.memoryStorage();
@@ -87,13 +88,16 @@ router.post('/image/:bubble_id', upload.single('content'), function(req, res, ne
 // GET api/post/:post_id
 router.get('/post/:post_id', function(req, res, next) {
 
-    Content.where({id: req.params.post_id, content_type_id: 1}).fetch().then(function (post){
-        if (!post){
-            return general.sendMessage(res, "This post doesn't exist or it was deleted!", 404);
-        }
+    Promise.join(
+        contUtils.getPost(req.params.post_id),
+        function(_post){
+            if (!_post){
+                return general.sendMessage(res, "This post doesn't exist or it was deleted!", 404);
+            }
 
-        return res.status(200).json(post);
-    })
+            return res.status(200).json(_post);
+        }
+    )
 });
 
 // GET api/image/:image_id
@@ -440,6 +444,10 @@ function editContent(req, res, type){
 
 function replaceAll(string, toReplace, replacement) {
     return string.split(toReplace).join(replacement);
+}
+
+function getPost(id){
+    return Content.where({id: id, content_type_id: 1}).fetch();
 }
 
 module.exports = router;

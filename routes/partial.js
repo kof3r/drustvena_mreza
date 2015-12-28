@@ -4,6 +4,8 @@ var router = express.Router();
 var User = require('../models/user');
 var Bubble = require('../models/bubble');
 
+var contUtils = require('../utils/content');
+
 var requireAuthentication = require('../utils/authentication');
 router.all('*' , requireAuthentication);
 
@@ -24,6 +26,18 @@ router.get('/messages', function(req, res, next) {
 });
 router.get('/new-content', function(req, res, next) {
     res.render('new-content.partial.ejs');
+});
+router.get('/edit-content/:id', function(req, res, next) {
+    Promise.join(
+        contUtils.getPost(req.params.post_id),
+        function(_post){
+            if (!_post){
+                return res.render('new-content.partial.ejs', {post:undefined});
+            }
+
+            return res.render('new-content.partial.ejs', {post: _post.toJSON()});
+        }
+    )
 });
 router.get('/view-profile', function(req, res, next) {
     User.where({id: req.user.id}).fetch().then(function (user) {
