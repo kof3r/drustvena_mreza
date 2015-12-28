@@ -8,6 +8,16 @@ function sendMessage(res, message, code){
     })
 }
 
+function sendJsonResponse(res, data, code, err){
+    res.status(code);
+    res.json({
+        status: code,
+        data: data,
+        err: err,
+    })
+}
+
 module.exports = {
+    sendJsonResponse: sendJsonResponse,
     sendMessage: sendMessage
 }

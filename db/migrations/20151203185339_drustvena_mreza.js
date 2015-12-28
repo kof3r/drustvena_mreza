@@ -36,7 +36,7 @@ exports.up = function(knex, Promise) {
         t.string('recipient', 32).references('username').inTable('user').notNullable();
         t.text('message').notNullable();
         t.timestamps();
-        t.date('read').defaultsTo(null);
+        t.dateTime('read').defaultsTo(null);
     });
 
     var createBubbleType = knex.schema.createTable('bubble_type', function(t){

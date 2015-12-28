@@ -8,6 +8,7 @@ var session = require('express-session');
 
 var passport = require('./config/passport');
 
+
 var app = express();
 
 app.set('views', path.join(__dirname, 'views'));

@@ -115,8 +115,88 @@ function migrate() {
 }
 
 // socket.io
+var connectedUsers = {};
+var User = require('../models/user');
+var Message = require('../models/message');
+
+// chat auth stuff
+//var cookieParser = require('cookie-parser');
+//var passportSocketIo = require("passport.socketio");
+
+//io.use(passportSocketIo.authorize({
+//  cookieParser: cookieParser,       // the same middleware you registrer in express
+//  key: 'connect.sid',       // the name of the cookie where express/connect stores its session_id
+//  secret: 'secret',    // the session_secret to parse the cookie
+//  store:
+//  success: onAuthorizeSuccess,  // *optional* callback on success - read more below
+//  fail: onAuthorizeFail,     // *optional* callback on fail/error - read more below
+//}));
+
+//function onAuthorizeSuccess(data, accept){
+//  console.log('successful connection to socket.io');
+//
+//  accept();
+//}
+
+//function onAuthorizeFail(data, message, error, accept){
+//  if(error)
+//    accept(new Error(message));
+//}
+
 io.on('connection', function(socket){
-  console.log('a user connected');
+  console.log('a user connected with socket ' + socket);
+
+  var username;
+  socket.on('join', function(user){
+    console.log('user ' + user + 'joined chat on socket ' + socket)
+    connectedUsers[user.data.username] = socket;
+    username = user.data.username;
+  })
+
+  socket.on('send', function(msg){
+
+    if (!connectedUsers[msg.data.sender]){
+      return socket.emit('errNotJoined', err(403))
+    }
+
+    Message.forge({
+      sender: msg.data.sender,
+      recipient: msg.data.recipient,
+      message: msg.data.message
+    }).save().then(function(saved, err){
+      if (err){
+        return socket.emit('errInternal', err(500))
+      }
+
+      var response = buildResponse(saved);
+
+      socket.emit('success', response)
+
+      if (connectedUsers[msg.data.recipient]){
+        connectedUsers[msg.data.recipient].emit('newMsg', response);
+      }
+    });
+
+  });
+
+  socket.on('disconnect', function() {
+    console.log('user on socket ' + socket + ' disconnected');
+    connectedUsers[username] = undefined;
+  });
 });
 
-module.exports = io;
+function buildResponse(msg){
+  return {
+    status: 200,
+    data: msg
+  }
+}
+
+function err(code){
+  return {
+    status: code,
+    data: null
+  }
+}
+
+module.exports = server;

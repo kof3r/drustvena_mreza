@@ -16,6 +16,7 @@ module.exports=function (passport) {
     router.use('/comment', require('./comment'));
     router.use('/account', require('./account'));
     router.use('/util', require('./util'));
+    router.use('/message', require('./message'));
 
     router.post('/sign-up', function(req, res, next) {
         var form = req.body;

@@ -86,6 +86,7 @@ router.post('/image/:bubble_id', upload.single('content'), function(req, res, ne
 
 // GET api/post/:post_id
 router.get('/post/:post_id', function(req, res, next) {
+    console.log(req.user);
 
     Content.where({id: req.params.post_id, content_type_id: 1}).fetch().then(function (post){
         if (!post){
