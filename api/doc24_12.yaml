@@ -1,4 +1,4 @@
-swagger: '2.0'
+﻿swagger: '2.0'
 info:
   title: Bubbles API
   description: Mrzim svoj život.
@@ -718,7 +718,7 @@ paths:
           description: Korisnik nema ovlasti urediti sliku.
         '404':
           description: Slika ne postoji.
-  '/content/post/{id}':
+  '/content/edit/post/{id}':
     post:
       tags:
         - Content
