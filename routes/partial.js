@@ -44,7 +44,23 @@ router.get('/edit-content/:id', function(req, res, next) {
 });
 router.get('/view-profile', function(req, res, next) {
     User.where({id: req.user.id}).fetch().then(function (user) {
-        res.render('view-profile.partial.ejs', {user: user.toJSON()});
+        var userToReturn = user.attributes;
+        userToReturn['isMyProfile'] = true;
+        res.render('view-profile.partial.ejs', {user: userToReturn});
+    })
+});
+router.get('/view-profile/:id', function(req, res, next) {
+    User.where({id: req.params.id}).fetch().then(function (user) {
+        var userToReturn = user.attributes;
+        // hide sensitive info
+        if (user.attributes.id != req.user.attributes.id){
+            userToReturn['password_hash'] = undefined;
+            userToReturn['email'] = undefined;
+            userToReturn['isMyProfile'] = false;
+        } else {
+            userToReturn['isMyProfile'] = true;
+        }
+        res.render('view-profile.partial.ejs', {user: userToReturn});
     })
 });
 router.get('/edit-profile', function(req, res, next) {
