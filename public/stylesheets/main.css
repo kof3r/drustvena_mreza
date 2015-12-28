@@ -1,11 +1,16 @@
 #navbar-main {
   background-color: #ffa500;
+  background-image: url('/images/Vertical-Geometric-Seamless.jpg');
+  background-repeat: repeat;
+  background-size: 100% auto;
+  background-position: 50%;
 /*  border-color: #ffffff; */
   /*font-family: 'Open Sans', sans-serif;*/
   border: 0;
   font-weight: bold;
 }
 #navbar-main .navbar-brand {
+  text-shadow: 1px 1px #666;
   color: #ffffff;
 }
 #navbar-main .navbar-brand:hover, #navbar-main .navbar-brand:focus {
@@ -17,6 +22,7 @@
 }
 #navbar-main .navbar-nav > li > a {
   color: #ffffff;
+  text-shadow: 1px 1px #666;
 }
 #navbar-main .navbar-nav > li > a:hover, #navbar-main .navbar-nav > li > a:focus {
   background-color: darkorange;
@@ -31,6 +37,7 @@
 }
 #navbar-main .navbar-nav > li > .dropdown-menu > li > a:hover,
 #navbar-main .navbar-nav > li > .dropdown-menu > li > a:focus {
+  text-shadow: none !important;
   color: white;
   background-color: orange;
 }
@@ -38,10 +45,12 @@
   background-color: darkorange;
 }
 #navbar-main .navbar-nav > .active > a, #navbar-main .navbar-nav > .active > a:hover, #navbar-main .navbar-nav > .active > a:focus {
+  text-shadow: none !important;
   color: #0000ff;
   background-color: #ffffff;
 }
 #navbar-main .navbar-nav > .open > a, #navbar-main .navbar-nav > .open > a:hover, #navbar-main .navbar-nav > .open > a:focus {
+  text-shadow: none !important;
   color: #0000ff;
   background-color: #ffffff;
 }
@@ -155,12 +164,11 @@
 }
 
 #main-content > .header {
+    margin: 10px 5px;
     padding: 10px 10px 30px 10px;
     border: 2px dashed;
     color: darkorange;
     border-radius: 25px;
-    position: relative;
-    bottom: -15px;
 }
 
 #main-content > .header h3 {
@@ -189,7 +197,7 @@
 }
 
 .post {
-    margin: auto 0 auto -10px;
+    margin: 10px 0 10px -10px;
     border-radius: 10px;
     min-width: 310px;
     max-width: 512px !important;
@@ -281,8 +289,20 @@
 	bottom: 5px;
 }
 
+@media (max-width: 448px) {
+  .post {
+    max-width: 100%;
+  }
+  .post > .header h4 {
+    max-width: 180px;
+  }
+	.post > .header h4 {
+    min-height: 50px;
+  }
+}
+
 .post > .content {
-    padding: 15px;
+    padding: 20px 5px 20px 5px;
     text-align: justify;
 }
 
@@ -408,8 +428,12 @@
     color: darkblue;
 }
 
-.post > .actions li a:hover, .post > .actions li a:active {
-    color: orangered;
+.post > .actions li a:hover {
+    color: black;
+}
+
+.post > .actions li a:active {
+    color: black;
 }
 
 /* spinning animation */

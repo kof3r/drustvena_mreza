@@ -5,14 +5,27 @@
         font-weight: bold;
         color: #ffffff;
         vertical-align:middle;
+        line-height : 200%
     }
+
+    IMG.centered-horizontally {
+        display: block;
+        margin-left: auto;
+        margin-right: auto }
 </style>
 
-<div class="container">
+<div class="container well">
     <br>
     <!-- Upload slike na gallery - 9 stoji cisto radi testiranja, dok backend ne omoguci galeriju -->
-    <form id="imageUploadForm" role="form" method="POST" enctype="multipart/form-data" action="/api/content/image/9">
-        <input type="file" name="content" accept="image/*">
+    <form id="imageUploadForm" role="form" method="POST" enctype="multipart/form-data" action="">
+        <div class="row">
+            <div class="col-md-10">
+                <input type="file" name="content" accept="image/*">
+            </div>
+            <div class="col-md-2">
+                <button type="button" class="btn btn-lg btn-primary" id="setAsAvatarButton">Set as avatar</button>
+            </div>
+        </div>
 
         <br>
         <!-- naslov slike -->
@@ -21,17 +34,18 @@
 
         <br>
         <!-- slika -->
-        <a href="" class="thumbnail" id="largeImageLink">
-            <img src="" alt="Medium Image" style="width:500px;height:500px" id="imageContainer">
+        <a href="" class="image-popup-no-margins" id="largeImageLink">
+            <img src="" class="centered-horizontally" alt="Medium Image" style="" id="imageContainer">
         </a>
 
+        <br>
         <!-- opis ispod slike -->
         <div class="row">
             <div class="col-md-4 text-center " id="dateColumn">
                 <p class="bg-orange" id="dateModified"></p>
             </div>
             <div class="col-md-4 text-center">
-                <button type="button" class="btn btn-info" id="bubbleNameButton"></button>
+                <button type="button" class="btn btn-lg btn-info" id="bubbleNameButton"></button>
             </div>
             <div class="col-md-4 text-center" id="authorNameColumn">
                 <i><p class="bg-orange" id="authorName"></p></i>
@@ -40,10 +54,9 @@
 
         <br>
         <!-- opis slike -->
-        <div class="row">
-            <label>Description:</label>
-            <textarea class="form-control" rows="5" id="descriptionArea" name="description"></textarea>
-        </div>
+        <label>Description:</label>
+        <textarea class="form-control" rows="5" id="descriptionArea" name="description"></textarea>
+
 
 
         <br>
@@ -61,29 +74,52 @@
         </div>
     </form>
 
-    <p style="display : none;"></p>
+    <p style="display : none;" id="usernameTag"><%=user.id%></p>
 </div>
 
 <script>
     var bubbleID = "";
     var url = document.location.href;
     var imageID = url.substring(url.lastIndexOf("/")+1);
+    var userID = $("#usernameTag").text();
 
-    //new image, no reason to show delete button
-    if(imageID == "") {
-        $("deleteImageButton").hide();
-    }
+    var alreadySubmitted = false;
 
-    //upravljanje gumbima
-    //bubble name
-    $("#bubbleNameButton").click(function(){
-        //alert(bubbleID);
-        window.location.href="/bubble/" + bubbleID;
-    });
+    //the bubble is the gallery
+    $.get("/api/gallery/id/"+userID, function(jsonData) {
+        bubbleID = jsonData.id;
 
-    //save button
-    $("#saveImageButton").click(function(){
-        /**
+        var formUploadUrl = "/api/content/image/" + bubbleID;
+        //$("#imageUploadForm").attr("action","/api/content/image/" + bubbleID);
+
+        //new image, no reason to show delete button
+        if(imageID == "") {
+            $("#deleteImageButton").hide();
+            $("#setAsAvatarButton").hide();
+            $("#largeImageLink").hide();
+            $("#bubbleNameButton").hide();
+        }
+
+        if(imageID == "") {
+
+        }
+
+        //upravljanje gumbima
+        $("#setAsAvatarButton").click(function() {
+            //api/user/avatar/:image_id?
+            $.post("/api/user/avatar/" + imageID);
+            window.location.href="/profile/view/";
+        });
+
+        //bubble name
+        $("#bubbleNameButton").click(function(){
+            //alert(bubbleID);
+            window.location.href="/bubble/" + bubbleID;
+        });
+
+        //save button
+        $("#saveImageButton").click(function(){
+            /**
         var imageTitle = $("#titleArea").text();
         var imageDescription = $("#descriptionArea").text();
         var imageJSON = {id : imageID, bubble_id:bubbleID, title:imageTitle, description:imageDescription};
@@ -92,52 +128,92 @@
         $.post("/api/content/image", imageJSON);
         **/
 
-        $("#submitButton").trigger("click");
+            $("#submitButton").trigger("click");
 
-        //vjer. će trebat neki redirect odradit, na homepage ili galeriju
-    });
-
-    //delete button
-    $("#deleteImageButton").click(function(){
-        $.post("/api/content/image/"+imageID+ "/delete/");
-
-        ///content/image/:imageID/delete/
-        //vjer. će trebat neki redirect odradit, na homepage ili galeriju
-        //također, trebat će odradit upravljanje pogreškama, šta ako neko klikne 
-        //na delete, a radi se o novoj slici, tj., imageID=""
-    });
-
-    if(imageID != "") {
-        //popunjavanje naslova, opisa,...
-        ///api/content/image/:image_id
-        $.get("/api/content/image/"+imageID, function(imageDescriptor, status) {
-            //link na veliku sliku
-            //ovo bi trebao biti ok link, ali treba loadati partial za prikaz slike (samo slike) - Domagoj
-            $("#largeImageLink").attr("href",'/' + imageDescriptor.content + '?size=large');
-            //link na samu sliku - pomocu ovog se dohvaća slika
-            $("#imageContainer").attr("src",imageDescriptor.content);
-
-            //naslov slike
-            $("#titleArea").text(imageDescriptor.title);
-            //date modified
-            $("#dateModified").text(new Date(imageDescriptor.updated_at).toLocaleString());
-            //image description
-            $("#descriptionArea").text(imageDescriptor.description);
-
-            //get bubble info - /api/bubble/:id/content/
-            //get user info        
-            $.get("/api/bubble/"+imageDescriptor.bubble_id+"/content/", function(bubbleDescriptor, status) {
-                bubbleID = bubbleDescriptor.attributes.id;
-
-                //naslov bubblea
-                $("#bubbleNameButton").text(bubbleDescriptor.attributes.title);
-
-                $.get("/api/user/info?id="+bubbleDescriptor.attributes.user_id, function(userDescriptor, status) {
-                    //ime autora
-                    $("#authorName").text(userDescriptor.username);
-                });
-            }); 
+            //vjer. će trebat neki redirect odradit, na homepage ili galeriju
         });
-    }
+
+        //delete button
+        $("#deleteImageButton").click(function(){
+            $.post("/api/content/image/"+imageID+ "/delete/");
+
+            ///content/image/:imageID/delete/
+            //vjer. će trebat neki redirect odradit, na homepage ili galeriju
+            //također, trebat će odradit upravljanje pogreškama, šta ako neko klikne 
+            //na delete, a radi se o novoj slici, tj., imageID=""
+        });
+
+
+        //ajax form submit - FormData doesnt work in IE9
+        var frm = $('#imageUploadForm');
+        frm.submit(function (ev) {
+
+            ev.preventDefault();
+            if(!alreadySubmitted) {
+                alreadySubmitted = true;
+                var formData = new FormData($(this)[0]);
+                $.ajax({
+                    type: frm.attr('method'),
+                    url: formUploadUrl,
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function (data) {
+                        window.location.href = "/homepage";
+                    }
+                });
+            }
+
+
+        });
+
+        if(imageID != "") {
+            //popunjavanje naslova, opisa,...
+            ///api/content/image/:image_id
+            $.get("/api/content/image/"+imageID, function(imageDescriptor, status) {
+                //link na veliku sliku
+                //ovo bi trebao biti ok link, ali treba loadati partial za prikaz slike (samo slike) - Domagoj
+                $("#largeImageLink").attr("href",imageDescriptor.content + '?size=large');
+                //link na samu sliku - pomocu ovog se dohvaća slika
+                $("#imageContainer").attr("src",imageDescriptor.content + "?size=medium");
+
+                $('.image-popup-no-margins').magnificPopup({
+                    type: 'image',
+                    closeOnContentClick: true,
+                    closeBtnInside: false,
+                    fixedContentPos: true,
+                    mainClass: 'mfp-no-margins mfp-with-zoom', // class to remove default margin from left and right side
+                    image: {
+                        verticalFit: true
+                    },
+                    zoom: {
+                        enabled: true,
+                        duration: 300 // don't foget to change the duration also in CSS
+                    }
+                });
+
+                //naslov slike
+                $("#titleArea").text(imageDescriptor.title);
+                //date modified
+                $("#dateModified").text(new Date(imageDescriptor.updated_at).toLocaleString());
+                //image description
+                $("#descriptionArea").text(imageDescriptor.description);
+
+                //get bubble info - /api/bubble/:id/content/
+                //get user info        
+                $.get("/api/bubble/"+imageDescriptor.bubble_id+"/content/", function(bubbleDescriptor, status) {
+                    bubbleID = bubbleDescriptor.attributes.id;
+
+                    //naslov bubblea
+                    $("#bubbleNameButton").text(bubbleDescriptor.attributes.title);
+
+                    $.get("/api/user/info?id="+bubbleDescriptor.attributes.user_id, function(userDescriptor, status) {
+                        //ime autora
+                        $("#authorName").text(userDescriptor.username);
+                    });
+                }); 
+            });
+        }
+    });
 
 </script>
