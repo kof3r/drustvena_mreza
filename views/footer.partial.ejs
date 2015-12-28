@@ -81,7 +81,9 @@
 							</span>
 						</a>
 					{{?}}
-					<h4>{{= escapeHtml(post.title) }}</h4>
+					{{? post.title }}
+              <h4>{{= escapeHtml(post.title) }}</h4>
+          {{?}}
 					<span class="date-time">
 						<span class="glyphicon glyphicon-time"></span> {{= post.created_at}}
 						{{? post.updated_at != post.created_at }} 
