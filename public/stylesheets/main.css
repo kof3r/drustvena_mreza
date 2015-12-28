@@ -189,8 +189,9 @@
 }
 
 .post {
+    margin: auto 0 auto -10px;
     border-radius: 10px;
-    min-width: 384px;
+    min-width: 310px;
     max-width: 512px !important;
 }
 
@@ -238,6 +239,7 @@
 
 .post > .header > .date-time {
 	font-size: 0.9em;
+  word-wrap: break-word;
 }
 
 .post > .header a.location {
@@ -269,7 +271,7 @@
 	float: right;
 	margin: 5px 5px 5px 5px;
 	padding: 10px 15px 10px 15px;
-	min-width: 180px;
+	min-width: 150px;
 	max-width: 200px;
 	min-height: 30px;
 	background: white;
