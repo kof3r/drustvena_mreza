@@ -19,26 +19,26 @@ router.get('/new-bubble', function(req, res, next) {
 });
 router.get('/edit-bubble/:id', function(req, res, next) {
     Bubble.where({id: req.params.id}).fetch().then(function(bubble){
-      res.render('bubble-editor.partial.ejs', {bubble: bubble});
+      res.render('bubble-editor.partial.ejs', {bubble: bubble.toJSON()});
     });
 });
 router.get('/messages', function(req, res, next) {
     res.render('messages.partial.ejs');
 });
 router.get('/new-content', function(req, res, next) {
-    res.render('new-content.partial.ejs');
+    res.render('content-editor.partial.ejs');
 });
 router.get('/edit-content/:id', function(req, res, next) {
     Promise.join(
         contUtils.getPost(req.params.id),
         function(_post){
             if (!_post){
-                return res.render('new-content.partial.ejs', {post: undefined});
+                return res.render('content-editor.partial.ejs', {error: 'Content does not exist'});
             }
 
             console.log('tu sam');
 
-            return res.render('new-content.partial.ejs', {post: _post});
+            return res.render('content-editor.partial.ejs', {post: _post.toJSON()});
         }
     )
 });
