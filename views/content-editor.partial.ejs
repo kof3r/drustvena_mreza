@@ -16,11 +16,13 @@
 #main-content { box-sizing: border-box }
 </style>
 
+<% if(locals.error) { %><div class="alert alert-danger">The content with the specified ID does not exist</div><% } else { %>
+
 <form name="post-form" id="post-form">
 
 	<div class="form-group col-sm-8 col-xs-12">
 		<label for="post-title">Title</label>
-			<input type="text" id="post-title" name="post-title" class="form-control" maxlength="128" />
+			<input type="text" id="post-title" name="post-title" class="form-control" maxlength="128"<% if(locals.post) { %>value="<%= post.title %>"<% } %> />
 	</div>
 	
 	<div class="form-group col-sm-4">
@@ -37,6 +39,7 @@
 					<input id="new-content-category-post" name="category" value="1" type="radio">
 					<span class="glyphicon glyphicon-font"></span> Post
 				</label>
+				<!--
 				<label class="">
 					<input id="new-content-category-picture" name="category" value="2" type="radio">
 					<span class="glyphicon glyphicon-picture"></span> Picture
@@ -49,6 +52,7 @@
 					<input id="new-content-category-video" name="category" value="4" type="radio">
 					<span class="glyphicon glyphicon-facetime-video"></span> Video
 				</label>
+				-->
 			</div>
 		</div>
 	</div>
@@ -56,7 +60,11 @@
 	<div class="col-sm-3 col-xs-8">
 		<label>Actions</label>
 		<div class="form-group">
-			<input type="submit" class="btn btn-primary " value="Publish" />
+      <% if(locals.post) { %>
+        <input type="submit" class="btn btn-success " value="Update" />
+			<% } else { %>
+        <input type="submit" class="btn btn-primary " value="Publish" />
+      <% } %>
 			<button class="btn btn-danger" onclick="Javascript:discard();">Discard</button>
 		</div>
 	</div>
@@ -64,7 +72,7 @@
 </form>
 
 	<div class="col-md-12 editor">
-			<textarea id="editor"></textarea>
+			<textarea id="editor"><% if(locals.post) { %><%= post.content %><% } %></textarea>
 	</div>
 	
 
@@ -106,18 +114,20 @@ $('#post-form').on('submit', function(event) {
 	event.preventDefault();
 	
 	var title = document.getElementById('post-title').value;
-	var bubble = $('#bubble-to-post-in').val();
+	var bubble_id = $('#bubble-to-post-in').val();
 	var content = $("#editor").bbcode();
 	var postData = {content: content,
                   title: title,
+                  <% if(locals.post) { %>bubble_id: bubble_id,<% } %>
                   description: ''};
 	
 	if (title == '')	{ $('#post-title').focus();}
-	else if (bubble == '') { $('#bubble-to-post-in').focus();}
+	else if (bubble_id == '') { $('#bubble-to-post-in').focus();}
 	else if (content == '') { $('#editor').focus();}
 					
 	else {
-		$.post('/api/content/post/' + bubble, postData, function(success) {
+    var url = '/api/content/post/<% if(locals.post) { %>edit/' + <%= post.id %><% } else { %>' + bubble_id<% } %>;
+		$.post(url, postData, function(success) {
 			window.history.back();
 		});
 	}
@@ -127,3 +137,4 @@ $('#post-form').on('submit', function(event) {
 $(document).ready(renderEditor);
 
 </script>
+<% } %>

@@ -16,6 +16,7 @@ function loadFeed(url, element) {
 	$.get(url, function(data) {
 		$.each(data.contents, function() {
       if(this.content_type_id == 1) {
+        this.content = escapeHtml(this.content);
         this.content = BBC2HTML(this.content);
       }
 			var dt = Date.parse(this.created_at);
@@ -296,20 +297,8 @@ page('/homepage', function(){
 	loadFeed('/api/home/feed', 'main-content');
 });
 
-page('/messages', function(){
-  loadPartial('messages');
-});
-
-page('/messages/:username', function(context){
-  loadPartial('messages?username=' + context.params.username);
-});
-
 page('/bubble/:id/', function(context) {
   loadFeed('/api/bubble/' + context.params.id + '/content', 'main-content');
-});
-
-page('/image/edit/:id', function(context) {
-  loadPartial('edit-image?imageID=' + context.params.id);
 });
 
 page('/image/edit/', function(context) {
@@ -320,15 +309,33 @@ page('/image/edit/:id', function(context) {
   loadPartial('edit-image/' + context.params.id);
 });
 
+page('/messages', function(){
+  loadPartial('messages');
+});
+
+page('/messages/:username', function(context){
+  loadPartial('messages?username=' + context.params.username);
+});
+
 page('/new/:type', function(context){
 	var type = context.params.type;
 	loadPartial('new-content', function() {
 		$('#new-content-category-' + type).attr('checked', 'checked');
 	});
 });
+page('/:type/:id/edit', function(context){
+	var type = context.params.type;
+	loadPartial('edit-content/' + context.params.id, function() {
+		$('#new-content-category-' + type).attr('checked', 'checked');
+	});
+});
 
 page('/profile/view', function() {
 	loadPartial('view-profile');
+});
+
+page('/profile/:id/view', function(context) {
+	loadPartial('view-profile/' + context.params.id);
 });
 
 page('/profile/edit', function() {

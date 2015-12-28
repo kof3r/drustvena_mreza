@@ -60,7 +60,7 @@
             {{?}}
             <span class="time">Created {{= dateFormat(it.attributes.created_at, dateTimeFormat) }}</span>
             {{? 1==1 }}
-                <a class="btn btn-success popup-ajax" href="/partial/edit-bubble/{{= it.attributes.id }}">Edit bubble</a>
+                <a class="popup-ajax" href="/partial/edit-bubble/{{= it.attributes.id }}">Edit</a>
             {{?}}
         </div>
     {{?}}
@@ -96,7 +96,7 @@
 				</div>
 				<div class="content">
           {{? post.content_type_id == 1 }}
-              {{= escapeHtml(post.content) }}
+              {{= post.content }}
           {{?? post.content_type_id == 2}}
               <a class="image-popup-no-margins" href="/.{{= post.content }}?size=large">
                 <img src="/.{{= post.content }}?size=medium" />
