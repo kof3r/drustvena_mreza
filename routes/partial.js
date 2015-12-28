@@ -16,7 +16,7 @@ router.get('/new-bubble', function(req, res, next) {
 });
 router.get('/edit-bubble/:id', function(req, res, next) {
     Bubble.where({id: req.params.id}).fetch().then(function(bubble){
-      res.render('bubble-editor.partial.ejs', bubble);
+      res.render('bubble-editor.partial.ejs', {bubble: bubble});
     });
 });
 router.get('/messages', function(req, res, next) {
