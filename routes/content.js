@@ -191,11 +191,7 @@ router.get('/gallery', function(req, res) {
 });
 
 router.get('/myBubbles', function (req, res) {
-    Bubble.query(function(qb) {
-        qb.where({user_id: req.user.id}).andWhere(function () {
-            this.where('bubble_type_id', 1).orWhere('bubble_type_id', 3);
-        });
-    }).fetchAll().then(function (bubbles) {
+    Bubble.where({user_id: req.user.get('id')}).fetchAll().then(function (bubbles) {
         res.json({bubbles: bubbles});
     });
 });
