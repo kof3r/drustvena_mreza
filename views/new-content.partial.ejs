@@ -75,7 +75,7 @@
 <script id="new-post-bubble-select-tmp" type="text/x-dot-template">
 	<option></option>
 	{{~it.bubbles :bubble:index}}
-		<option value="{{= bubble.id }}">{{= bubble.title }}</option>
+		<option value="{{= bubble.id }}">{{= escapeHtml(bubble.title) }}</option>
 	{{~}}
 </script>
 
