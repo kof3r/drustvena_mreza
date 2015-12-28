@@ -5,6 +5,7 @@ var User = require('../models/user');
 var Bubble = require('../models/bubble');
 
 var contUtils = require('../utils/content');
+var Promise = require('bluebird');
 
 var requireAuthentication = require('../utils/authentication');
 router.all('*' , requireAuthentication);
@@ -29,13 +30,15 @@ router.get('/new-content', function(req, res, next) {
 });
 router.get('/edit-content/:id', function(req, res, next) {
     Promise.join(
-        contUtils.getPost(req.params.post_id),
+        contUtils.getPost(req.params.id),
         function(_post){
             if (!_post){
-                return res.render('new-content.partial.ejs', {post:undefined});
+                return res.render('new-content.partial.ejs', {post: undefined});
             }
 
-            return res.render('new-content.partial.ejs', {post: _post.toJSON()});
+            console.log('tu sam');
+
+            return res.render('new-content.partial.ejs', {post: _post});
         }
     )
 });
