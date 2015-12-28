@@ -46,7 +46,6 @@ router.get('/', function(req, res, next) {
         })
         .fetchAll().then(function (collection) {
             var count = collection.models.length;
-            console.log(collection);
 
             if (count < from + size) {
                 size = count;

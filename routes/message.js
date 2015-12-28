@@ -9,6 +9,7 @@ var Message = require('../models/message');
 var general = require('../utils/general');
 var requireAuthentication = require('../utils/authentication');
 var convert = require('../utils/convert');
+var Promise = require('bluebird');
 router.all("*", requireAuthentication);
 
 // asynchronous messages
@@ -54,18 +55,24 @@ router.get("/my/:user_name",function(req,res,next){
             return general.sendMessage(res, "The specified user doesn't exist", 404);
         }
 
-        Message
-            .query({
-                    where: {sender: req.user.attributes.username, recipient: user.attributes.username},
-                    orWhere: {sender: user.attributes.username, recipient: req.user.attributes.username}
-            })
-            .fetchAll()
-            .then(function(results){
+        console.log(user.attributes.username + ' ' + req.user.attributes.username);
+
+        Promise.join(
+            getMySent(req.user.attributes.username, user.attributes.username),
+            getOtherSent(req.user.attributes.username, user.attributes.username),
+
+            function(_mySent, _otherSent){
+
+                var sent = _mySent.toJSON();
+                var received = _otherSent.toJSON();
+
+                var messages = sent.concat(received);
                 return general.sendJsonResponse(res, {
-                    length: results.models.length,
-                    messages: results.toJSON()
+                    length: messages.length,
+                    messages: messages
                 }, 200, null)
-            })
+        })
+
     })
 });
 
@@ -74,7 +81,7 @@ router.post('/:user_name', function(req, res, next){
 
     User.where({username: req.params.user_name}).fetch().then(function(user){
         if (!user){
-            return general.sendMessage(res, "The specified user doesn't exist", 404);
+            return general.sendJsonResponse(res, null, 404, "The specified user doesn't exist");
         }
 
         Message
@@ -95,11 +102,11 @@ router.post('/mark/:message_id', function(req, res, next){
 
     Message.where({id: req.params.message_id}).fetch().then(function(message){
         if (!message){
-            return general.sendMessage(res, "The specified message doesn't exist.", 404);
+            return general.sendJsonResponse(res, null, 404, "The specified message doesn't exist");
         }
 
         if (message.attributes.recipient != req.user.attributes.username){
-            return general.sendMessage(res, "The specified message isn't yours!", 403);
+            return general.sendJsonResponse(res, null, 403, "The specified message isn't yours!");
         }
 
         Message
@@ -114,6 +121,19 @@ router.post('/mark/:message_id', function(req, res, next){
     })
 })
 
+function getMySent(myUserName, otherUserName){
+    return Message.query({
+        where: {sender: myUserName},
+        andWhere: {recipient:otherUserName}
+    }).fetchAll()
+}
+
+function getOtherSent(myUserName, otherUserName){
+    return Message.query({
+        where: {sender: otherUserName},
+        andWhere: {recipient:myUserName}
+    }).fetchAll()
+}
 
 
 module.exports=router;

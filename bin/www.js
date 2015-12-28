@@ -144,7 +144,8 @@ var Message = require('../models/message');
 //}
 
 io.on('connection', function(socket){
-  console.log('a user connected with socket ' + socket);
+  console.log('a user connected');
+  //console.log(socket.handshake.headers)
 
   var username;
   socket.on('join', function(user){
