@@ -425,12 +425,12 @@ function editContent(req, res, type){
                 req: req
             }
 
-            if (type == 1){
+            if (req.body.content && type == 1){
                 context.content = req.body.content;
             }
 
 
-            if (type == 2){
+            if (req.body.content && type == 2){
                 context.content = req.file;
                 context.imgPath = '/res/img/';
                 context.filename = md5(Date.now().toString() + req.file.originalname) + '_'
@@ -438,7 +438,7 @@ function editContent(req, res, type){
             }
 
             return parseContent(context);
-            })
+        })
     })
 }
 
