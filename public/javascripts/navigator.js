@@ -268,6 +268,13 @@ function removeComment(comment_id) {
 	});
 }
 
+function removeContent(content_id) {
+  var url = '/api/content/delete/' + content_id;
+  $.post(url, function() {
+    $('#post-' + content_id).hide(250);
+  });
+}
+
 
 function initializeVideos() {
 

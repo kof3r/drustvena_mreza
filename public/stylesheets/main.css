@@ -227,6 +227,7 @@
 }
 .post > .header > .actions-link > a {
   margin: 0 10px;
+  cursor: pointer;
 }
 .post > .header > .actions-link > a.edit {
   color: darkblue;
