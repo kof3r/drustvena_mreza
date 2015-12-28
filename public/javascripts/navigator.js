@@ -26,8 +26,7 @@ function loadFeed(url, element) {
 		var templateFunction = doT.template(document.getElementById('feed-tmp').text);
 		var html = templateFunction( data );
 		document.getElementById(element).innerHTML = html;
-    initializeImagePopups();
-		initializeVideos();
+		initializeFeedInteractivity();
 	});
 
 }
@@ -63,16 +62,37 @@ function initializeImagePopups() {
   });
 }
 
+function initializeToolsTips() {
+	$(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+  });
+}
+
+function initializeAjaxPopup() {
+	$('.popup-ajax').magnificPopup({
+		type: 'ajax'
+	});
+}
+
 function initialize() {
 	$.get('/api/content/myBubbles', function(data) {
-		var templateFunction = doT.template(document.getElementById('my-bubbles-tmp').text);
+		var templateFunction = doT.template(document.getElementById('my-bubbles-tmp').text  );
 		var html = templateFunction(data);
 		$('#my-bubbles').html(html);
 	});
 	
-	$('.popup-ajax').magnificPopup({
-		type: 'ajax'
-	});
+	initializeAjaxPopup();
+	
+	$(document).ready(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+  });
+}
+
+function initializeFeedInteractivity() {
+  initializeImagePopups();
+  initializeVideos();
+  initializeToolsTips();
+	initializeAjaxPopup();
 }
 
 function clearSearchResults() {

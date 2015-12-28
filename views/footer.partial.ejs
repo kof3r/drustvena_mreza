@@ -85,7 +85,7 @@
 					<span class="date-time">
 						<span class="glyphicon glyphicon-time"></span> {{= post.created_at}}
 						{{? post.updated_at != post.created_at }} 
-							<span title="Updated {{= post.updated_at }}" class="glyphicon glyphicon-pushpin"></span>
+							<span data-toggle="tooltip" title="Updated {{= post.updated_at }}" class="glyphicon glyphicon-pushpin"></span>
 						{{?}}
 					</span>
 					{{? post.location!=null }}
