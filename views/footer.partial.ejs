@@ -33,7 +33,20 @@
       
       {{? it.bubbles.length > 0 }}
         {{~it.bubbles :bubble:index}}
-          <li><a href="/bubble/{{= bubble.id }}">{{= escapeHtml(bubble.title) }}</a></li>
+          <li>
+            <a href="/bubble/{{= bubble.id }}">
+              {{? bubble.bubble_type_id == 1 }}
+                <span class="glyphicon glyphicon-text-size"></span> 
+              {{?}}
+              {{? bubble.bubble_type_id == 2 }}
+                <span class="glyphicon glyphicon-picture"></span> 
+              {{?}}
+              {{? bubble.bubble_type_id == 3 }}
+                <span class="glyphicon glyphicon-font"></span> 
+              {{?}}
+              {{= escapeHtml(bubble.title) }}
+            </a>
+          </li>
         {{~}}
       {{??}}
         <li class="dropdown-header">No bubbles</li>

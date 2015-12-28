@@ -25,11 +25,13 @@
 			<input type="text" id="post-title" name="post-title" class="form-control" maxlength="128"<% if(locals.post) { %>value="<%= post.title %>"<% } %> />
 	</div>
 	
+	<% if(!locals.post) { %>
 	<div class="form-group col-sm-4">
 		<label for="bubble-to-post-in">Bubble</label>
 		<select id="bubble-to-post-in" name="bubble-to-post-in" class="form-control">
 		</select>
 	</div>
+	<% } %>
 	
 	<div class="col-md-8 col-sm-8">
 		<label>Category</label>
@@ -99,11 +101,13 @@ function renderEditor() {
     }
     $("#editor").wysibb(wbbOpt);
     
-    $.get('/api/content/myBubbles', function(data) {
-    var templateFunction = doT.template(document.getElementById('new-post-bubble-select-tmp').text);
-		var html = templateFunction(data);
-		$('#bubble-to-post-in').html(html);
-	});
+    <% if(!locals.post) { %>
+      $.get('/api/content/myBubbles', function(data) {
+        var templateFunction = doT.template(document.getElementById('new-post-bubble-select-tmp').text);
+        var html = templateFunction(data);
+        $('#bubble-to-post-in').html(html);
+      });
+    <% } %>
 }
 
 function discard() {
@@ -114,11 +118,14 @@ $('#post-form').on('submit', function(event) {
 	event.preventDefault();
 	
 	var title = document.getElementById('post-title').value;
-	var bubble_id = $('#bubble-to-post-in').val();
+	var bubble_id = <% if(locals.post) { %><%= post.bubble_id %><% } else { %>$('#bubble-to-post-in').val()<% } %>;
 	var content = $("#editor").bbcode();
 	var postData = {content: content,
                   title: title,
-                  <% if(locals.post) { %>bubble_id: bubble_id,<% } %>
+                  <% if(locals.post) { %>
+                  id: <%= post.id %>,
+                  <% } else { %>
+                  bubble_id: bubble_id,<% } %>
                   description: ''};
 	
 	if (title == '')	{ $('#post-title').focus();}
@@ -126,9 +133,9 @@ $('#post-form').on('submit', function(event) {
 	else if (content == '') { $('#editor').focus();}
 					
 	else {
-    var url = '/api/content/post/<% if(locals.post) { %>edit/' + <%= post.id %><% } else { %>' + bubble_id<% } %>;
+    var url = '/api/content/<% if(locals.post) { %>edit/post/' + <%= post.id %><% } else { %>post/' + bubble_id<% } %>;
 		$.post(url, postData, function(success) {
-			window.history.back();
+      window.location = '/bubble/' + bubble_id;
 		});
 	}
 	return false;
