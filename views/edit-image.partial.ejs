@@ -135,8 +135,8 @@
 
         //delete button
         $("#deleteImageButton").click(function(){
-            $.post("/api/content/image/"+imageID+ "/delete/");
-
+            $.post("/api/content/delete/"+imageID);
+            window.location.href = "/homepage";
             ///content/image/:imageID/delete/
             //vjer. će trebat neki redirect odradit, na homepage ili galeriju
             //također, trebat će odradit upravljanje pogreškama, šta ako neko klikne 
