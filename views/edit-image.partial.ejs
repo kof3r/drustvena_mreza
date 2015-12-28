@@ -20,7 +20,7 @@
     <form id="imageUploadForm" role="form" method="POST" enctype="multipart/form-data" action="">
         <div class="row">
             <div class="col-md-10">
-                <input type="file" name="content" accept="image/*">
+                <input type="file" name="content" accept="image/*" id="imageContentInputTag">
             </div>
             <div class="col-md-2">
                 <button type="button" class="btn btn-lg btn-primary" id="setAsAvatarButton">Set as avatar</button>
@@ -90,6 +90,15 @@
         bubbleID = jsonData.id;
 
         var formUploadUrl = "/api/content/image/" + bubbleID;
+        if(imageID != "") {
+            formUploadUrl="/api/content/edit/image/" + imageID;
+            if($("#imageContentInputTag").attr("value") == undefined) {
+                //ime se promijeni, samo da ne bi doslo do pomutnje,
+                //sto se salje pod imenom "content"
+                //na ovaj nacin(hack) ne salje se nista
+                $("#imageContentInputTag").attr("name", "random");
+            }
+        }
         //$("#imageUploadForm").attr("action","/api/content/image/" + bubbleID);
 
         //new image, no reason to show delete button
@@ -128,15 +137,30 @@
         $.post("/api/content/image", imageJSON);
         **/
 
-            $("#submitButton").trigger("click");
+            //$("#submitButton").trigger("click");
+            var frm = $('#imageUploadForm');
+            if(!alreadySubmitted) {
+                alreadySubmitted = true;
+                var formData = new FormData(frm[0]);
+                $.ajax({
+                    type: "POST",
+                    url: formUploadUrl,
+                    contentType: false,
+                    processData: false,
+                    data: formData,
+                    success: function (data) {
+                        window.location.href = "/homepage";
+                    }
+                });
+            }
 
             //vjer. će trebat neki redirect odradit, na homepage ili galeriju
         });
 
         //delete button
         $("#deleteImageButton").click(function(){
-            $.post("/api/content/image/"+imageID+ "/delete/");
-
+            $.post("/api/content/delete/"+imageID);
+            window.location.href = "/homepage";
             ///content/image/:imageID/delete/
             //vjer. će trebat neki redirect odradit, na homepage ili galeriju
             //također, trebat će odradit upravljanje pogreškama, šta ako neko klikne 
@@ -145,6 +169,7 @@
 
 
         //ajax form submit - FormData doesnt work in IE9
+        /*
         var frm = $('#imageUploadForm');
         frm.submit(function (ev) {
 
@@ -163,9 +188,8 @@
                     }
                 });
             }
-
-
         });
+        */
 
         if(imageID != "") {
             //popunjavanje naslova, opisa,...

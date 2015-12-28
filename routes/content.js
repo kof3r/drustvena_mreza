@@ -314,8 +314,32 @@ function parseContent(context){
 
 // not yet tested
 function handleImg(context){
+
+    var image = {
+        bubble_id: context.bubbleId,
+        title: context.title,
+        description: context.description,
+        content_type_id: context.typeId
+    }
+
+    if (context.content_id){
+        image.id = context.content_id;
+    }
+
+    if (!context.changeContent){
+        image.content = context.content;
+        Content.forge(image).save().then(function(finished, err){
+            if (err){
+                return general.sendMessage(context.res, "Failed to save the image.", 500);
+            }
+            context.res.status(200);
+            return context.res.json(finished);
+        })
+    }
+
     var loc = '.' + context.imgPath + context.filename; // save locally in folder relative to local project root
     var linkloc = context.imgPath + context.filename; // generate link that is relative to host root
+    image.content = linkloc;
     fs.writeFile(loc, context.content.buffer, { encoding: 'ascii', mode: 0666, flag: 'w+'}, function(err){
         if (err){
             console.log(err);
@@ -354,18 +378,6 @@ function handleImg(context){
                     console.log(err);
                 }
             });
-
-        var image = {
-            content: linkloc,
-            bubble_id: context.bubbleId,
-            title: context.title,
-            description: context.description,
-            content_type_id: context.typeId
-        }
-
-        if (context.content_id){
-            image.id = context.content_id;
-        }
 
         Content.forge(image).save().then(function(finished, err){
             if (err){
@@ -416,25 +428,31 @@ function editContent(req, res, type){
             }
 
             var context = {
-                content_id: content.id,
-                bubbleId: bubble.id,
+                content_id: content.attributes.id,
+                bubbleId: bubble.attributes.id,
                 typeId: type,
-                title: req.body.title,
-                description: req.body.description,
+                title: req.body.title || content.attributes.title,
+                description: req.body.description || content.attributes.description,
                 res: res,
                 req: req
             }
 
-            if (req.body.content && type == 1){
-                context.content = req.body.content;
-            }
+            if(req.body.content){
+                if (type == 1){
+                    context.content = req.body.content;
+                }
 
+                if (type == 2){
+                    context.content = req.file;
+                    context.imgPath = '/res/img/';
+                    context.filename = md5(Date.now().toString() + req.file.originalname) + '_'
+                        + req.file.originalname
+                }
 
-            if (req.body.content && type == 2){
-                context.content = req.file;
-                context.imgPath = '/res/img/';
-                context.filename = md5(Date.now().toString() + req.file.originalname) + '_'
-                    + req.file.originalname
+                context.changeContent = true;
+            } else {
+                context.content = content.attributes.content;
+                context.changeContent = false;
             }
 
             return parseContent(context);
