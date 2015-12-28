@@ -81,6 +81,13 @@
 			{{~it.contents :post:index}}
 				<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
 				<div class="header">
+          {{? post.username == globalUsername }}
+            <span class="actions-link">
+              <a class="edit" 
+              href="{{? post.content_type_id == 2 }}/image/edit/{{= post.id }}{{??}}/post/{{= post.id }}/edit{{?}}">Edit</a>
+              <a class="remove" href="/post/{{= post.id }}/remove">Remove</a>
+            </span>
+          {{?}}
 					<span class="stats">
 						<span class="likes badge">{{=post.likes}}</span> + 
 						<span class="dislikes badge">{{=post.dislikes}}</span> = 

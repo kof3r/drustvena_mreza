@@ -216,6 +216,29 @@
     border-top-right-radius: 10px;
 }
 
+.post > .header > .actions-link {
+  position: absolute;
+  right: 150px;
+  top: -10px;
+  background-color: white;
+  padding: 5px;
+  border-radius: 5px;
+  visibility: hidden;
+}
+.post > .header > .actions-link > a {
+  margin: 0 10px;
+}
+.post > .header > .actions-link > a.edit {
+  color: darkblue;
+}
+.post > .header > .actions-link > a.remove {
+  color: darkred;
+}
+.post:hover > .header > .actions-link {
+  visibility: visible;
+}
+
+
 .post > .header > .stats {
 	position: absolute;
 	top: -10px;
