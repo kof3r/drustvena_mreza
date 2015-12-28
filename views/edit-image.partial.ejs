@@ -1,11 +1,25 @@
+<style>
+
+    .bg-orange {
+        background-color: darkorange;
+        font-weight: bold;
+        color: #ffffff;
+        vertical-align:middle;
+    }
+</style>
+
 <div class="container">
+    <br>
     <!-- Upload slike na gallery - 9 stoji cisto radi testiranja, dok backend ne omoguci galeriju -->
     <form id="imageUploadForm" role="form" method="POST" enctype="multipart/form-data" action="/api/content/image/9">
         <input type="file" name="content" accept="image/*">
 
+        <br>
         <!-- naslov slike -->
+        <label class="control-label">Title:</label>
         <textarea class="form-control" rows="1" id="titleArea" name="title"></textarea>
 
+        <br>
         <!-- slika -->
         <a href="" class="thumbnail" id="largeImageLink">
             <img src="" alt="Medium Image" style="width:500px;height:500px" id="imageContainer">
@@ -13,33 +27,36 @@
 
         <!-- opis ispod slike -->
         <div class="row">
-            <div class="col-md-4" id="dateColumn">
-                <p id="dateModified"></p>
+            <div class="col-md-4 text-center " id="dateColumn">
+                <p class="bg-orange" id="dateModified"></p>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4 text-center">
                 <button type="button" class="btn btn-info" id="bubbleNameButton"></button>
             </div>
-            <div class="col-md-4" id="authorNameColumn">
-                <p id="authorName"></p>
+            <div class="col-md-4 text-center" id="authorNameColumn">
+                <i><p class="bg-orange" id="authorName"></p></i>
             </div>
         </div>
 
+        <br>
         <!-- opis slike -->
         <div class="row">
+            <label>Description:</label>
             <textarea class="form-control" rows="5" id="descriptionArea" name="description"></textarea>
         </div>
 
 
+        <br>
         <!-- gumbi save i delete -->
         <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-10">
             </div>
-            <div class="col-md-3">
-                <button type="button" class="btn btn-warning" id="deleteImageButton">Delete</button>
+            <div class="col-md-1">
+                <button type="button" class="btn btn-lg btn-danger" id="deleteImageButton">Delete</button>
             </div>
-            <div class="col-md-3">
+            <div class="col-md-1">
                 <input type="submit" id="submitButton" style="display : none;">
-                <button type="button" class="btn btn-primary" id="saveImageButton">Save</button>
+                <button type="button" class="btn btn-lg btn-primary" id="saveImageButton">Save</button>
             </div>
         </div>
     </form>
@@ -52,6 +69,7 @@
     var url = document.location.href;
     var imageID = url.substring(url.lastIndexOf("/")+1);
 
+    //new image, no reason to show delete button
     if(imageID == "") {
         $("deleteImageButton").hide();
     }
@@ -59,6 +77,7 @@
     //upravljanje gumbima
     //bubble name
     $("#bubbleNameButton").click(function(){
+        //alert(bubbleID);
         window.location.href="/bubble/" + bubbleID;
     });
 
@@ -96,30 +115,29 @@
             //ovo bi trebao biti ok link, ali treba loadati partial za prikaz slike (samo slike) - Domagoj
             $("#largeImageLink").attr("href",'/' + imageDescriptor.content + '?size=large');
             //link na samu sliku - pomocu ovog se dohvaća slika
-            $("#imageContainer").attr("src",'/' + imageDescriptor.content);
-            
-            //naslov slike
-            $("#titleArea").append(imageDescriptor.title);
-            //date modified
-            $("#dateModified").append(imageDescriptor.updated_at);
-            //image description
-            $("#descriptionArea").append(imageDescriptor.description);
+            $("#imageContainer").attr("src",imageDescriptor.content);
 
-            //get bubble info
+            //naslov slike
+            $("#titleArea").text(imageDescriptor.title);
+            //date modified
+            $("#dateModified").text(new Date(imageDescriptor.updated_at).toLocaleString());
+            //image description
+            $("#descriptionArea").text(imageDescriptor.description);
+
+            //get bubble info - /api/bubble/:id/content/
             //get user info        
-            $.get("/api/bubble/info?id="+imageDescriptor.bubble_id, function(bubbleDescriptor, status) {
-                bubbleID = bubbleDescriptor.bubble_id;
+            $.get("/api/bubble/"+imageDescriptor.bubble_id+"/content/", function(bubbleDescriptor, status) {
+                bubbleID = bubbleDescriptor.attributes.id;
 
                 //naslov bubblea
-                $("#bubbleNameButton").append(bubbleDescriptor.title);
+                $("#bubbleNameButton").text(bubbleDescriptor.attributes.title);
 
-                $.get("/api/user/info?id="+bubbleDescriptor.user_id, function(userDescriptor, status) {
+                $.get("/api/user/info?id="+bubbleDescriptor.attributes.user_id, function(userDescriptor, status) {
                     //ime autora
-                    $("#authorName").append(userDescriptor.username);
+                    $("#authorName").text(userDescriptor.username);
                 });
             }); 
         });
     }
-
 
 </script>

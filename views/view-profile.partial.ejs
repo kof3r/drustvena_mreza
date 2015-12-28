@@ -34,13 +34,13 @@
         text-indent: 5%;
         font-weight: bold;
     }
-    
+
     .friends-tab {
         width: 30%;
         margin: auto;
         margin-top: 2.5%;
     }
-    
+
     .my-friends {
         color: dodgerblue;
         font-weight: bold;
@@ -153,18 +153,18 @@
         </div>
         <div class="tab-pane fade" id="profile-posts">
         </div>
-        
-        
+
+
         <div class="tab-pane fade" id="profile-friends">
             <div class="well friends-tab" >
                 <div class="my-friends" >
                     <p> <span class="glyphicon glyphicon-user"></span> MY CONTACTS </p>
                     <ul class = "friends-list"></ul>
                 </div>
-             </div>     
+            </div>     
         </div>
-        
-        
+
+
         <div class="tab-pane fade" id="profile-gallery-outer">
             <div id="profile-gallery">
                 <!--  Ovdje će JQuery ubacit slike  -->
@@ -187,92 +187,95 @@
 
 <!--gallery tab script-->
 <script>
+    var alreadyLoaded = false;
     $("#galleryNavPill").click(function() {
-        //these two variables are dependant
-        var numOfImagesPerRow = 4;
-        var bootstrapOccupation = 3;
+        if(!alreadyLoaded) {
+            alreadyLoaded=true;
+            //these two variables are dependant
+            var numOfImagesPerRow = 4;
+            var bootstrapOccupation = 3;
 
-        var numOfImagesInCurrentRow = 0;
-        var nextRowIndex = 0;
-        //kako ovo dohvatiti - ejs atributi ili
-        //neki zahtjev za ovo
-        var username = $("#usernameTag").text();
+            var numOfImagesInCurrentRow = 0;
+            var nextRowIndex = 0;
+            //kako ovo dohvatiti - ejs atributi ili
+            //neki zahtjev za ovo
+            var username = $("#usernameTag").text();
 
-        $("#newImageButton").click(function(){
-            window.location.href="/image/edit/";
-        });
-
-        //gets an array of image descriptors
-        //for all the images of the current user
-
-        //gets all the content of the current user
-        //one should sort the content by type and display it properly
-        //so far, if the content is an image, "content_type_id"==2
-        //there is probably a more intelligent way of checking this and we might implement it
-        //the bubble number 9 is just for testing, real bubble id(gallery in this case)
-        //goes here
-        $.get("/api/bubble/9/content/", addImages);
-
-        //adds all the images of the user to the gallery
-        function addImages(attrsAndContentJson, status) {
-            var contentsArray = attrsAndContentJson.contents;
-            var imageArray = [];
-            $.each(contentsArray, function(index, contentDescriptor) {
-                //add images to a separate array
-                if(contentDescriptor.content_type_id==2) {
-                    imageArray.push(contentDescriptor);
-                }
+            $("#newImageButton").click(function(){
+                window.location.href="/image/edit/";
             });
 
+            //gets an array of image descriptors
+            //for all the images of the current user
 
-            $.each(imageArray, function(index, imageDescriptor) {
-                var imageID = imageDescriptor.id;
-                addImage(imageDescriptor);
-            });
-        }
+            //gets all the content of the current user
+            //one should sort the content by type and display it properly
+            //so far, if the content is an image, "content_type_id"==2
+            //there is probably a more intelligent way of checking this and we might implement it
+            //the bubble number 9 is just for testing, real bubble id(gallery in this case)
+            //goes here
+            $.get("/api/bubble/9/content/", addImages);
+
+            //adds all the images of the user to the gallery
+            function addImages(attrsAndContentJson, status) {
+                var contentsArray = attrsAndContentJson.contents;
+                var imageArray = [];
+                $.each(contentsArray, function(index, contentDescriptor) {
+                    //add images to a separate array
+                    if(contentDescriptor.content_type_id==2) {
+                        imageArray.push(contentDescriptor);
+                    }
+                });
 
 
-        function addImage(imageDescriptor) {
-            //$.get("/content/image?id="+imageID, function(imageDescriptor, status) {
-            addNextImage(imageDescriptor);
-            //});
-        }
-
-        //adds an image to the gallery
-        //does all the necessary gallery formatting,
-        //like adding rows, etc..
-        function addNextImage(imageDescriptor) {
-            //add new row
-            if(numOfImagesInCurrentRow == 0) {
-                var rowHTML = '<div class="row" id="galleryRow'+nextRowIndex + '"> </div>';
-                nextRowIndex++;
-
-                $("#profile-gallery").append(rowHTML);
-            } 
-
-            //add image to the end of the current row
-            var currentRowIndex = nextRowIndex-1;
-            var imageHTML = constructImageHTML(imageDescriptor);
-            $("#galleryRow"+currentRowIndex).append(imageHTML);
-            numOfImagesInCurrentRow++;
-
-            //check if the row is filled
-            if(numOfImagesInCurrentRow == numOfImagesPerRow) {
-                numOfImagesInCurrentRow = 0;
+                $.each(imageArray, function(index, imageDescriptor) {
+                    var imageID = imageDescriptor.id;
+                    addImage(imageDescriptor);
+                });
             }
-        }
 
-        function constructImageHTML(imageDescriptor) {
-            var imageSRC = imageDescriptor.content;
-            //add image page src here
-            var imagePageSRC='/image/edit/' + imageDescriptor.id;
-            var imageHTML = '<div class="col-md-'+bootstrapOccupation+'">';
-            imageHTML+='<a href="'+imagePageSRC+'" class="thumbnail">';
-            imageHTML+='<p>'+imageDescriptor.title+'</p>';
-            imageHTML+='<img src="/'+imageSRC+'" alt="Image" style="width:150px;height:150px">';
-            imageHTML+='</a></div>';
-            alert(imageHTML);
-            return imageHTML;
+
+            function addImage(imageDescriptor) {
+                //$.get("/content/image?id="+imageID, function(imageDescriptor, status) {
+                addNextImage(imageDescriptor);
+                //});
+            }
+
+            //adds an image to the gallery
+            //does all the necessary gallery formatting,
+            //like adding rows, etc..
+            function addNextImage(imageDescriptor) {
+                //add new row
+                if(numOfImagesInCurrentRow == 0) {
+                    var rowHTML = '<div class="row" id="galleryRow'+nextRowIndex + '"> </div>';
+                    nextRowIndex++;
+
+                    $("#profile-gallery").append(rowHTML);
+                } 
+
+                //add image to the end of the current row
+                var currentRowIndex = nextRowIndex-1;
+                var imageHTML = constructImageHTML(imageDescriptor);
+                $("#galleryRow"+currentRowIndex).append(imageHTML);
+                numOfImagesInCurrentRow++;
+
+                //check if the row is filled
+                if(numOfImagesInCurrentRow == numOfImagesPerRow) {
+                    numOfImagesInCurrentRow = 0;
+                }
+            }
+
+            function constructImageHTML(imageDescriptor) {
+                var imageSRC = imageDescriptor.content;
+                //add image page src here
+                var imagePageSRC='/image/edit/' + imageDescriptor.id;
+                var imageHTML = '<div class="col-md-'+bootstrapOccupation+'">';
+                imageHTML+='<a href="'+imagePageSRC+'" class="thumbnail">';
+                imageHTML+='<p>'+imageDescriptor.title+'</p>';
+                imageHTML+='<img src="'+imageSRC+'" alt="Image" style="width:150px;height:150px">';
+                imageHTML+='</a></div>';
+                return imageHTML;
+            }
         }
     });
 </script>
@@ -291,11 +294,11 @@
 
 <script>
     $(document).ready(function () {
-       $.get('/api/user/contacts',function(data){
-          var templateFunction = doT.template(document.getElementById('view-profile-friends-tmp').text);
-          var html = templateFunction(data);
-          $('#profile-friends ul.friends-list').html(html);
-       });
+        $.get('/api/user/contacts',function(data){
+            var templateFunction = doT.template(document.getElementById('view-profile-friends-tmp').text);
+            var html = templateFunction(data);
+            $('#profile-friends ul.friends-list').html(html);
+        });
     });
 
 </script>
