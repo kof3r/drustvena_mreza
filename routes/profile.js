@@ -14,13 +14,19 @@ var requireAuthentication = require('../utils/authentication');
 router.all('*' , requireAuthentication);
 
 router.get('/view', function(req, res, next) {
-    User.where({id: req.user.id}).fetch().then(function (user) {
+    User.query(function(qb) {
+        qb.join('country', 'user.country_id', 'country.id')
+            .where('user.id', req.user.id);
+    }).fetch({columns: ['user.*', 'country.name as country_name']}).then(function (user) {
         res.render('view-profile.ejs', {user: user.toJSON()});
     })
 });
 
 router.get('/edit', function(req, res, next) {
-    User.where({id: req.user.id}).fetch().then(function (user) {
+    User.query(function(qb) {
+        qb.join('country', 'user.country_id', 'country.id')
+            .where('user.id', req.user.id);
+    }).fetch({columns: ['user.*', 'country.name as country_name']}).then(function (user) {
         res.render('edit-profile.ejs', {user: user.toJSON()});
     })
 });
@@ -41,6 +47,7 @@ router.post('/edit', function(req, res, next) {
     user.set('relationship_status_id', form.relationshipStatusId);
     user.set('gender_id', form.gender_id);
     user.save().then(function (user) {
+        console.log(user);
         if(isAndroid) {
             res.json({user: user.toJSON()});
         } else {

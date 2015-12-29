@@ -76,7 +76,11 @@
 
     #edit_btn {
         float: right;
-        margin: 2% 5%;
+        margin: 2%;
+    }
+    
+    #main-content div.tab-pane {
+        margin: 10px;
     }
 
     .nav-pills a, .nav-pills a:hover, .nav-pills a:focus {
@@ -115,6 +119,14 @@
         font-size: 0.9em;
         color: darkgrey;
     }
+    .my-friends div {
+        clear: both;
+    }
+    
+    /* Timeline */
+    #profile-posts > .header {
+        display: none;
+    }
 
 </style>
 
@@ -122,12 +134,14 @@
     <div class="row">
         <div class="col-md-8">
         </div>
-        <div class="col-md-2">
-            <button class="btn btn-danger" id="removeFriendButton" name="/api/user/removeContact">Remove from friends</button>
-        </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary" id="addFriendButton" name="/api/user/contactRequest">Add to friends</button>
-        </div> 
+        <% if(user.isMyProfile == false) { %>
+            <div class="col-md-2">
+                <button class="btn btn-danger" id="removeFriendButton" name="/api/user/removeContact">Remove from contacts</button>
+            </div>
+            <div class="col-md-2">
+                <button class="btn btn-primary" id="addFriendButton" name="/api/user/contactRequest">Add to contacts</button>
+            </div> 
+        <% } %>
     </div>
     <div align="right"  class="profile-name"><p>Been with us since <% if(locals.user) { %><%= user.created_at %> <% } %></p></div>
 </div>
@@ -144,7 +158,7 @@
     <ul class="nav nav-pills profile-tabs">
         <li role="presentation" class="active"><a data-toggle="pill" href="#profile-account_info">Profile</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-bubbles">Bubbles</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#profile-posts">Posts</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#profile-posts">Timeline</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-friends" id="view-profile-friends-button">Contacts</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-gallery-outer" id="galleryNavPill">Gallery</a></li>   
     </ul>
@@ -173,7 +187,7 @@
 
                 <div class="pinfo_part">
                     <h4>Currently living at:</h4>
-                    <p><% if(locals.user) { %><%= user.address %>, <%= user.city %>, <%= user.country_id %><% } %> </p>
+                    <p><% if(locals.user) { %><%= user.address %>, <%= user.city %>, <%= user.country_name %><% } %> </p>
                 </div>
 
                 <div class="pinfo_part">
@@ -197,7 +211,6 @@
         <div class="tab-pane fade" id="profile-friends">
             <div class="friends-tab" >
                 <div class="my-friends" >
-                    <ul class = "friends-list"></ul>
                 </div>
             </div>     
         </div>
@@ -351,6 +364,7 @@
 
 <script id="view-profile-friends-tmp" type="text/x-dot-template">
     {{? it.contacts.length > 0 }}
+        <ul class="friends-list">
         {{~it.contacts :contact:index}}
             <li>
                 <a href="/profile/{{= contact.username }}/view">
@@ -360,9 +374,10 @@
     </a>
     </li>
         {{~}}
-        <li>{{= it.contacts.length }} contacts total</li>
+        </ul>
+        <div class="col-md-12">{{= it.contacts.length }} contacts total</div>
     {{??}}
-        <li>No contacts</li>
+        <div class="alert alert-info">No contacts</div>
     {{?}}
 </script>
 
@@ -370,11 +385,12 @@
 <script>
     $(document).ready(function () {
         initializeImagePopups();
-        $.get('/api/user/contacts',function(data){
+        $.get('/api/user/contacts<% if(!user.isMyProfile) { %>/?id=<%= user.id %><% } %>',function(data){
             var templateFunction = doT.template(document.getElementById('view-profile-friends-tmp').text);
             var html = templateFunction(data);
-            $('#profile-friends ul.friends-list').html(html);
+            $('#profile-friends .my-friends').html(html);
         });
+        loadFeed('/api/content/timeline?user_id=<%= user.id %>', 'profile-posts');
     });
 
 </script>

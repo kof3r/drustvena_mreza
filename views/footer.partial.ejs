@@ -76,15 +76,17 @@
                 <a class="popup-ajax" href="/partial/edit-bubble/{{= it.attributes.id }}">Edit</a>
             {{?}}
         </div>
+    {{??}}
+      {{ it.attributes=<%= user.user_id %> }}
     {{?}}
 		{{? it.contents.length > 0 }}
 			{{~it.contents :post:index}}
 				<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
 				<div class="header">
-          {{? post.username == globalUsername }}
+          {{? post.username == globalUsername || it.attributes.user_id == globalUserId }}
             <span class="actions-link">
               <a class="edit" 
-              href="{{? post.content_type_id == 2 }}/image/edit/{{= post.id }}{{??}}/post/{{= post.id }}/edit{{?}}">Edit</a>
+              href="{{? post.content_type_id == 2 }}/image/edit/{{= post.id }}{{??}}/content/post/{{= post.id }}/edit{{?}}">Edit</a>
               <a class="remove" onclick="removeContent('{{= post.id }}')">Remove</a>
             </span>
           {{?}}

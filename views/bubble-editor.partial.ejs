@@ -19,8 +19,12 @@
         var titleInput = $('#new-bubble-title');
         if (titleInput.val().length > 0) {
             var descriptionInput = $('#new-bubble-description');
-            $.post('/api/bubble/<% if(locals.bubble) { %>edit/<%= bubble.id %><% } else { %>create<% } %>', {title: titleInput.val(), description: descriptionInput.val()}, function() {
-                location.reload();
+            $.post('/api/bubble/<% if(locals.bubble) { %>edit/<%= bubble.id %><% } else { %>create<% } %>', {title: titleInput.val(), description: descriptionInput.val()}, function(data) {
+                <% if(locals.bubble) { %>
+                    location.reload();
+                <% } else { %>
+                    window.location = '/bubble/' + data.id;
+                <% } %>
             });
         }
         else {

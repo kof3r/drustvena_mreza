@@ -146,7 +146,7 @@ router.post('/delete/:id', function(req, res, next){
 
 router.get('/timeline', function(req, res) {
     var user = req.user;
-    var user_id = user.get('id');
+    var user_id = req.query.user_id || user.get('id');
     knex.raw('select content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content, COUNT(likes) as likes, COUNT(dislikes) as dislikes, COUNT(DISTINCT iLikeDislike.iLike) as iLike, COUNT(DISTINCT iLikeDislike.iDislike) as iDislike '
         + ' from bubble '
         + ' join content on content.bubble_id = bubble.id '
@@ -163,11 +163,11 @@ router.get('/timeline', function(req, res) {
         +   ' UNION '
         +   ' SELECT `like`.user_id as likes, dislike.user_id as dislikes, dislike.content_id FROM dislike '
         +   ' LEFT JOIN `like` ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
-        + ' ) as iLikeDislike on iLikeDislike.content_id = content.id and ((iLikeDislike.iLike = likeCount.likes and iLikeDislike.iLike = ' + user_id + ') or (iLikeDislike.iDislike = likeCount.dislikes and iLikeDislike.iDislike = ' + user_id +'))'
+        + ' ) as iLikeDislike on iLikeDislike.content_id = content.id and ((iLikeDislike.iLike = likeCount.likes and iLikeDislike.iLike = ?) or (iLikeDislike.iDislike = likeCount.dislikes and iLikeDislike.iDislike = ' + user_id +'))'
         + ' where bubble.user_id = ' + user_id + ' and (bubble.bubble_type_id = 1 or bubble.bubble_type_id = 3)'
         + ' group by content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content'
-        + ' order by content.created_at DESC').then(function (posts) {
-        res.json( {posts: posts[0]} );
+        + ' order by content.created_at DESC', [user_id]).then(function (posts) {
+        res.json( {attributes: { user_id: user_id }, contents: posts[0]} );
     }).catch(function(error) {
         console.log(error);
     });
