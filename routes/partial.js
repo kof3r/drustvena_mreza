@@ -49,8 +49,8 @@ router.get('/view-profile', function(req, res, next) {
         res.render('view-profile.partial.ejs', {user: userToReturn});
     })
 });
-router.get('/view-profile/:id', function(req, res, next) {
-    User.where({id: req.params.id}).fetch().then(function (user) {
+router.get('/view-profile/:username', function(req, res, next) {
+    User.where({username: req.params.username}).fetch().then(function (user) {
         var userToReturn = user.attributes;
         // hide sensitive info
         if (user.attributes.id != req.user.attributes.id){
