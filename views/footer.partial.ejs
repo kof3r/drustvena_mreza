@@ -94,7 +94,7 @@
 						<span class="karma badge">{{=post.likes-post.dislikes}}</span>
 					</span>
 					{{? post.username != undefined }}
-						<a class="author" href="/profile/view/{{= post.username }}">
+						<a class="author" href="/profile/{{= post.username }}/view">
 							<img width="64" height="64" src="{{= post.avatar }}?size=avatar" />
 							<span class="username">
 								<span class="glyphicon glyphicon-user"></span>{{=post.username}}
@@ -167,7 +167,7 @@
 		{{~it.comments :comment:index}}
 			<li>
 				<div class="header">
-					<a href="/profile/view/{{= comment.username }}" title="View {{= comment.first_name }}&#39;s profile">{{= comment.username }}</a> {{=comment.created_at}}
+					<a href="/profile/{{= comment.username }}/view" title="View {{= comment.first_name }}&#39;s profile">{{= comment.username }}</a> {{=comment.created_at}}
 					{{? comment.updated_at != comment.created_at }}
 						, <em>updated {{= comment.updated_at }}</em>
 					{{?}}
