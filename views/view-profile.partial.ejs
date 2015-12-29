@@ -146,7 +146,7 @@
     <ul class="nav nav-pills profile-tabs">
         <li role="presentation" class="active"><a data-toggle="pill" href="#profile-account_info">Profile</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-bubbles">Bubbles</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#profile-posts">Posts</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#profile-posts">Timeline</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-friends" id="view-profile-friends-button">Contacts</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-gallery-outer" id="galleryNavPill">Gallery</a></li>   
     </ul>
@@ -377,6 +377,7 @@
             var html = templateFunction(data);
             $('#profile-friends ul.friends-list').html(html);
         });
+        loadFeed('/api/content/timeline', 'profile-posts');
     });
 
 </script>

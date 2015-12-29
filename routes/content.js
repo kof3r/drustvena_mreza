@@ -167,7 +167,7 @@ router.get('/timeline', function(req, res) {
         + ' where bubble.user_id = ' + user_id + ' and (bubble.bubble_type_id = 1 or bubble.bubble_type_id = 3)'
         + ' group by content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content'
         + ' order by content.created_at DESC').then(function (posts) {
-        res.json( {posts: posts[0]} );
+        res.json( {contents: posts[0]} );
     }).catch(function(error) {
         console.log(error);
     });

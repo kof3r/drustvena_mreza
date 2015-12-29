@@ -106,7 +106,7 @@
                     <ul class="nav navbar-nav navbar-right">
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle username" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                <span class="caret"></span> <em id="global-username"><%= user.username %></em>
+                                <span class="caret"></span> <em id="global-username"><%= user.username %></em><span id="global-user-id"><%= user.id %></span>
                             </a>
                             <form id="sign-out-form" method="post" action="/sign-out"></form>
                             <ul class="dropdown-menu">

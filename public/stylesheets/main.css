@@ -157,6 +157,11 @@
     overflow: hidden;
 }
 
+#global-user-id {
+    display: none;
+    visibility: hidden;
+}
+
 /* navbar active */
 body.bubbles #navbar-main a.bubbles,
 body.homepage #navbar-main a.homepage,
@@ -178,6 +183,7 @@ body.profile #navbar-main a.username
 #main-content > .preloader {
     background: url('/images/Preloader_7.gif') center center no-repeat;
     height: 50vh;
+    width: 100px;
 }
 
 #main-content > .header {

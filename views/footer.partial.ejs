@@ -81,7 +81,7 @@
 			{{~it.contents :post:index}}
 				<div id="post-{{= post.id }}" class="post col-md-6 col-sm-12">
 				<div class="header">
-          {{? post.username == globalUsername }}
+          {{? post.username == globalUsername || it.attributes.user_id == globalUserId }}
             <span class="actions-link">
               <a class="edit" 
               href="{{? post.content_type_id == 2 }}/image/edit/{{= post.id }}{{??}}/content/post/{{= post.id }}/edit{{?}}">Edit</a>
