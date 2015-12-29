@@ -45,6 +45,7 @@
         color: dodgerblue;
         font-weight: bold;
     }
+    
 
     .avatar {
         margin: -160px 10px 20px 0px;
@@ -91,6 +92,8 @@
         background-color: darkorange;
         color: white;
     } 
+    
+
 </style>
 
 <div class="jumbotron">
@@ -291,7 +294,12 @@
 <script id="view-profile-friends-tmp" type="text/x-dot-template">
     {{? it.contacts.length > 0 }}
         {{~it.contacts :contact:index}}
-            <li><a href="/profile/view/{{= contact.username }}">{{= contact.username }}</a></li>
+            <li>
+                <a href="/profile/view/{{= contact.username }}">
+                    {{= contact.first_name }} {{= contact.last_name }} <div>{{= contact.username }}</div>
+                    <img src="/images/avatar.jpg" size="avatar" alt="Image not available" height="64" width="64" />
+                </a>
+            </li>
         {{~}}
     {{??}}
         <li>No contacts</li>
