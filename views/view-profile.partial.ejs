@@ -123,7 +123,9 @@
 </div>
 <div class="container">
     <div class="avatar">
-        <img align="left" class="image-profile img-circle" src="<%= user.avatar %>?size=small" width="125" height="125" alt="Profile image"/>
+        <a href="<%= user.avatar %>?size=large" class="image-popup-no-margins">
+            <img align="left" class="image-profile img-circle" src="<%= user.avatar %>?size=small" width="125" height="125" alt="Profile image"/>
+        </a>
         <div class="profile-name">
             <h1><% if(locals.user) { %><%= user.username %><% } %></h1>
             <h4><% if(locals.user) { %><%= user.first_name %> <%= user.last_name %><% } %></h4>
@@ -140,7 +142,9 @@
     <div class="tab-content">
         <div class="tab-pane fade in active" id="profile-account_info">
             <div class="well personal_info">
-                <a id="edit_btn" href="/profile/edit" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-wrench"></span> Edit</a>
+                <% if(user.isMyProfile == true) { %>
+                    <a id="edit_btn" href="/profile/edit" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-wrench"></span> Edit</a>
+                <% } %>
                 <div class="pinfo_part">
                     <h4>Full name:</h4>
                     <p><% if(locals.user) { %><%= user.first_name %> <%= user.middle_name %> <%= user.last_name %><% } %></p>
@@ -332,6 +336,7 @@
 
 <script>
     $(document).ready(function () {
+        initializeImagePopups();
         $.get('/api/user/contacts',function(data){
             var templateFunction = doT.template(document.getElementById('view-profile-friends-tmp').text);
             var html = templateFunction(data);
