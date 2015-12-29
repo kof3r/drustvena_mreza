@@ -85,7 +85,7 @@
             <span class="actions-link">
               <a class="edit" 
               href="{{? post.content_type_id == 2 }}/image/edit/{{= post.id }}{{??}}/post/{{= post.id }}/edit{{?}}">Edit</a>
-              <a class="remove" href="/post/{{= post.id }}/remove">Remove</a>
+              <a class="remove" onclick="removeContent('{{= post.id }}')">Remove</a>
             </span>
           {{?}}
 					<span class="stats">
@@ -95,7 +95,7 @@
 					</span>
 					{{? post.username != undefined }}
 						<a class="author" href="/profile/view/{{= post.username }}">
-							<img width="64" height="64" src="/images/avatar.jpg" />
+							<img width="64" height="64" src="{{= post.avatar }}?size=avatar" />
 							<span class="username">
 								<span class="glyphicon glyphicon-user"></span>{{=post.username}}
 							</span>
