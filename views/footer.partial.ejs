@@ -76,6 +76,8 @@
                 <a class="popup-ajax" href="/partial/edit-bubble/{{= it.attributes.id }}">Edit</a>
             {{?}}
         </div>
+    {{??}}
+      {{ it.attributes=<%= user.user_id %> }}
     {{?}}
 		{{? it.contents.length > 0 }}
 			{{~it.contents :post:index}}
