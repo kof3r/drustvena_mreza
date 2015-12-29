@@ -95,7 +95,7 @@
 					</span>
 					{{? post.username != undefined }}
 						<a class="author" href="/profile/view/{{= post.username }}">
-							<img width="64" height="64" src="/images/avatar.jpg" />
+							<img width="64" height="64" src="{{= post.avatar }}?size=avatar" />
 							<span class="username">
 								<span class="glyphicon glyphicon-user"></span>{{=post.username}}
 							</span>

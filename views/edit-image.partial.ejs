@@ -133,8 +133,9 @@
         //upravljanje gumbima
         $("#setAsAvatarButton").click(function() {
             //api/user/avatar/:image_id?
-            $.post("/api/user/avatar/" + imageID);
-            window.location.href="/profile/view/";
+            $.post("/api/user/avatar/" + imageID, function() {
+                window.location.href="/profile/view/";
+            });           
         });
 
         //bubble name
@@ -185,8 +186,9 @@
 
     //delete button
     $("#deleteImageButton").click(function(){
-        $.post("/api/content/delete/"+imageID);
-        window.location.href = "/homepage";
+        $.post("/api/content/delete/"+imageID, function() {
+            window.location.href = "/homepage";
+        });
         ///content/image/:imageID/delete/
         //vjer. će trebat neki redirect odradit, na homepage ili galeriju
         //također, trebat će odradit upravljanje pogreškama, šta ako neko klikne 
