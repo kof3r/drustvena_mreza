@@ -61,8 +61,8 @@ router.get('/contacts', function(req, res, next) {
     Privilege.query(function(qb) {
         qb.join('user', 'privilege.permitter_id', 'user.id')
             .where('privilege.permittee_id', req.query.id || req.user.get('id'))
-            .orderBy('username', 'ASC');
-    }).fetchAll({columns: ['user.id', 'user.username']}).then(function (contacts) {
+            .orderBy('username', 'ASC')
+    }).fetchAll({columns: ['user.id', 'username', 'first_name', 'last_name', 'middle_name', 'avatar']}).then(function (contacts) {
         res.json({contacts: contacts});
     }).catch(function(error) {
         console.log(error);
