@@ -309,24 +309,35 @@ function escapeHtml(unsafe) {
          .replace(/'/g, "&#039;");
 }
 
+function navigate(menuClass) {
+    $('#main-content').html('<div class="preloader"></div>');
+    $('body').removeClass();
+    $('body').addClass(menuClass);
+}
+
 page('/homepage', function(){
-	loadFeed('/api/home/feed', 'main-content');
+    loadFeed('/api/home/feed', 'main-content');
+    navigate('homepage');
 });
 
 page('/bubble/:id/', function(context) {
   loadFeed('/api/bubble/' + context.params.id + '/content', 'main-content');
+  navigate('bubbles');
 });
 
 page('/image/edit/', function(context) {
 	loadPartial('edit-image/');
+  navigate('new');
 });
 
 page('/image/edit/:id', function(context) {
   loadPartial('edit-image/' + context.params.id);
+  navigate('profile');
 });
 
 page('/messages', function(){
   loadPartial('messages');
+    navigate('messages');
 });
 
 page('/messages/:username', function(context){
@@ -338,16 +349,19 @@ page('/content/new/:type', function(context){
 	loadPartial('new-content', function() {
 		$('#new-content-category-' + type).attr('checked', 'checked');
 	});
+  navigate('new');
 });
 page('/content/:type/:id/edit', function(context){
 	var type = context.params.type;
 	loadPartial('edit-content/' + context.params.id, function() {
 		$('#new-content-category-' + type).attr('checked', 'checked');
 	});
+    navigate('new');
 });
 
 page('/profile/view', function() {
 	loadPartial('view-profile');
+  navigate('profile');
 });
 
 page('/profile/:id/view', function(context) {
@@ -356,10 +370,12 @@ page('/profile/:id/view', function(context) {
 
 page('/profile/edit', function() {
 	loadPartial('edit-profile');
+  navigate('profile');
 });
 
 page('/account/manage', function() {
 	loadPartial('manage-account');
+  navigate('profile');
 });
 
 page('/sign-out', function() {

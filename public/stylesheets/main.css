@@ -157,6 +157,18 @@
     overflow: hidden;
 }
 
+/* navbar active */
+body.bubbles #navbar-main a.bubbles,
+body.homepage #navbar-main a.homepage,
+body.new #navbar-main a.new,
+body.messages #navbar-main a.messages,
+body.profile #navbar-main a.username
+{
+    text-shadow: none !important;
+    color: #00F;
+    background-color: #FFF;
+}
+
 /* CONTAINER */
 
 #main-content {
@@ -165,7 +177,7 @@
 
 #main-content > .preloader {
     background: url('/images/Preloader_7.gif') center center no-repeat;
-    height: 100%;
+    height: 50vh;
 }
 
 #main-content > .header {
