@@ -381,6 +381,23 @@
     {{?}}
 </script>
 
+<script id="profile-bubbles-tmp" type="text/x-dot-template">
+      {{? it.bubbles.length > 0 }}
+          <dl>
+          {{~it.bubbles :bubble:index}}
+              <dt>
+                  <a href="/bubble/{{= bubble.id }}">
+                      {{= escapeHtml(bubble.title) }}
+                  </a>
+              </dt>
+              <dd>{{? bubble.description }}{{= bubble.description }}{{?}}</dd>
+          {{~}}
+          </dl>
+      {{??}}
+          <div class="alert alert-info">No bubbles</div>
+      {{?}}
+  
+</script>
 
 <script>
     $(document).ready(function () {
@@ -391,6 +408,7 @@
             $('#profile-friends .my-friends').html(html);
         });
         loadFeed('/api/content/timeline?user_id=<%= user.id %>', 'profile-posts');
+        renderTemplate('/api/user/bubbles?user_id=<%= user.id %>', 'profile-bubbles-tmp', 'profile-bubbles');
     });
 
 </script>
