@@ -60,7 +60,76 @@ exports.seed = function(knex, Promise) {
             country_name : 'Croatia'
         }).save().then(function (user) {
             katarina_id = user.get('id');
-        })
+        }),
+
+        User.forge({
+            username : 'gordan',
+            password_hash : 'gordangordan',
+            email : 'gordan@test.hr',
+            confirmed : true,
+            first_name : 'Gordan',
+            last_name : 'Graberec',
+            country_name : 'Croatia'
+        }).save(),
+
+        User.forge({
+            username : 'andrija',
+            password_hash : 'andrijaandrija',
+            email : 'andrija@test.hr',
+            confirmed : true,
+            first_name : 'Andrija',
+            country_name : 'Croatia'
+        }).save(),
+
+        User.forge({
+            username : 'domagoj',
+            password_hash : 'domidomi',
+            email : 'domagoj@test.hr',
+            confirmed : true,
+            first_name : 'Domagoj',
+            last_name : 'Polančec',
+            country_name : 'Croatia'
+        }).save(),
+
+        User.forge({
+            username : 'mislav',
+            password_hash : 'mislavmislav',
+            email : 'mislav@test.hr',
+            confirmed : true,
+            first_name : 'Mislav',
+            last_name : 'Lukač',
+            country_name : 'Croatia'
+        }).save(),
+
+        User.forge({
+            username : 'mate',
+            password_hash : 'matemate',
+            email : 'mate@test.hr',
+            confirmed : true,
+            first_name : 'Mate',
+            last_name : 'Šimović',
+            country_name : 'Croatia'
+        }).save(),
+
+        User.forge({
+            username : 'matej',
+            password_hash : 'matejmatej',
+            email : 'matej@test.hr',
+            confirmed : true,
+            first_name : 'Matej',
+            last_name : 'Vukosav',
+            country_name : 'Croatia'
+        }).save(),
+
+        User.forge({
+            username : 'igor',
+            password_hash : 'igorigor',
+            email : 'igor@test.hr',
+            confirmed : true,
+            first_name : 'Igor',
+            last_name : 'Mekterović',
+            country_name : 'Croatia'
+        }).save()
 
   ).then(function () {
 
