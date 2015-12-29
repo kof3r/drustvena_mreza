@@ -293,6 +293,12 @@ function initializeVideos() {
     });
 }
 
+function contactRequest(id, callback) {
+    $.post('/api/user/contactRequest', {user_id: id}, function() {
+        if(callback) { callback(); }
+    });
+}
+
 function escapeHtml(unsafe) {
     if (!unsafe) { return; }
     return unsafe
@@ -327,13 +333,13 @@ page('/messages/:username', function(context){
   loadPartial('messages?username=' + context.params.username);
 });
 
-page('/new/:type', function(context){
+page('/content/new/:type', function(context){
 	var type = context.params.type;
 	loadPartial('new-content', function() {
 		$('#new-content-category-' + type).attr('checked', 'checked');
 	});
 });
-page('/:type/:id/edit', function(context){
+page('/content/:type/:id/edit', function(context){
 	var type = context.params.type;
 	loadPartial('edit-content/' + context.params.id, function() {
 		$('#new-content-category-' + type).attr('checked', 'checked');
