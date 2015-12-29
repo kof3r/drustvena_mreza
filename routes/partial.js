@@ -43,11 +43,20 @@ router.get('/edit-content/:id', function(req, res, next) {
     )
 });
 router.get('/view-profile', function(req, res, next) {
+    User.query(function(qb) {
+        qb.join('country', 'user.country_id', 'country.id')
+            .where('user.id', req.user.id);
+    }).fetch({columns: ['user.*', 'country.name as country_name']}).then(function (user) {
+        user.set('isMyProfile', true);
+        res.render('view-profile.partial.ejs', {user: user.toJSON()});
+    })
+    /**
     User.where({id: req.user.id}).fetch().then(function (user) {
         var userToReturn = user.attributes;
         userToReturn['isMyProfile'] = true;
         res.render('view-profile.partial.ejs', {user: userToReturn});
     })
+     */
 });
 router.get('/view-profile/:username', function(req, res, next) {
     User.where({username: req.params.username}).fetch().then(function (user) {
