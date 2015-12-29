@@ -264,7 +264,7 @@ function editComment(comment_id) {
 
 function removeComment(comment_id) {
 	$.post('/api/comment/delete/' + comment_id, function() {
-		$('#comment-' + comment_id).remove();
+		$('#comment-' + comment_id).parent().hide(200);
 	});
 }
 
