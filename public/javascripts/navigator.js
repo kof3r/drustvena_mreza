@@ -269,10 +269,12 @@ function removeComment(comment_id) {
 }
 
 function removeContent(content_id) {
-  var url = '/api/content/delete/' + content_id;
-  $.post(url, function() {
-    $('#post-' + content_id).hide(250);
-  });
+  if(confirm('Are you sure you want to remove the selected content?')) {
+    var url = '/api/content/delete/' + content_id;
+    $.post(url, function() {
+      $('#post-' + content_id).hide(250);
+    });
+  }
 }
 
 
