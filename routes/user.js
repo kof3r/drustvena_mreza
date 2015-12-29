@@ -33,6 +33,12 @@ router.post('/contactRequest', function (req, res, next) {
     })
 });
 
+router.post('/removeContact', function (req, res) {
+    Privilege.where({permittee_id: req.user.get('id'), permitter_id: req.body.user_id}).destroy().then(function () {
+        res.end();
+    })
+});
+
 router.post('/avatar/:id', function (req, res, next) {
     Content.where({id: req.params.id, content_type_id: 2}).fetch().then(function(content) {
         if (!content) {
