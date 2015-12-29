@@ -163,6 +163,11 @@
     margin: 75px auto;
 }
 
+#main-content > .preloader {
+    background: url('/images/Preloader_7.gif') center center no-repeat;
+    height: 100%;
+}
+
 #main-content > .header {
     margin: 10px 5px;
     padding: 10px 10px 30px 10px;

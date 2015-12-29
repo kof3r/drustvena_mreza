@@ -122,7 +122,7 @@ $('#search-form').on('submit', function(event){
 			$.each(data.users, function() {
 				itemLi = document.createElement('li');
 				itemA = document.createElement('a');
-				itemA.href = '/profile/view/'+ this.username;
+				itemA.href = '/profile/'+ this.username +'/view';
 				itemA.innerHTML = this.first_name +' '+ this.last_name;
 				itemLi.appendChild(itemA);
 				sr.append(itemLi);

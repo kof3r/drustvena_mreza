@@ -9,8 +9,6 @@
     }
 
     .image-profile {
-        height:200px;
-        width:200px;
         margin-right: 3%;
         border-bottom: groove;
     }
@@ -36,7 +34,6 @@
     }
 
     .friends-tab {
-        width: 30%;
         margin: auto;
         margin-top: 2.5%;
     }
@@ -93,6 +90,31 @@
         color: white;
     } 
     
+    /* contacts tab */
+    .my-friends > ul.friends-list {
+        list-style: none;
+        clear: left;
+    }
+    
+    .my-friends > ul.friends-list > li {
+        text-align: center;
+    }
+    .my-friends > ul.friends-list:last-child {
+        clear: left;
+    }
+    .my-friends > ul.friends-list > li > a {
+        float: left;
+        display: block;
+        text-decoration: none;
+        padding: 10px;
+        margin: 5px;
+        border: 1px solid;
+        border-radius: 5px;
+    }
+    .my-friends > ul.friends-list > li > a > div {
+        font-size: 0.9em;
+        color: darkgrey;
+    }
 
 </style>
 
@@ -101,7 +123,7 @@
 </div>
 <div class="container">
     <div class="avatar">
-        <img align="left" class="image-profile img-circle" src="/images/profile.jpg" alt="Profile image"/>
+        <img align="left" class="image-profile img-circle" src="<%= user.avatar %>?size=small" width="125" height="125" alt="Profile image"/>
         <div class="profile-name">
             <h1><% if(locals.user) { %><%= user.username %><% } %></h1>
             <h4><% if(locals.user) { %><%= user.first_name %> <%= user.last_name %><% } %></h4>
@@ -111,7 +133,7 @@
         <li role="presentation" class="active"><a data-toggle="pill" href="#profile-account_info">Profile</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-bubbles">Bubbles</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-posts">Posts</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#profile-friends" id="view-profile-friends-button">Friends</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#profile-friends" id="view-profile-friends-button">Contacts</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-gallery-outer" id="galleryNavPill">Gallery</a></li>   
     </ul>
 
@@ -159,9 +181,8 @@
 
 
         <div class="tab-pane fade" id="profile-friends">
-            <div class="well friends-tab" >
+            <div class="friends-tab" >
                 <div class="my-friends" >
-                    <p> <span class="glyphicon glyphicon-user"></span> MY CONTACTS </p>
                     <ul class = "friends-list"></ul>
                 </div>
             </div>     
@@ -295,12 +316,14 @@
     {{? it.contacts.length > 0 }}
         {{~it.contacts :contact:index}}
             <li>
-                <a href="/profile/view/{{= contact.username }}">
-                    {{= contact.first_name }} {{= contact.last_name }} <div>{{= contact.username }}</div>
-                    <img src="/images/avatar.jpg" size="avatar" alt="Image not available" height="64" width="64" />
+                <a href="/profile/{{= contact.username }}/view">
+                    {{= contact.first_name }} {{= contact.last_name }}
+                    <div>{{= contact.username }}</div>
+                    <img src="{{= contact.avatar }}?size=small" alt="avatar" height="125" width="125" />
                 </a>
             </li>
         {{~}}
+        <li>{{= it.contacts.length }} contacts total</li>
     {{??}}
         <li>No contacts</li>
     {{?}}
