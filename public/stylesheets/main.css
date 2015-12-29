@@ -206,6 +206,7 @@
     border-radius: 10px;
     min-width: 310px;
     max-width: 512px !important;
+    word-wrap: break-word;
 }
 
 @media (min-width: 768px) {
@@ -226,7 +227,7 @@
   right: 150px;
   top: -10px;
   background-color: white;
-  padding: 5px;
+  padding: 5px 5px 10px 5px;
   border-radius: 5px;
   visibility: hidden;
 }
@@ -268,6 +269,7 @@
 
 .post > .header a.author {
     display: block;
+    overflow-x: none;
 }
 
 .post > .header a.author .username {
@@ -276,7 +278,6 @@
 
 .post > .header > .date-time {
 	font-size: 0.9em;
-  word-wrap: break-word;
 }
 
 .post > .header a.location {
