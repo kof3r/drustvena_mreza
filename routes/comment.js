@@ -33,4 +33,11 @@ router.post('/edit/:id', function(req, res) {
     })
 });
 
+router.post('/delete/:id', function(req, res) {
+    var comment_id = req.params.id;
+    Comment.forge({id: comment_id}).destroy().then(function () {
+        res.end();
+    });
+});
+
 module.exports = router;
