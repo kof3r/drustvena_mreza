@@ -92,4 +92,12 @@ router.get('/nonFriends', function(req, res) {
     });
 });
 
+router.get('/bubbles', function(req, res) {
+    //  privatnost: Moguće zatražiti bubble-ove usera koji session holderu nisu dali dopuštenje.
+    var user_id = req.query.user_id;
+    Bubble.where({user_id: user_id}).fetchAll().then(function (bubbles) {
+        res.json({bubbles: bubbles});
+    });
+});
+
 module.exports=router;
