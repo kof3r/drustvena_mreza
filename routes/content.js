@@ -72,7 +72,8 @@ router.post('/image/:bubble_id', upload.single('content'), function(req, res, ne
         filename:  md5(Date.now().toString() + req.file.originalname) + '_'
         + req.file.originalname,
         res: res,
-        req: req
+        req: req,
+        changeContent: true
     }
 
     console.log('Received file: ');
@@ -119,6 +120,7 @@ router.post('/edit/post/:id', function(req, res, next){
 })
 
 router.post('/edit/image/:id', upload.single('content'), function(req, res, next){
+    //console.log('edit image');
     return editContent(req, res, 2);
 })
 
@@ -331,11 +333,15 @@ function handleImg(context){
             context.res.status(200);
             return context.res.json(finished);
         })
+
+        return;
     }
 
     var loc = '.' + context.imgPath + context.filename; // save locally in folder relative to local project root
     var linkloc = context.imgPath + context.filename; // generate link that is relative to host root
     image.content = linkloc;
+    console.log(linkloc);
+    console.log(context.content);
     fs.writeFile(loc, context.content.buffer, { encoding: 'ascii', mode: 0666, flag: 'w+'}, function(err){
         if (err){
             console.log(err);
@@ -377,6 +383,7 @@ function handleImg(context){
 
         Content.forge(image).save().then(function(finished, err){
             if (err){
+                console.log(err);
                 return general.sendMessage(context.res, "Failed to save the image.", 500);
             }
             context.res.status(200);
@@ -412,6 +419,7 @@ function handlePost(context){
 }
 
 function editContent(req, res, type){
+    //console.log(req.params);
     Content.where({id: req.params.id, content_type_id: type}).fetch().then(function(content){
         if(!content) {
             return general.sendMessage(res, "This content doesn't exist or it was deleted!", 404);
@@ -433,12 +441,14 @@ function editContent(req, res, type){
                 req: req
             }
 
+            //console.log(req.body);
             if(req.body.content){
                 if (type == 1){
                     context.content = req.body.content;
                 }
 
                 if (type == 2){
+                    console.log('tu sam');
                     context.content = req.file;
                     context.imgPath = '/res/img/';
                     context.filename = md5(Date.now().toString() + req.file.originalname) + '_'
