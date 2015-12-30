@@ -193,12 +193,8 @@ body.profile #navbar-main a.username
     border-radius: 25px;
 }
 
-#main-content > .header h3 {
-    float: left;
-    margin: 10px 20px;
-    padding: 5px;
-    background-color: darkorange;
-    color: white;
+#main-content > .page-header a.btn {
+    float: right;
 }
 
 /* POST */
@@ -360,7 +356,6 @@ body.profile #navbar-main a.username
     display: block;
     margin-left: auto;
     margin-right: auto;
-    border: 3px solid;
 }
 
 .post > .content div.external {
@@ -933,39 +928,48 @@ img.mfp-img {
     background: rgba(0, 0, 0, 0.6);
     position: fixed;
     text-align: center;
-    padding: 0; } }
+    padding: 0; }
+}
 
 @media all and (max-width: 900px) {
-  .mfp-arrow {
-    -webkit-transform: scale(0.75);
-    transform: scale(0.75); }
-  .mfp-arrow-left {
-    -webkit-transform-origin: 0;
-    transform-origin: 0; }
-  .mfp-arrow-right {
-    -webkit-transform-origin: 100%;
-    transform-origin: 100%; }
-  .mfp-container {
-    padding-left: 6px;
-    padding-right: 6px; } }
+    .mfp-arrow {
+        -webkit-transform: scale(0.75);
+        transform: scale(0.75); 
+    }
+    .mfp-arrow-left {
+        -webkit-transform-origin: 0;
+        transform-origin: 0; 
+    }
+    .mfp-arrow-right {
+        -webkit-transform-origin: 100%;
+        transform-origin: 100%; 
+    }
+    .mfp-container {
+        padding-left: 6px;
+        padding-right: 6px; 
+    }
+}
 
 .mfp-ie7 .mfp-img {
-  padding: 0; }
+    padding: 0;
+}
 
 .mfp-ie7 .mfp-bottom-bar {
-  width: 600px;
-  left: 50%;
-  margin-left: -300px;
-  margin-top: 5px;
-  padding-bottom: 5px; }
+    width: 600px;
+    left: 50%;
+    margin-left: -300px;
+    margin-top: 5px;
+    padding-bottom: 5px;
+}
 
 .mfp-ie7 .mfp-container {
-  padding: 0; }
+    padding: 0; }
 
 .mfp-ie7 .mfp-content {
-  padding-top: 44px; }
+    padding-top: 44px; }
 
 .mfp-ie7 .mfp-close {
-  top: 0;
-  right: 0;
-  padding-top: 0; }
+    top: 0;
+    right: 0;
+    padding-top: 0;
+}

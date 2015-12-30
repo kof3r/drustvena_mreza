@@ -66,15 +66,26 @@
 	<!-- Feed -->
     <script id="feed-tmp" type="text/x-dot-template">
     {{? it.attributes }}
-        <div class="header">
-            <h3>{{= escapeHtml(it.attributes.title) }}</h3>
-            {{? it.attributes.description }}
-                <p>{{= escapeHtml(it.attributes.description) }}</p>
-            {{?}}
-            <span class="time">Created {{= dateFormat(it.attributes.created_at, dateTimeFormat) }}</span>
-            {{? 1==1 }}
-                <a class="popup-ajax" href="/partial/edit-bubble/{{= it.attributes.id }}">Edit</a>
-            {{?}}
+        <div class="page-header container">
+            <div class="col-sm-8">
+                {{? it.attributes.user_id == globalUserId }}
+                    <a class="popup-ajax btn btn-default col-xs-2" href="/partial/edit-bubble/{{= it.attributes.id }}">Edit</a>
+                {{?}}
+                <h3>{{= escapeHtml(it.attributes.title) }}
+                    {{? it.contents.length }}
+                        <small>({{= it.contents.length }})</small>
+                    {{?}}
+                </h3>
+                {{? it.attributes.description }}
+                    <p class="col-xs-12">{{= escapeHtml(it.attributes.description) }}</p>
+                {{?}}
+            </div>
+            <div class="col-sm-4">
+                <div class="time">Created {{= dateFormat(it.attributes.created_at, dateTimeFormat) }}</div>
+                {{? it.attributes.created_at != it.attributes.updated_at }}
+                    <div class="time">Updated {{= dateFormat(it.attributes.updated_at, dateTimeFormat) }}</div>
+                {{?}}
+            </div>
         </div>
     {{??}}
       {{ it.attributes=<%= user.user_id %> }}
