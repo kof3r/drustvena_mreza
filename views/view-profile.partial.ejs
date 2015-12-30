@@ -155,7 +155,7 @@
             <h4><% if(locals.user) { %><%= user.first_name %> <%= user.last_name %><% } %></h4>
         </div>
     </div>
-    <ul class="nav nav-pills profile-tabs">
+    <ul class="nav nav-pills profile-tabs" id="navList">
         <li role="presentation" class="active"><a data-toggle="pill" href="#profile-account_info">Profile</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-bubbles">Bubbles</a></li>
         <li role="presentation"><a data-toggle="pill" href="#profile-posts">Timeline</a></li>
@@ -236,6 +236,11 @@
     <p style="display : none;" id="userIDTag"><%=user.id%></p>
     <p style="display : none;" id="usernameTag"><%=user.username%></p>
 </div>
+
+<!-- tab navigation script by url -->
+<script>
+    
+</script>
 
 <!-- Add/remove friend script -->
 <script>

@@ -78,7 +78,8 @@
         </div>
     </form>
 
-    <p style="display : none;" id="usernameTag"><%=user.id%></p>
+    <p style="display : none;" id="usernameTag"><%=user.username%></p>
+    <p style="display : none;" id="userIDTag"><%=user.id%></p>
 </div>
 
 <script>
@@ -86,24 +87,32 @@
     var newBubbleID = "";
     var url = document.location.href;
     var imageID = url.substring(url.lastIndexOf("/")+1);
-    var userID = $("#usernameTag").text();
+    var userID = $("#userIDTag").text();
+    var username = $("#usernameTag").text();
     var formUploadUrl = "";
 
     var alreadySubmitted = false;
+    var alreadyPopulated = false;
 
     //populating the bubble title select
-    $.get("/api/content/myBubbles", function(bubblesJson) {
-        $.each(bubblesJson.bubbles, function(index, bubbleDescriptor) {
-            var htmlOption = '<option value="' + bubbleDescriptor.id + '" ';
-            //which bubble to select by default?
-            if(index == 0) {
-                htmlOption +="selected ";
-            }
-            htmlOption +=">";
+    if(!alreadyPopulated) {
+        alreadyPopulated = true;
+        $.get("/api/content/myBubbles", function(bubblesJson) {
+            $.each(bubblesJson.bubbles, function(index, bubbleDescriptor) {
+                //timeline is 1 - no images on timeline
+                if(bubbleDescriptor.bubble_type_id!=1) {
+                    var htmlOption = '<option value="' + bubbleDescriptor.id + '" ';
+                    //which bubble to select by default?
+                    if(index == 0) {
+                        htmlOption +="selected ";
+                    }
+                    htmlOption +=">";
 
-            $("#bubbleTitleSelect").append(htmlOption + bubbleDescriptor.title + "</option>");
+                    $("#bubbleTitleSelect").append(htmlOption + bubbleDescriptor.title + "</option>");
+                }
+            });
         });
-    });
+    }
 
     //editing an existing picture
     if(imageID != "") {
@@ -134,7 +143,7 @@
         $("#setAsAvatarButton").click(function() {
             //api/user/avatar/:image_id?
             $.post("/api/user/avatar/" + imageID, function() {
-                window.location.href="/profile/view/";
+                window.location.href="/profile/" + username + "/view";
             });           
         });
 
