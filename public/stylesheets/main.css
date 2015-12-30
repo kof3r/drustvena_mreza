@@ -270,6 +270,7 @@ body.profile #navbar-main a.username
 
 .post > .header > .stats > .likes {
 	background-color: darkgreen;
+	cursor: pointer;
 }
 
 .post > .header > .stats > .dislikes {
@@ -278,6 +279,11 @@ body.profile #navbar-main a.username
 
 .post > .header > .stats > .karma {
 	background-color: darkblue;
+}
+
+.tooltip-inner {
+    white-space:pre;
+    max-width:none;
 }
 
 .post > .header a.author {

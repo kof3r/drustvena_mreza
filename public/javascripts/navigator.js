@@ -189,12 +189,29 @@ function toggleOpinion(opinion, content_id) {
 	});
 }
 
+function whoLikes(content_id) {
+    $('body').css('cursor', 'progress');
+    $.get('/api/content/likes/' + content_id, function(data) {
+        var txt = '';
+        $.each(data.users, function() {
+            if (this.first_name) txt += this.first_name + ' ';
+            if (this.middle_name) txt += this.middle_name + ' ';
+            if (this.last_name) txt += this.last_name + ' ';
+            txt += '(' + this.username + ')\r\n';
+        });
+        $('#post-' + content_id + ' .stats .likes').attr('title', txt).tooltip('fixTitle').tooltip('show');
+        $('body').css('cursor', 'auto');
+    });
+    
+}
+
 function loadComments(content_id) {
 	if (content_id) {
 		$('#post-' + content_id + ' .actions .comment').addClass('active');
 		var cmtbtn = $('#post-' + content_id + ' .actions .comment span');
 		cmtbtn.removeClass('glyphicon-comment');
 		cmtbtn.addClass('gly-spin glyphicon-refresh');
+        $('body').css('cursor', 'progress');
 
 		$.get('/api/content/comments/' + content_id, function (data) {
 			if (data.comments.length) {
@@ -216,6 +233,7 @@ function loadComments(content_id) {
 			
 			cmtbtn.removeClass('gly-spin glyphicon-refresh');
 			cmtbtn.addClass('glyphicon-comment');
+            $('body').css('cursor', 'auto');
 		});
 	}
 }
@@ -227,6 +245,7 @@ function postComment(content_id) {
 		var pbtn = $('#post-' + content_id + ' > .comments > div > button');
 		pbtn.attr('disabled', 'disabled');
 		pbtn.html('Posting... <span class="glyphicon glyphicon-refresh gly-spin"></span>');
+        $('body').css('cursor', 'progress');
 		
 		$.post('/api/content/comment/' + content_id, {content_id: content_id, comment: comment.val()}, function (data) {
 		
@@ -234,6 +253,7 @@ function postComment(content_id) {
 		pbtn.removeAttr('disabled');
 		loadComments(content_id);
 		comment.val('');
+        $('body').css('cursor', 'auto');
 		});
 	}
 	else {
@@ -252,8 +272,10 @@ function editComment(comment_id) {
 		$(commentIdn).keypress(function(e) {
 			if(e.which == 13) {
 				var newCommentTxt = editor.val();
+                $('body').css('cursor', 'progress');
 				$.post('/api/comment/edit/' + comment_id, {comment: newCommentTxt }, function() {
 					$(commentIdn).html(newCommentTxt);
+                    $('body').css('cursor', 'auto');
 				});
 			}
 		});
@@ -264,16 +286,20 @@ function editComment(comment_id) {
 }
 
 function removeComment(comment_id) {
+    $('body').css('cursor', 'progress');
 	$.post('/api/comment/delete/' + comment_id, function() {
 		$('#comment-' + comment_id).parent().hide(200);
+        $('body').css('cursor', 'auto');
 	});
 }
 
 function removeContent(content_id) {
   if(confirm('Are you sure you want to remove the selected content?')) {
     var url = '/api/content/delete/' + content_id;
+    $('body').css('cursor', 'progress');
     $.post(url, function() {
-      $('#post-' + content_id).hide(250);
+        $('#post-' + content_id).hide(250);
+        $('body').css('cursor', 'auto');
     });
   }
 }
