@@ -240,15 +240,15 @@
 <!-- tab navigation script by url -->
 <script>
     var url = document.location.href;
-    if(url.contains("#")) {
+    if(url.indexOf("#") != -1) {
         var pillHref = url.substring(url.lastIndexOf("#"));
         var listItems = $("#navList li");
-        $.each(listItems, function(index, listItem) {
-            if(listItem.attr("href") == pillHref) {
-                listItem.attr("class", "active");
-            } else if(listItem.attr("class") == "active") {
-                 listItem.attr("class", "");
-            }
+        $.each(listItems, function(index, listItemJS) {
+            var listItem = $(listItemJS);
+            var childAnnotation = listItem.children(":first-child");
+            if(childAnnotation.attr("href") == pillHref) {
+                childAnnotation.click();
+            } 
         });
     }
 
