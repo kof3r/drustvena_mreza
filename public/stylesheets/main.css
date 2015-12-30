@@ -366,11 +366,15 @@ body.profile #navbar-main a.username
 	color: orangered;
 }
 
+.post > .content .popup-youtube {
+    display: inline; 
+}
+
 .post > .content .popup-youtube img {
 	opacity: 0.75;
 }
 
-.post > .content a.popup-youtube img:hover {
+.post > .content a.popup-youtube:hover img {
 	opacity: 1;
 }
 

@@ -78,7 +78,7 @@
         float: right;
         margin: 2%;
     }
-    
+
     #main-content div.tab-pane {
         margin: 10px;
     }
@@ -122,7 +122,7 @@
     .my-friends div {
         clear: both;
     }
-    
+
     /* Timeline */
     #profile-posts > .page-header {
         display: none;
@@ -135,12 +135,12 @@
         <div class="col-md-8">
         </div>
         <% if(user.isMyProfile == false) { %>
-            <div class="col-md-2">
-                <button class="btn btn-danger" id="removeFriendButton" name="/api/user/removeContact">Remove from contacts</button>
-            </div>
-            <div class="col-md-2">
-                <button class="btn btn-primary" id="addFriendButton" name="/api/user/contactRequest">Add to contacts</button>
-            </div> 
+        <div class="col-md-2">
+            <button class="btn btn-danger" id="removeFriendButton" name="/api/user/removeContact">Remove from contacts</button>
+        </div>
+        <div class="col-md-2">
+            <button class="btn btn-primary" id="addFriendButton" name="/api/user/contactRequest">Add to contacts</button>
+        </div> 
         <% } %>
     </div>
     <div align="right"  class="profile-name"><p>Been with us since <% if(locals.user) { %><%= user.created_at %> <% } %></p></div>
@@ -239,7 +239,19 @@
 
 <!-- tab navigation script by url -->
 <script>
-    
+    var url = document.location.href;
+    if(url.indexOf("#") != -1) {
+        var pillHref = url.substring(url.lastIndexOf("#"));
+        var listItems = $("#navList li");
+        $.each(listItems, function(index, listItemJS) {
+            var listItem = $(listItemJS);
+            var childAnnotation = listItem.children(":first-child");
+            if(childAnnotation.attr("href") == pillHref) {
+                childAnnotation.click();
+            } 
+        });
+    }
+
 </script>
 
 <!-- Add/remove friend script -->
@@ -379,7 +391,7 @@
     </a>
     </li>
         {{~}}
-        </ul>
+    </ul>
         <div class="col-md-12">{{= it.contacts.length }} contacts total</div>
     {{??}}
         <div class="alert alert-info">No contacts</div>
@@ -393,27 +405,27 @@
               <dt>
                   <a href="/bubble/{{= bubble.id }}">
                       {{= escapeHtml(bubble.title) }}
-                  </a>
-              </dt>
+    </a>
+    </dt>
               <dd>{{? bubble.description }}{{= bubble.description }}{{?}}</dd>
           {{~}}
-          </dl>
+    </dl>
       {{??}}
           <div class="alert alert-info">No bubbles</div>
       {{?}}
-  
+
 </script>
 
 <script>
     $(document).ready(function () {
         initializeImagePopups();
         $.get('/api/user/contacts<% if(!user.isMyProfile) { %>/?id=<%= user.id %><% } %>',function(data){
-            var templateFunction = doT.template(document.getElementById('view-profile-friends-tmp').text);
-            var html = templateFunction(data);
-            $('#profile-friends .my-friends').html(html);
-        });
-        loadFeed('/api/content/timeline?user_id=<%= user.id %>', 'profile-posts');
-        renderTemplate('/api/user/bubbles?user_id=<%= user.id %>', 'profile-bubbles-tmp', 'profile-bubbles');
+              var templateFunction = doT.template(document.getElementById('view-profile-friends-tmp').text);
+        var html = templateFunction(data);
+        $('#profile-friends .my-friends').html(html);
     });
+    loadFeed('/api/content/timeline?user_id=<%= user.id %>', 'profile-posts');
+             renderTemplate('/api/user/bubbles?user_id=<%= user.id %>', 'profile-bubbles-tmp', 'profile-bubbles');
+             });
 
 </script>
