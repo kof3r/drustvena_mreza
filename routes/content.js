@@ -120,7 +120,6 @@ router.post('/edit/post/:id', function(req, res, next){
 })
 
 router.post('/edit/image/:id', upload.single('content'), function(req, res, next){
-    //console.log('edit image');
     return editContent(req, res, 2);
 })
 
@@ -340,8 +339,6 @@ function handleImg(context){
     var loc = '.' + context.imgPath + context.filename; // save locally in folder relative to local project root
     var linkloc = context.imgPath + context.filename; // generate link that is relative to host root
     image.content = linkloc;
-    console.log(linkloc);
-    console.log(context.content);
     fs.writeFile(loc, context.content.buffer, { encoding: 'ascii', mode: 0666, flag: 'w+'}, function(err){
         if (err){
             console.log(err);
@@ -419,7 +416,6 @@ function handlePost(context){
 }
 
 function editContent(req, res, type){
-    //console.log(req.params);
     Content.where({id: req.params.id, content_type_id: type}).fetch().then(function(content){
         if(!content) {
             return general.sendMessage(res, "This content doesn't exist or it was deleted!", 404);
@@ -441,14 +437,12 @@ function editContent(req, res, type){
                 req: req
             }
 
-            //console.log(req.body);
-            if(req.body.content){
+            if(req.body && req.body.content || req.file){
                 if (type == 1){
                     context.content = req.body.content;
                 }
 
                 if (type == 2){
-                    console.log('tu sam');
                     context.content = req.file;
                     context.imgPath = '/res/img/';
                     context.filename = md5(Date.now().toString() + req.file.originalname) + '_'
