@@ -270,7 +270,7 @@ body.profile #navbar-main a.username
 
 .post > .header > .stats > .likes {
 	background-color: darkgreen;
-	cursor: pointer;
+	cursor: help;
 }
 
 .post > .header > .stats > .dislikes {

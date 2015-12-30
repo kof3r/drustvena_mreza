@@ -190,18 +190,21 @@ function toggleOpinion(opinion, content_id) {
 }
 
 function whoLikes(content_id) {
-    $('body').css('cursor', 'progress');
-    $.get('/api/content/likes/' + content_id, function(data) {
-        var txt = '';
-        $.each(data.users, function() {
-            if (this.first_name) txt += this.first_name + ' ';
-            if (this.middle_name) txt += this.middle_name + ' ';
-            if (this.last_name) txt += this.last_name + ' ';
-            txt += '(' + this.username + ')\r\n';
+    var likesBadge = $('#post-' + content_id + ' .stats .likes');
+    if(!likesBadge.attr('data-original-title')) {
+        $('body').css('cursor', 'progress');
+        $.get('/api/content/likes/' + content_id, function(data) {
+            var txt = '';
+            $.each(data.users, function() {
+                if (this.first_name) txt += this.first_name + ' ';
+                if (this.middle_name) txt += this.middle_name + ' ';
+                if (this.last_name) txt += this.last_name + ' ';
+                txt += '(' + this.username + ')\r\n';
+            });
+            $('#post-' + content_id + ' .stats .likes').attr('title', txt).tooltip('fixTitle').tooltip('show');
+            $('body').css('cursor', 'auto');
         });
-        $('#post-' + content_id + ' .stats .likes').attr('title', txt).tooltip('fixTitle').tooltip('show');
-        $('body').css('cursor', 'auto');
-    });
+    }
     
 }
 
