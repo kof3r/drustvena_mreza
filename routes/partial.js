@@ -44,7 +44,7 @@ router.get('/edit-content/:id', function(req, res, next) {
 });
 router.get('/view-profile', function(req, res, next) {
     User.query(function(qb) {
-        qb.join('country', 'user.country_id', 'country.id')
+        qb.leftJoin('country', 'user.country_id', 'country.id')
             .where('user.id', req.user.id);
     }).fetch({columns: ['user.*', 'country.name as country_name']}).then(function (user) {
         user.set('isMyProfile', true);
@@ -74,7 +74,7 @@ router.get('/view-profile/:username', function(req, res, next) {
 });
 router.get('/edit-profile', function(req, res, next) {
     User.query(function(qb) {
-        qb.join('country', 'user.country_id', 'country.id')
+        qb.leftJoin('country', 'user.country_id', 'country.id')
             .where('user.id', req.user.id);
     }).fetch({columns: ['user.*', 'country.name as country_name']}).then(function (user) {
         res.render('edit-profile.partial.ejs', {user: user.toJSON()});
