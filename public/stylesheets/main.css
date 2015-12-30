@@ -133,7 +133,7 @@
     }
 }
 
-@media only screen and (min-wdith: 1440px) {
+@media only screen and (min-width: 1440px) {
     #navbar-main .search {
         width: 250px;
     }
@@ -264,7 +264,7 @@ body.profile #navbar-main a.username
 	top: -10px;
 	right: 20px;
 	margin-right: 5px;
-	font: 'Comfortaa', cursive;
+	font: 'Comfortaa' cursive;
 	font-weight: bold;
 }
 
@@ -282,7 +282,7 @@ body.profile #navbar-main a.username
 
 .post > .header a.author {
     display: block;
-    overflow-x: none;
+    overflow-x: hidden;
 }
 
 .post > .header a.author .username {
@@ -415,12 +415,6 @@ body.profile #navbar-main a.username
 
 .post .glyphicon {
 	margin-right: 5px;
-}
-
-@media (pointer:none) {
-	.post > .comments ul li .actions {
-		visibility: visible !important;
-	}
 }
 
 .post > .comments ul li:hover .actions {

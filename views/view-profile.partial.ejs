@@ -124,7 +124,7 @@
     }
 
     /* Timeline */
-    #profile-posts > .page-header {
+    #timeline > .page-header {
         display: none;
     }
 
@@ -156,15 +156,15 @@
         </div>
     </div>
     <ul class="nav nav-pills profile-tabs" id="navList">
-        <li role="presentation" class="active"><a data-toggle="pill" href="#profile-account_info">Profile</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#profile-bubbles">Bubbles</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#profile-posts">Timeline</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#profile-friends" id="view-profile-friends-button">Contacts</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#profile-gallery-outer" id="galleryNavPill">Gallery</a></li>   
+        <li role="presentation" class="active"><a data-toggle="pill" href="#info">Info</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#bubbles">Bubbles</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#timeline">Timeline</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#contacts" id="view-contacts-button">Contacts</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#gallery" id="galleryNavPill">Gallery</a></li>   
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane fade in active" id="profile-account_info">
+        <div class="tab-pane fade in active" id="info">
             <div class="well personal_info">
                 <% if(user.isMyProfile == true) { %>
                 <a id="edit_btn" href="/profile/edit" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-wrench"></span> Edit</a>
@@ -202,13 +202,13 @@
                 </div>
             </div>
         </div>
-        <div class="tab-pane fade" id="profile-bubbles">
+        <div class="tab-pane fade" id="bubbles">
         </div>
-        <div class="tab-pane fade" id="profile-posts">
+        <div class="tab-pane fade" id="timeline">
         </div>
 
 
-        <div class="tab-pane fade" id="profile-friends">
+        <div class="tab-pane fade" id="contacts">
             <div class="friends-tab" >
                 <div class="my-friends" >
                 </div>
@@ -216,7 +216,7 @@
         </div>
 
 
-        <div class="tab-pane fade" id="profile-gallery-outer">
+        <div class="tab-pane fade" id="gallery">
             <div id="profile-gallery">
                 <!--  Ovdje će JQuery ubacit slike  -->
             </div>
@@ -379,7 +379,7 @@
 </script>
 
 
-<script id="view-profile-friends-tmp" type="text/x-dot-template">
+<script id="view-contacts-tmp" type="text/x-dot-template">
     {{? it.contacts.length > 0 }}
         <ul class="friends-list">
         {{~it.contacts :contact:index}}
@@ -398,7 +398,7 @@
     {{?}}
 </script>
 
-<script id="profile-bubbles-tmp" type="text/x-dot-template">
+<script id="bubbles-tmp" type="text/x-dot-template">
       {{? it.bubbles.length > 0 }}
           <dl>
           {{~it.bubbles :bubble:index}}
@@ -420,12 +420,12 @@
     $(document).ready(function () {
         initializeImagePopups();
         $.get('/api/user/contacts<% if(!user.isMyProfile) { %>/?id=<%= user.id %><% } %>',function(data){
-              var templateFunction = doT.template(document.getElementById('view-profile-friends-tmp').text);
+              var templateFunction = doT.template(document.getElementById('view-contacts-tmp').text);
         var html = templateFunction(data);
-        $('#profile-friends .my-friends').html(html);
+        $('#contacts .my-friends').html(html);
     });
-    loadFeed('/api/content/timeline?user_id=<%= user.id %>', 'profile-posts');
-             renderTemplate('/api/user/bubbles?user_id=<%= user.id %>', 'profile-bubbles-tmp', 'profile-bubbles');
+    loadFeed('/api/content/timeline?user_id=<%= user.id %>', 'timeline');
+             renderTemplate('/api/user/bubbles?user_id=<%= user.id %>', 'bubbles-tmp', 'bubbles');
              });
 
 </script>
