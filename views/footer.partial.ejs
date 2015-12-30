@@ -102,7 +102,7 @@
             </span>
           {{?}}
 					<span class="stats">
-						<span class="likes badge">{{=post.likes}}</span> + 
+						<span class="likes badge" data-placement="bottom" onmouseover="whoLikes('{{= post.id }}')">{{=post.likes}}</span> + 
 						<span class="dislikes badge">{{=post.dislikes}}</span> = 
 						<span class="karma badge">{{=post.likes-post.dislikes}}</span>
 					</span>
