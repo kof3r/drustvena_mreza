@@ -262,6 +262,10 @@
 
 <!--gallery tab script-->
 <script>
+    <% if(!user.isMyProfile) {%> 
+        $("#newImageButton").hide();
+    <%} %>
+    
     var alreadyLoaded = false;
     $("#galleryNavPill").click(function() {
         if(!alreadyLoaded) {
