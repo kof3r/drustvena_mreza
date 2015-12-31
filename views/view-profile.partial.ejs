@@ -237,22 +237,6 @@
     <p style="display : none;" id="usernameTag"><%=user.username%></p>
 </div>
 
-<!-- tab navigation script by url -->
-<script>
-    var url = document.location.href;
-    if(url.indexOf("#") != -1) {
-        var pillHref = url.substring(url.lastIndexOf("#"));
-        var listItems = $("#navList li");
-        $.each(listItems, function(index, listItemJS) {
-            var listItem = $(listItemJS);
-            var childAnnotation = listItem.children(":first-child");
-            if(childAnnotation.attr("href") == pillHref) {
-                childAnnotation.click();
-            } 
-        });
-    }
-
-</script>
 
 <!-- Add/remove friend script -->
 <script>
@@ -376,6 +360,23 @@
             });
         }
     });
+</script>
+
+<!-- tab navigation script by url -->
+<script>
+    var url = document.location.href;
+    if(url.indexOf("#") != -1) {
+        var pillHref = url.substring(url.lastIndexOf("#"));
+        var listItems = $("#navList li");
+        $.each(listItems, function(index, listItemJS) {
+            var listItem = $(listItemJS);
+            var childAnnotation = listItem.children(":first-child");
+            if(childAnnotation.attr("href") == pillHref) {
+                childAnnotation.click();
+            } 
+        });
+    }
+
 </script>
 
 
