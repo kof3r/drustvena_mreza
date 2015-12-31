@@ -19,7 +19,7 @@ module.exports = {
             to: email, // list of receivers
             subject: 'Just one more step to get started on Bubbles', // Subject line
             html: '<h3>To complete your Bubbles registration, please confirm your account by following the link</h3>'+
-            '<a href=' + link + '>' + link + '<//a>'// html body
+            '<a href="' + link + '">' + link + '</a>'// html body
         };
 
         // send mail with defined transport object
