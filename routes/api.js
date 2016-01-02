@@ -63,7 +63,7 @@ module.exports=function (passport) {
             notFound404(req, res, next);
         } else {
             req.logout();
-            res.end(200);
+            res.end();
         }
     });
 
