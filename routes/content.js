@@ -191,6 +191,16 @@ router.get('/gallery', function(req, res) {
     });
 });
 
+router.get('/galleryVuki', function (req, res) {
+    var user_id = req.query.user_id || req.user.get('id');
+
+    Bubble.where({user_id: user_id, bubble_type_id: 2}).fetch({withRelated: [{'contents': function (qb) {
+        qb.orderBy('created_at', 'DESC');
+    }}]}).then(function(gallery) {
+        res.json({response: gallery.related('contents')});
+    })
+});
+
 router.get('/myBubbles', function (req, res) {
     Bubble.where({user_id: req.user.get('id')}).fetchAll().then(function (bubbles) {
         res.json({bubbles: bubbles});
