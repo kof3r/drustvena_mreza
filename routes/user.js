@@ -100,4 +100,25 @@ router.get('/bubbles', function(req, res) {
     });
 });
 
+router.get('/search', function(req, res) {
+    var term = req.query.term + '%';
+    User.query(function (qb) {
+        qb.whereRaw('username LIKE ?', [term])
+            .union(function () {
+                this.from('user')
+                    .whereRaw('first_name LIKE ?', [term])
+            })
+            .union(function () {
+                this.from('user')
+                    .whereRaw('last_name LIKE ?', [term])
+            }).union(function () {
+            this.from('user')
+                .whereRaw('middle_name LIKE ?', [term])
+                .orderBy('username');
+        })
+    }).fetchAll().then(function (users) {
+        res.json({response: users});
+    })
+});
+
 module.exports=router;
