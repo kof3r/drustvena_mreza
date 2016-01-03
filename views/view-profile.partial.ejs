@@ -416,7 +416,12 @@
         {{~it.contacts :contact:index}}
             <li>
                 <a href="/profile/{{= contact.username }}/view">
-                    {{= contact.first_name }} {{= contact.last_name }}
+                    {{? contact.first_name }}
+                        {{= contact.first_name }}
+                    {{?}}
+                    {{? contact.last_name }}
+                        {{= contact.last_name }}
+                    {{?}}
                     <div>{{= contact.username }}</div>
                     <img src="{{= contact.avatar }}?size=small" alt="avatar" height="125" width="125" />
     </a>
