@@ -13,7 +13,7 @@
         border-bottom: groove;
     }
 
-    .personal_info {
+    .well-profile {
         width: 85%;
         margin: auto;
         margin-top: 2.5%;
@@ -93,6 +93,26 @@
         background-color: darkorange;
         color: white;
     } 
+    
+    /* bubbles tab */
+    #bubbles a {
+        text-decoration: none;
+        text-align: center;
+        background-color: white;
+        border-radius: 25px;
+        border: 5px orange solid;
+        display: block;
+        float: left;
+        margin: 5px 10px;
+    }
+    
+    #bubbles dl dt {
+        padding: 5px;
+    }
+    
+    #bubbles dl dd {
+        padding: 5px 5px 5px 15px;
+    }
 
     /* contacts tab */
     .my-friends > ul.friends-list {
@@ -145,7 +165,7 @@
     </div>
     <div align="right"  class="profile-name"><p>Been with us since <% if(locals.user) { %><%= user.created_at %> <% } %></p></div>
 </div>
-<div class="container">
+<div>
     <div class="avatar">
         <a href="<%= user.avatar %>?size=large" class="image-popup-no-margins">
             <img align="left" class="image-profile img-circle" src="<%= user.avatar %>?size=small" width="125" height="125" alt="Profile image"/>
@@ -159,35 +179,39 @@
         <li role="presentation" class="active"><a data-toggle="pill" href="#info">Info</a></li>
         <li role="presentation"><a data-toggle="pill" href="#bubbles">Bubbles</a></li>
         <li role="presentation"><a data-toggle="pill" href="#timeline">Timeline</a></li>
+        <li role="presentation"><a data-toggle="pill" href="#gallery" id="galleryNavPill">Gallery</a></li>
         <li role="presentation"><a data-toggle="pill" href="#contacts" id="view-contacts-button">Contacts</a></li>
-        <li role="presentation"><a data-toggle="pill" href="#gallery" id="galleryNavPill">Gallery</a></li>   
     </ul>
 
     <div class="tab-content">
         <div class="tab-pane fade in active" id="info">
-            <div class="well personal_info">
+            <div class="well well-profile">
                 <% if(user.isMyProfile == true) { %>
                 <a id="edit_btn" href="/profile/edit" class="btn btn-primary" role="button"><span class="glyphicon glyphicon-wrench"></span> Edit</a>
                 <% } %>
                 <div class="pinfo_part">
                     <h4>Full name:</h4>
                     <p><% if(locals.user) { %><%= user.first_name %> <%= user.middle_name %> <%= user.last_name %><% } %></p>
-                    <h4>E-mail:</h4>
-                    <p><% if(locals.user) { %><%= user.email %><% } %></p>
+                    <% if(user.isMyProfile) { %>
+                        <h4>E-mail:</h4>
+                        <p><% if(locals.user) { %><%= user.email %><% } %></p>
+                    <% } %>
                     <h4>Birthday:</h4>
                     <p><% if(locals.user) { %><%= user.date_of_birth %><% } %></p>
                 </div>
 
                 <div class="pinfo_part">
-                    <h4>Gender:</h4>
-                    <p><% if(user.gender_id==2){%>Male<%}%><% if(user.gender_id==1){%>Female<%}%><% if(user.gender_id==''){%>Unknown<%}%></p>
+                    <% if(user.gender_id) { %>
+                        <h4>Gender:</h4>
+                        <p><% if(user.gender_id==2){%>Male<%}%><% if(user.gender_id==1){%>Female<%}%><% if(!user.gender_id){%>Other<%}%></p>
+                    <% } %>
                     <h4>Relationship status:</h4>
                     <p><% if(user.relationship_status_id==1){%>Single<%}%><% if(user.relationship_status_id==2){%>Complicated<%}%><%                                              if(user.relationship_status_id==3){%>In a relationship<%}%><% if(user.relationship_status_id==4){%>Other<%}%> </p>
                 </div>
 
                 <div class="pinfo_part">
-                    <h4>Currently living at:</h4>
-                    <p><% if(locals.user) { %><%= user.address %>, <%= user.city %>, <%= user.country_name %><% } %> </p>
+                    <h4>Living at:</h4>
+                    <p><% if(user.address) { %><%= user.address %>, <% } if(user.city) { %><%= user.city %>,<% } if(user.country_name) { %> <%= user.country_name %><% } %> </p>
                 </div>
 
                 <div class="pinfo_part">
@@ -197,8 +221,10 @@
                         <%= user.created_at %> 
                         <% } %>
                     </p>
-                    <h4>Last account update:</h4>
-                    <p><% if(locals.user) { %><%= user.updated_at %> <% } %> </p>
+                    <% if(user.updated_at) { %>
+                        <h4>Last account update:</h4>
+                        <p><% if(locals.user) { %><%= user.updated_at %> <% } %> </p>
+                    <% } %>
                 </div>
             </div>
         </div>
@@ -404,21 +430,26 @@
 </script>
 
 <script id="bubbles-tmp" type="text/x-dot-template">
-      {{? it.bubbles.length > 0 }}
-          <dl>
-          {{~it.bubbles :bubble:index}}
-              <dt>
-                  <a href="/bubble/{{= bubble.id }}">
+  {{? it.bubbles.length > 2 }}
+      <dl>
+      {{~it.bubbles :bubble:index}}
+          {{? bubble.bubble_type_id == 3 }}
+              <a href="/bubble/{{= bubble.id }}">
+                  <dt>
                       {{= escapeHtml(bubble.title) }}
-    </a>
-    </dt>
-              <dd>{{? bubble.description }}{{= bubble.description }}{{?}}</dd>
-          {{~}}
-    </dl>
-      {{??}}
-          <div class="alert alert-info">No bubbles</div>
-      {{?}}
-
+                  </dt>
+                  {{? bubble.description }}
+                      <dd>
+                          {{= bubble.description }}
+                      </dd>
+                  {{?}}
+              </a>
+          {{?}}
+      {{~}}
+</dl>
+  {{??}}
+      <div class="alert alert-info">No bubbles</div>
+  {{?}}
 </script>
 
 <script>
