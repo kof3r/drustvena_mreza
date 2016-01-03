@@ -23,7 +23,9 @@ router.get('/isContact', function (req, res) {
 
 router.get('/info', function (req, res) {
     User.where({id: req.query.id}).fetch().then(function (user) {
-        res.json(user);
+        var result = user.toJSON();
+        result['response'] = user.toJSON();
+        res.json(result);
     });
 });
 
@@ -100,20 +102,34 @@ router.get('/bubbles', function(req, res) {
     });
 });
 
+router.get('/gallery', function (req, res) {
+    var user_id = req.query.user_id || req.user.get('id');
+
+    Bubble.where({user_id: user_id, bubble_type_id: 2}).fetch({withRelated: [{'contents': function (qb) {
+        qb.orderBy('created_at', 'DESC');
+    }}]}).then(function(gallery) {
+        res.json({response: gallery.related('contents')});
+    })
+});
+
 router.get('/search', function(req, res) {
     var term = req.query.term + '%';
     User.query(function (qb) {
         qb.whereRaw('username LIKE ?', [term])
+            .column('id', 'username', 'first_name', 'last_name', 'middle_name')
             .union(function () {
                 this.from('user')
                     .whereRaw('first_name LIKE ?', [term])
+                    .column('id', 'username', 'first_name', 'last_name', 'middle_name')
             })
             .union(function () {
                 this.from('user')
                     .whereRaw('last_name LIKE ?', [term])
+                    .column('id', 'username', 'first_name', 'last_name', 'middle_name')
             }).union(function () {
             this.from('user')
                 .whereRaw('middle_name LIKE ?', [term])
+                .column('id', 'username', 'first_name', 'last_name', 'middle_name')
                 .orderBy('username');
         })
     }).fetchAll().then(function (users) {

@@ -111,7 +111,9 @@ router.get('/image/:image_id', function(req, res, next) {
             return general.sendMessage(res, "This image doesn't exist or it was deleted!", 404);
         }
 
-        return res.status(200).json(image);
+        var result = image.toJSON();
+        result['response'] = image.toJSON();
+        return res.status(200).json(result);
     })
 });
 
@@ -148,8 +150,9 @@ router.post('/delete/:id', function(req, res, next){
 router.get('/timeline', function(req, res) {
     var user = req.user;
     var user_id = req.query.user_id || user.get('id');
-    knex.raw('select content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content, COUNT(likes) as likes, COUNT(dislikes) as dislikes, COUNT(DISTINCT iLikeDislike.iLike) as iLike, COUNT(DISTINCT iLikeDislike.iDislike) as iDislike '
+    knex.raw('select user.username, user.avatar, content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content, COUNT(likes) as likes, COUNT(dislikes) as dislikes, COUNT(DISTINCT iLikeDislike.iLike) as iLike, COUNT(DISTINCT iLikeDislike.iDislike) as iDislike '
         + ' from bubble '
+        + ' join user on user.id = bubble.user_id '
         + ' join content on content.bubble_id = bubble.id '
         + ' left join ( '
         +   ' SELECT `like`.user_id as likes, dislike.user_id as dislikes, `like`.content_id FROM `like` '
@@ -166,9 +169,9 @@ router.get('/timeline', function(req, res) {
         +   ' LEFT JOIN `like` ON `like`.content_id = dislike.content_id AND `like`.user_id = dislike.user_id '
         + ' ) as iLikeDislike on iLikeDislike.content_id = content.id and ((iLikeDislike.iLike = likeCount.likes and iLikeDislike.iLike = ?) or (iLikeDislike.iDislike = likeCount.dislikes and iLikeDislike.iDislike = ' + user_id +'))'
         + ' where bubble.user_id = ' + user_id + ' and (bubble.bubble_type_id = 1 or bubble.bubble_type_id = 3)'
-        + ' group by content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content'
+        + ' group by user.username, user.avatar, content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content'
         + ' order by content.created_at DESC', [user_id]).then(function (posts) {
-        res.json( {attributes: { user_id: user_id }, contents: posts[0]} );
+        res.json( {attributes: { user_id: user_id }, contents: posts[0], response:posts[0]} );
     }).catch(function(error) {
         console.log(error);
     });
@@ -191,20 +194,19 @@ router.get('/gallery', function(req, res) {
     });
 });
 
-router.get('/galleryVuki', function (req, res) {
-    var user_id = req.query.user_id || req.user.get('id');
-
-    Bubble.where({user_id: user_id, bubble_type_id: 2}).fetch({withRelated: [{'contents': function (qb) {
-        qb.orderBy('created_at', 'DESC');
-    }}]}).then(function(gallery) {
-        res.json({response: gallery.related('contents')});
-    })
-});
-
 router.get('/myBubbles', function (req, res) {
     Bubble.where({user_id: req.user.get('id')}).fetchAll().then(function (bubbles) {
         res.json({bubbles: bubbles});
     });
+});
+
+router.get('/myBubblesList', function(req, res) {
+    Bubble.query(function(qb) {
+        qb.where('bubble_type_id', '<>', 2).andWhere('user_id', req.user.get('id'))
+            .orderBy('title', 'ASC');
+    }).fetchAll().then(function (bubbles) {
+        res.json({response: bubbles});
+    })
 });
 
 router.get('/comments/:content_id', function (req, res) {
