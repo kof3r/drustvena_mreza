@@ -424,7 +424,7 @@ function handlePost(context){
             return general.sendMessage(context.res, "Failed to save the post.", 500);
         }
         context.res.status(200);
-        return context.res.json(finished);
+        return context.res.json({response: finished});
     })
 }
 
