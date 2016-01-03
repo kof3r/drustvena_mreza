@@ -17,7 +17,7 @@ router.all('*', requireAuthentication);
 
 router.get('/isContact', function (req, res) {
     Privilege.where({permittee_id: req.user.get('id'), permitter_id: req.query.id}).fetch().then(function (privilege) {
-        res.json({isContact: (privilege ? true : false)});
+        res.json({isContact: (privilege ? true : false), response: (privilege ? true : false)});
     });
 });
 
