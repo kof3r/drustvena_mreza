@@ -222,9 +222,12 @@ router.post('/comment/:content_id', function(req, res, next) {
         user_id: req.user.id,
         content_id: req.params.content_id,
         comment: req.body.comment
-    }).save().then(function () {
-        res.end();
+    }).save().then(function (comment) {
+        res.json({response: comment});
+    }).catch(function (error) {
+        console.log(error.stack);
     });
+
 });
 
 router.post('/like/:id', function (req, res) {
