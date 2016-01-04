@@ -6,6 +6,10 @@ module.exports = function (req, res, next) {
     if(req.isAuthenticated()) {
         next();
     } else {
-        res.redirect('/');
+        if(req.useragent.isAndroid) {
+            res.status(403).end();
+        } else {
+            res.redirect('/');
+        }
     }
 };
