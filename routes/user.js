@@ -13,6 +13,8 @@ var Bubble = require('../models/bubble');
 var general = require('../utils/general');
 var requireAuthentication = require('../utils/authentication');
 
+var Promise = require('bluebird');
+
 router.all('*', requireAuthentication);
 
 router.get('/isContact', function (req, res) {
