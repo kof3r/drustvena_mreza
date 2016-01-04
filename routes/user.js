@@ -90,7 +90,7 @@ router.get('/nonFriends', function(req, res) {
         friendIds.push(id);
         return User.query(function (qb) {
             qb.whereNotIn('id', friendIds);
-        }).fetchAll();
+        }).fetchAll({columns: ['id', 'username', 'avatar', 'city', 'country_id']});
     }).then(function (nonFriends) {
         res.json({response: nonFriends});
     });
