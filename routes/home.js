@@ -45,12 +45,12 @@ router.get('/feed', function(req, res) {
                 .join('content', 'content.bubble_id', 'bubble.id')
                 .join('user', 'bubble.user_id', 'user.id')
                 .where('privilege.permittee_id', user.get('id'))
-                .columns('content.*', 'username', 'avatar').union(function () {
+                .columns('content.*', 'username', 'avatar', 'user_id').union(function () {
                 this.from('bubble')
                     .join('content', 'content.bubble_id', 'bubble.id')
                     .join('user', 'bubble.user_id', 'user.id')
                     .where('user.id', user.get('id'))
-                    .columns('content.*', 'username', 'avatar')
+                    .columns('content.*', 'username', 'avatar', 'user.id as user_id')
                     .orderBy('created_at', 'DESC');
             })
         }).fetchAll();

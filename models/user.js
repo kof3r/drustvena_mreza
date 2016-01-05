@@ -73,7 +73,7 @@ var User = orm.Model.extend({
     }),
 
     sendConfirmationMail: Promise.method(function() {
-        Mail.sendVerificationEmail(this.get('email'), "localhost:8080/emailverification?id=" + this.get('id') + "&hash=" + this.get('password_hash'));
+        Mail.sendVerificationEmail(this.get('email'), "http://www.bubbles.com.hr/emailverification?id=" + this.get('id') + "&hash=" + this.get('password_hash'));
     }),
 
     format: function(attributes) {
