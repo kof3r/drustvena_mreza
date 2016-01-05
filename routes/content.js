@@ -159,6 +159,7 @@ router.get('/timeline', function(req, res) {
     var appendlikes = require('../db/query/likeCounter');
 
     appendlikes(contentQuery, user.get('id'))
+        .groupBy('user.id', 'user.username', 'user.avatar', 'content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content')
         .column('username', 'avatar', 'content.bubble_id', 'content.id', 'content.content_type_id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content')
         .orderBy('content.created_at', 'DESC')
         .then(function(posts) {

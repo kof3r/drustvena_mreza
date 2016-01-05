@@ -57,6 +57,27 @@ router.get('/:id/content', function (req, res) {
     var bubble_id = req.params.id;
     var user_id = req.user.get('id');
 
+    var contentQuery = knex.from('bubble')
+        .join('content', function() {
+            this.on(knex.raw('bubble.id = content.bubble_id and bubble.id = ?', [bubble_id]))
+        });
+
+    var appendlikes = require('../db/query/likeCounter');
+
+    Promise.join(
+
+        Bubble.where({id: bubble_id}).fetch(),
+
+    appendlikes(contentQuery, user_id)
+        .groupBy('content.bubble_id', 'content.id', 'content.content_type_id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content')
+        .column('content.bubble_id', 'content.id', 'content.content_type_id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
+        .orderBy('content.created_at', 'DESC'),
+
+        function(bubble, posts) {
+            res.json({attributes: bubble, contents: posts});
+        }
+    )
+    /*
     Promise.join(
         Bubble.where({id: bubble_id}).fetch(),
 
@@ -83,6 +104,7 @@ router.get('/:id/content', function (req, res) {
     }).catch(function(error) {
         console.log(error);
     });
+    */
 
     /**
     Bubble.where({id: req.params.id}).fetch().then(function(bubble, err){

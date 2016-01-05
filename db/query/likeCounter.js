@@ -9,7 +9,6 @@ module.exports = function (contentQuery, user_id) {
         .leftJoin(likeDislikeOJ('iLikeDislikeOJ'), function() {
             this.on(knex.raw('content.id = iLikeDislikeOJ.content_id and ((likeDislikeOJ.liked = iLikeDislikeOJ.liked and iLikeDislikeOJ.liked = ?) or (likeDislikeOJ.disliked = iLikeDislikeOJ.disliked and iLikeDislikeOJ.disliked = ?))', [user_id, user_id]))
         })
-        .groupBy('user.id', 'user.username', 'user.avatar', 'content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content')
         .count('likeDislikeOJ.liked as likes')
         .count('likeDislikeOJ.disliked as dislikes')
         .count('iLikeDislikeOJ.liked as iLike')

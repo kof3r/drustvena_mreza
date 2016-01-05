@@ -35,6 +35,7 @@ router.get('/feed', function(req, res) {
     var appendLikes = require('../db/query/likeCounter');
 
     appendLikes(contentQuery, user_id)
+        .groupBy('user.id', 'user.username', 'user.avatar', 'content.id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content')
         .column('user.id as user_id', 'username', 'avatar','content.bubble_id', 'content.id', 'content.content_type_id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content', 'content.description')
         .orderBy('created_at', 'DESC')
         .then(function (contents) {
