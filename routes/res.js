@@ -3,10 +3,7 @@
  */
 var express = require('express');
 var router = express.Router();
-var ValidationError = require('../models/errors/validationError');
-var requireAuthentication = require('../utils/authentication');
 var fs = require('fs');
-router.all("*", requireAuthentication);
 
 router.get('/img/:img_file', function(req, res, next) {
     var file = req.params.img_file;
