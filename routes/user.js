@@ -72,7 +72,7 @@ router.get('/contacts', function(req, res, next) {
         qb.join('user', 'privilege.permitter_id', 'user.id')
             .where('privilege.permittee_id', req.query.id || req.user.get('id'))
             .orderBy('username', 'ASC')
-    }).fetchAll({columns: ['user.id', 'username', 'first_name', 'last_name', 'middle_name', 'avatar']}).then(function (contacts) {
+    }).fetchAll({columns: ['user.id', 'username', 'first_name', 'last_name', 'middle_name', 'avatar', 'city', 'country_id']}).then(function (contacts) {
         res.json({contacts: contacts, response: contacts});
     }).catch(function(error) {
         console.log(error);
