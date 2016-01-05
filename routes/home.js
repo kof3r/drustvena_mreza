@@ -28,7 +28,7 @@ router.get('/feed', function(req, res) {
         }).union(function () {
             this.select(knex.raw('? as id', [user_id]))
         }).as('friendsAndMe')
-    }).joinRaw('join bubble on bubble.user_id = friendsAndMe.id and bubble_type_id <> 2')
+    }).joinRaw('join bubble on bubble.user_id = friendsAndMe.id')
         .joinRaw('join user on bubble.user_id = user.id')
         .joinRaw('join content on bubble.id = content.bubble_id');
 
