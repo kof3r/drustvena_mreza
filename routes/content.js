@@ -150,6 +150,22 @@ router.post('/delete/:id', function(req, res, next){
 router.get('/timeline', function(req, res) {
     var user = req.user;
     var user_id = req.query.user_id || user.get('id');
+
+    var contentQuery = knex.from('user')
+        .join('bubble', function() {
+            this.on(knex.raw('bubble.user_id = user.id and bubble.bubble_type_id <> 2 and user.id = ?', [user_id]));
+        }).join('content', 'content.bubble_id', 'bubble.id');
+
+    var appendlikes = require('../db/query/likeCounter');
+
+    appendlikes(contentQuery, user.get('id'))
+        .column('username', 'avatar', 'content.bubble_id', 'content.id', 'content.content_type_id', 'content.created_at', 'content.updated_at', 'content.title', 'content.content')
+        .orderBy('content.created_at', 'DESC')
+        .then(function(posts) {
+            res.json( {attributes: { user_id: user_id }, contents: posts, response:posts} );
+        })
+
+    /*
     knex.raw('select user.username, user.avatar, content.bubble_id, content.id, content.content_type_id, content.created_at, content.updated_at, content.title, content.content, COUNT(likes) as likes, COUNT(dislikes) as dislikes, COUNT(DISTINCT iLikeDislike.iLike) as iLike, COUNT(DISTINCT iLikeDislike.iDislike) as iDislike '
         + ' from bubble '
         + ' join user on user.id = bubble.user_id '
@@ -175,6 +191,7 @@ router.get('/timeline', function(req, res) {
     }).catch(function(error) {
         console.log(error);
     });
+    */
 });
 
 router.get('/gallery', function(req, res) {
