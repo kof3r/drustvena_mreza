@@ -439,12 +439,11 @@ function handlePost(context){
         post.id = context.content_id;
     }
 
-    Content.forge(post).save().then(function(finished, err){
-        if (err){
-            return general.sendMessage(context.res, "Failed to save the post.", 500);
-        }
+    Content.forge(post).save().then(function(finished){
         context.res.status(200);
         return context.res.json({response: finished});
+    }).catch(ValidationError, function (error) {
+        context.res.json({error: error.messages[0]});
     })
 }
 
