@@ -260,7 +260,9 @@ $(document).ready(function() {
 		selectContact();
 		loadMessages();
 	}
-	window.setInterval(receiveMessages, 3000);
+	if (typeof messagesPullInterval != "number") {
+		messagesPullInterval = setInterval(receiveMessages, 3000);
+	}
 });
 
 $(window).on('hashchange', function() {

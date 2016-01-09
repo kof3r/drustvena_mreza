@@ -1,6 +1,7 @@
 var globalUserId = document.getElementById('global-user-id').innerHTML;
 var globalUsername = document.getElementById('global-username').innerHTML;
 var dateTimeFormat = 'dd/mm/yyyy HH:MM';
+var messagesPullInterval;
 //var globalUserId = document.getElementById('global-user-id').innerHTML;
 
 function loadPartial(name, callback) {
