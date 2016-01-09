@@ -152,15 +152,18 @@
 
 <div class="jumbotron">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-md-4">
         </div>
         <% if(user.isMyProfile == false) { %>
-        <div class="col-md-2">
-            <button class="btn btn-danger" id="removeFriendButton" name="/api/user/removeContact">Remove from contacts</button>
+        <div class="col-md-3">
+            <button class="btn btn-danger" id="removeFriendButton" name="/api/user/removeContact"><span class="glyphicon glyphicon-remove"></span> Remove from contacts</button>
         </div>
-        <div class="col-md-2">
-            <button class="btn btn-primary" id="addFriendButton" name="/api/user/contactRequest">Add to contacts</button>
+        <div class="col-md-3">
+            <button class="btn btn-success" id="addFriendButton" name="/api/user/contactRequest"><span class="glyphicon glyphicon-plus"></span> Add to contacts</button>
         </div> 
+        <div class=col-md-3">
+			<a href="/messages#<%= user.username %>" class="btn btn-primary"><span class="glyphicon glyphicon-envelope"></span> Message</a>
+		</div>
         <% } %>
     </div>
     <div align="right"  class="profile-name"><p>Been with us since <% if(locals.user) { %><%= user.created_at %> <% } %></p></div>

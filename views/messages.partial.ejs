@@ -57,10 +57,14 @@
     margin-right: 0;
     padding-right: 0;
 }
+#messages-box > h4 {
+	padding: 0 15px;
+}
 
 #messages-box > ol {
     overflow-y: scroll;
-    max-height: 75vh;
+    min-height: 200px;
+    max-height: 65vh;
 }
 
 #messages-box > ol.messages {
@@ -121,32 +125,10 @@
 <div>
     <div id="contacts-box" class="col-sm-4">
         <ul class="contacts">
-            <li>
-                <a href="#">
-                    <img src="/images/avatar.jpg" />
-                    <span class="user">Maja Matijasevic</span>
-                    <div class="time">
-                        <span class="glyphicon glyphicon-time"></span>
-                        01/02/2016 14:30
-                    </div>
-                    <div class="message">Danas radimo TCP/IP stack u arhitekturi najnovijig NGE mreza</div>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <img src="/images/avatar.jpg" />
-                    <span class="user">Igor Cukrov</span>
-                </a>
-            </li>
-            <li>
-                <a href="#">
-                    <img src="/images/avatar.jpg" />
-                    <span class="user">Neven Babek</span>
-                </a>
-            </li>
         </ul>
     </div>
     <div class="col-sm-8" id="messages-box">
+		<h4></h4>
         <ol class="messages">
         </ol>
     </div>
@@ -154,6 +136,7 @@
 </div>
 
 <script>
+var contacts = $('#contacts-box .contacts');
 var messages = $('#messages-box > ol.messages');
 var editor = $('#message-editor');
 var recipient_username;
@@ -176,7 +159,7 @@ editor.keypress(function(e) {
             );
             */
             $.post('/api/message/' + recipient_username, { message: newMessage }, function() {
-				if (messages.prop('scrollHeight') > 1080) {
+				if (messages.prop('scrollHeight') > 1000) {
 					messages.children().slice(0, 2).remove();
 				}
 				appendMessage(this.created_at, newMessage, globalUsername, 'my');
@@ -188,77 +171,117 @@ editor.keypress(function(e) {
     }
 });
 
-/*
-socket.on('chat message', function(msg){
-    alert(msg);
-});
-*/
-
-function receiveMessages() {
-	$.ajax({
-			url:'/api/message/my/' + recipient_username, 
-			cache: false, 
-			success:
-				function(data) {
-					$.each(data.data.messages, function() {
-						if(this.read == null && this.recipient == globalUsername) {
-							appendMessage(this.created_at, this.message, this.sender, '');
-							$.post('/api/message/mark/' + this.id);
-						}
-					});
-				}
-	});
+function selectContact() {
+	$('#messages-box > h4').html(recipient_username);
+	messages.html('');
 }
 
-function loadMessages(username) {
+function updateRecentContacts(data) {
+	var templateFunction = doT.template(document.getElementById('messages-contacts-tmp').text);
+	function update(collection) {
+		$.each(collection, function() {
+			if(this.sender != globalUsername) {
+				contacts.html(templateFunction(this));
+			}
+		});
+	}
+	if(data && data.data.length) {
+		update(data.data.messages);
+	}
+	else {
+		$.ajax({
+				url: 'api/message/my',
+				cache: false,
+				success:
+					function(data) {
+						update(data.data.messages);
+					}
+				});
+	}
+}
 
-	$.ajax({
-			url: '/api/message/my/' + username,
-			cache: false,
-			success: 
-				function(data) {
-					$('#messages-box ol.messages').html();
-					$.each(data.data.messages, function() {
-						var my = '';
-						if (this.sender == globalUsername) {
-							my='my';
-						}
-						appendMessage(this.created_at, this.message, this.sender, my);
-					});
-				}
-	});
-	
+function receiveMessages() {
+	if(recipient_username) {
+		$.ajax({
+				url:'/api/message/unread', 
+				cache: false, 
+				success:
+					function(data) {
+						$.each(data.data.messages, function() {
+							if(this.sender == recipient_username) {
+								appendMessage(this.created_at, this.message, this.sender, '');
+								$.post('/api/message/mark/' + this.id);
+							}
+						});
+						updateRecentContacts(data);
+					}
+		});
+	}
+	else {
+		updateRecentContacts();
+	}
+}
+
+function loadMessages() {
+	if(recipient_username) {
+		$.ajax({
+				url: '/api/message/my/' + recipient_username,
+				cache: false,
+				success: 
+					function(data) {
+						data.data.messages.sort(function(a, b){
+							if (a.created_at > b.created_at){
+							  return 1;
+							} else if (a.created_at < b.created_at){
+							  return -1;
+							} else {
+								return 0;
+							}
+						});
+						$('#messages-box ol.messages').html('');
+						$.each(data.data.messages, function() {
+							var my = '';
+							if (this.sender == globalUsername) {
+								my='my';
+							}
+							appendMessage(this.created_at, this.message, this.sender, my);
+						});
+					}
+		});
+	}
+	else {
+		
+	}
 }
 
 $(document).ready(function() {
-	recipient_username = prompt('Who is the recipient?');
-	loadMessages(recipient_username);
+	recipient_username = window.location.hash.substring(1);
+	if (recipient_username) {
+		selectContact();
+		loadMessages();
+	}
 	window.setInterval(receiveMessages, 3000);
+});
+
+$(window).on('hashchange', function() {
+	selectContact();
+	recipient_username = window.location.hash.substring(1);
 });
 </script>
 
 <!-- Messaging contacts -->
 <script id="messages-contacts-tmp" type="text/x-dot-template">
   
-  {{? it.bubbles.length > 0 }}
-	{{~it.bubbles :bubble:index}}
-	  <li>
-		<a href="/bubble/{{= bubble.id }}">
-		  {{? bubble.bubble_type_id == 1 }}
-			<span class="glyphicon glyphicon-text-size"></span> 
-		  {{?}}
-		  {{? bubble.bubble_type_id == 2 }}
-			<span class="glyphicon glyphicon-picture"></span> 
-		  {{?}}
-		  {{? bubble.bubble_type_id == 3 }}
-			<span class="glyphicon glyphicon-font"></span> 
-		  {{?}}
-		  {{= escapeHtml(bubble.title) }}
+	<li>
+		<a href="/messages#{{= it.sender }}">
+			<!--<img src="/images/avatar.jpg">-->
+			<span class="user">{{= it.sender }}</span>
+			<div class="time">
+				<span class="glyphicon glyphicon-time"></span> 
+				{{= dateFormat(it.created_at, dateTimeFormat) }}
+			</div>
+			<div class="message">{{= it.message }}</div>
 		</a>
-	  </li>
-	{{~}}
-  {{??}}
-	<li class="dropdown-header">No bubbles</li>
-  {{?}}
+	</li>
 	
 </script>

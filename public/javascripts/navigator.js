@@ -373,7 +373,8 @@ page('/messages', function(){
 });
 
 page('/messages/:username', function(context){
-  loadPartial('messages?username=' + context.params.username);
+  loadPartial('messages');
+    navigate('messages');
 });
 
 page('/content/new/:type', function(context){
