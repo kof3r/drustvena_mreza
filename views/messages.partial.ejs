@@ -196,9 +196,10 @@
 <script>
 var messages = $('#messages-box > ol.messages');
 var editor = $('#message-editor');
+var recipient_username = prompt('Who is the recipient?');
 
-function appendMessage(dt, msg) {
-        messages.append('<li class="my"><div class="header"><span class="time">' + dateFormat(dt, 'dd/mm/yyyy HH:MM') + '</span></div><div class="message">' + msg + '</div></li>');
+function appendMessage(dt, msg, username, my) {
+        messages.append('<li class="'+my+'"><div class="header"><span class="username">' + username + '</span><span class="time">' + dateFormat(dt, 'dd/mm/yyyy HH:MM') + '</span></div><div class="message">' + msg + '</div></li>');
         messages.scrollTop(messages.prop('scrollHeight'));
 }
   
@@ -209,18 +210,18 @@ editor.keypress(function(e) {
         var newMessage = escapeHtml(editor.val());
         
         if (newMessage.length) {
+			/*
             socket.emit(
-                'chat message', 
-                {sender: globalUsername,
-                recipient: globalUsername,
-                message: newMessage}
+                'chat message', {blah}
             );
-            
-            if (messages.prop('scrollHeight') > 1080) {
-                messages.children().slice(0, 2).remove();
-            }
-            appendMessage(Date.now(), newMessage);
-            editor.val('');
+            */
+            $.post('/api/message/' + recipient_username, { message: newMessage }, function() {
+				if (messages.prop('scrollHeight') > 1080) {
+					messages.children().slice(0, 2).remove();
+				}
+				appendMessage(Date.now(), newMessage, globalUsername, 'my');
+				editor.val('');
+			});
         }
         else {
             editor.focus();
@@ -234,4 +235,48 @@ socket.on('chat message', function(msg){
     alert(msg);
 });
 */
+
+function receiveMessages() {
+	$.ajax({
+			url:'/api/message/my/' + recipient_username, 
+			cache: false, 
+			success:
+				function(data) {
+					$.each(data.data.messages, function() {
+						if(this.read == null && this.recipient == globalUsername) {
+							appendMessage(this.created_at, this.message, this.sender, '');
+							$.post('/api/message/mark/' + this.id);
+						}
+					});
+				}
+	});
+}
+
+window.setInterval(receiveMessages, 3000);
+</script>
+
+<!-- My Bubbles -->
+<script id="my-bubbles-tmp" type="text/x-dot-template">
+  
+  {{? it.bubbles.length > 0 }}
+	{{~it.bubbles :bubble:index}}
+	  <li>
+		<a href="/bubble/{{= bubble.id }}">
+		  {{? bubble.bubble_type_id == 1 }}
+			<span class="glyphicon glyphicon-text-size"></span> 
+		  {{?}}
+		  {{? bubble.bubble_type_id == 2 }}
+			<span class="glyphicon glyphicon-picture"></span> 
+		  {{?}}
+		  {{? bubble.bubble_type_id == 3 }}
+			<span class="glyphicon glyphicon-font"></span> 
+		  {{?}}
+		  {{= escapeHtml(bubble.title) }}
+		</a>
+	  </li>
+	{{~}}
+  {{??}}
+	<li class="dropdown-header">No bubbles</li>
+  {{?}}
+	
 </script>
