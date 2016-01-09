@@ -148,46 +148,6 @@
     </div>
     <div class="col-sm-8" id="messages-box">
         <ol class="messages">
-            <li>
-                <div class="message">Evo jedne poruke</div>
-            </li>
-            <li>
-                <div class="header">
-                    <span class="time">
-                        01/02/2015 12:12
-                    </span>
-                    <span class="location">
-                        Zagreb, Croatia
-                    </span>
-                </div>
-                <div class="message">Hej ti, pogledaj samo kako je ova stranica responzivna! Pa to je milina.</div>
-            </li>
-            <li class="my">
-                <div class="header">
-                    <span class="time">
-                        01/02/2015 12:12
-                    </span>
-                    <span class="location">
-                        Zagreb, Croatia
-                    </span>
-                </div>
-                <div class="message">Meni se raspada...</div>
-            </li>
-            <li>
-                <div class="message">E pa kad koristiš krivi browser! E, a znaš da bi ovdje mogao proraditi socket.io chat?</div>
-            </li>
-            <li class="my">
-                <div class="message">To bi bilo predobro...</div>
-            </li>
-            <li>
-                <div class="message">Znam, ali nisam siguran hoæe li biti vremena da tim napravi punokrvni chat, možda budu samo obiène poruke...</div>
-            </li>
-            <li class="my">
-                <div class="message">Ipak je to hrpa novih tehnologija koje treba usvojiti.</div>
-            </li>
-            <li>
-                <div class="message">Lorem Ipsum je jednostavno probni tekst koji se koristi u tiskarskoj i slovoslagarskoj industriji. Lorem Ipsum postoji kao industrijski standard još od 16-og stoljeæa, kada je nepoznati tiskar uzeo tiskarsku galiju slova i posložio ih da bi napravio knjigu s uzorkom tiska. Taj je tekst ne samo preživio pet stoljeæa, veæ se i vinuo u svijet elektronskog slovoslagarstva, ostajuæi u suštini nepromijenjen. Postao je popularan tijekom 1960-ih s pojavom Letraset listova s odlomcima Lorem Ipsum-a, a u skorije vrijeme sa software-om za stolno izdavaštvo kao što je Aldus PageMaker koji takoðer sadrži varijante Lorem Ipsum-a..</div>
-            </li>
         </ol>
     </div>
     <textarea class="col-sm-offset-4 col-sm-8 col-xs-12" id="message-editor" placeholder="Type a message here and press return to send"></textarea>
@@ -196,7 +156,7 @@
 <script>
 var messages = $('#messages-box > ol.messages');
 var editor = $('#message-editor');
-var recipient_username = prompt('Who is the recipient?');
+var recipient_username;
 
 function appendMessage(dt, msg, username, my) {
         messages.append('<li class="'+my+'"><div class="header"><span class="username">' + username + '</span><span class="time">' + dateFormat(dt, 'dd/mm/yyyy HH:MM') + '</span></div><div class="message">' + msg + '</div></li>');
@@ -219,14 +179,12 @@ editor.keypress(function(e) {
 				if (messages.prop('scrollHeight') > 1080) {
 					messages.children().slice(0, 2).remove();
 				}
-				appendMessage(Date.now(), newMessage, globalUsername, 'my');
+				appendMessage(this.created_at, newMessage, globalUsername, 'my');
 				editor.val('');
 			});
         }
-        else {
-            editor.focus();
-        }
         editor.removeAttr('disabled');
+            editor.focus();
     }
 });
 
@@ -252,11 +210,35 @@ function receiveMessages() {
 	});
 }
 
-window.setInterval(receiveMessages, 3000);
+function loadMessages(username) {
+
+	$.ajax({
+			url: '/api/message/my/' + username,
+			cache: false,
+			success: 
+				function(data) {
+					$('#messages-box ol.messages').html();
+					$.each(data.data.messages, function() {
+						var my = '';
+						if (this.sender == globalUsername) {
+							my='my';
+						}
+						appendMessage(this.created_at, this.message, this.sender, my);
+					});
+				}
+	});
+	
+}
+
+$(document).ready(function() {
+	recipient_username = prompt('Who is the recipient?');
+	loadMessages(recipient_username);
+	window.setInterval(receiveMessages, 3000);
+});
 </script>
 
-<!-- My Bubbles -->
-<script id="my-bubbles-tmp" type="text/x-dot-template">
+<!-- Messaging contacts -->
+<script id="messages-contacts-tmp" type="text/x-dot-template">
   
   {{? it.bubbles.length > 0 }}
 	{{~it.bubbles :bubble:index}}
