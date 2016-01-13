@@ -221,6 +221,7 @@ function updateRecentMessages(data) {
 						data.data.messages.filter(function(item) {
 							return (item.read == null) ? true : false;
 						});
+						data.data.messages.sort(recentMessagesSort);
 						update(data.data.messages);
 					}
 				});
