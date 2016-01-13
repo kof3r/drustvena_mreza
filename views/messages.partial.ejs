@@ -52,7 +52,6 @@
 }
 #messages-box {
     border: 1px solid black;
-    border-bottom: 0;
     padding: 10px 0;
     margin-right: 0;
     padding-right: 0;
@@ -110,11 +109,15 @@
     color: #333;
     border-radius: 5px;
     padding: 15px;
+    padding-bottom: 0;
     margin: 5px;
+    margin-bottom: 0;
 }
 
 #message-editor {
-    border: 1px solid;
+	margin-top: 15px;
+	border: 0;
+    border-top: 1px solid;
     padding: 15px;
     resize: none;
     overflow: none;
@@ -131,8 +134,8 @@
 		<h4></h4>
         <ol class="messages">
         </ol>
+		<textarea class="col-xs-12" id="message-editor" placeholder="Type a message here and press return to send"></textarea>
     </div>
-    <textarea class="col-sm-offset-4 col-sm-8 col-xs-12" id="message-editor" placeholder="Type a message here and press return to send"></textarea>
 </div>
 
 <script>
@@ -172,23 +175,41 @@ editor.keypress(function(e) {
 });
 
 function selectContact() {
-	$('#messages-box > h4').html(recipient_username);
-	messages.html('');
+	if(recipient_username != '') {
+		$('#messages-box > h4').html(recipient_username);
+		messages.html('');
+		$('#message-editor').removeAttr('disabled');
+	}
+	else {
+		$('#message-editor').attr('disabled', 'disabled');
+	}
 }
 
-function updateRecentContacts(data) {
+function recentMessagesSort(a, b){
+	if (a.created_at > b.created_at){
+	  return 1;
+	} else if (a.created_at < b.created_at){
+	  return -1;
+	} else {
+		return 0;
+	}
+}
+
+function updateRecentMessages(data) {
 	var templateFunction = doT.template(document.getElementById('messages-contacts-tmp').text);
 	function update(collection) {
+		contacts.html('');
 		$.each(collection, function() {
 			if(this.sender != globalUsername) {
-				contacts.html(templateFunction(this));
+				contacts.prepend(templateFunction(this));
 			}
 		});
 	}
 	if(data && data.data.length) {
+		
 		update(data.data.messages);
 	}
-	else {
+	else if(contacts.children().length == 0) {
 		$.ajax({
 				url: 'api/message/my',
 				cache: false,
@@ -208,17 +229,17 @@ function receiveMessages() {
 				success:
 					function(data) {
 						$.each(data.data.messages, function() {
-							if(this.sender == recipient_username) {
+							if(this.sender == recipient_username && this.read == null) {
 								appendMessage(this.created_at, this.message, this.sender, '');
 								$.post('/api/message/mark/' + this.id);
 							}
 						});
-						updateRecentContacts(data);
+						updateRecentMessages(data);
 					}
 		});
 	}
 	else {
-		updateRecentContacts();
+		updateRecentMessages();
 	}
 }
 
@@ -229,17 +250,12 @@ function loadMessages() {
 				cache: false,
 				success: 
 					function(data) {
-						data.data.messages.sort(function(a, b){
-							if (a.created_at > b.created_at){
-							  return 1;
-							} else if (a.created_at < b.created_at){
-							  return -1;
-							} else {
-								return 0;
-							}
-						});
+						data.data.messages.sort(recentMessagesSort);
 						$('#messages-box ol.messages').html('');
 						$.each(data.data.messages, function() {
+							if(this.read == null) {
+								$.post('/api/message/mark/' + this.id);
+							}
 							var my = '';
 							if (this.sender == globalUsername) {
 								my='my';
@@ -256,8 +272,8 @@ function loadMessages() {
 
 $(document).ready(function() {
 	recipient_username = window.location.hash.substring(1);
+	selectContact();
 	if (recipient_username) {
-		selectContact();
 		loadMessages();
 	}
 	if (typeof messagesPullInterval != "number") {

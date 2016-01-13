@@ -199,5 +199,30 @@
 			</li>
 		{{~}}
 	</script>
+	
+	<script id="search-results-tmp" type="text/x-dot-template">
+	
+	<li class="dropdown-header">
+		<span class="glyphicon glyphicon-user"> Contacts</span>
+	</li>
+	<li role="separator" class="divider"></li>
+	
+	{{? it.results.length > 0 }}
+        {{~it.results :result:index}}
+			<li>
+				<a href="/profile/{{= result.username }}/view">
+					<span class="glyphicon glyphicon-profile"></span>
+					{{? result.first_name }}{{= result.first_name}}
+					{{? result.last_name }}{{= result.last_name }}
+					({{ result.username }})
+				</a>
+				<a href="/message/{{= result.username }}">
+					<span class="glyphicon glyphicon-envelope"></span>
+				</a>
+			</li>
+        {{~}}
+	{{?}}
+	
+	</script>
 </body>
 </html>
