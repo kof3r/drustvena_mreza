@@ -199,22 +199,28 @@ function updateRecentMessages(data) {
 	var templateFunction = doT.template(document.getElementById('messages-contacts-tmp').text);
 	function update(collection) {
 		contacts.html('');
+		var i = 0;
 		$.each(collection, function() {
-			if(this.sender != globalUsername) {
+			if(i < 10 && this.sender != globalUsername) {
 				contacts.prepend(templateFunction(this));
+				++i;
 			}
 		});
 	}
-	if(data && data.data.length) {
-		
-		update(data.data.messages);
+	if(data) {
+		if(data.data.length) {
+			update(data.data.messages);
+		}
 	}
-	else if(contacts.children().length == 0) {
+	else {
 		$.ajax({
 				url: 'api/message/my',
 				cache: false,
 				success:
 					function(data) {
+						data.data.messages.filter(function(item) {
+							return (item.read == null) ? true : false;
+						});
 						update(data.data.messages);
 					}
 				});
@@ -276,6 +282,10 @@ $(document).ready(function() {
 	if (recipient_username) {
 		loadMessages();
 	}
+	else {
+		updateRecentMessages();
+	}
+	
 	if (typeof messagesPullInterval != "number") {
 		messagesPullInterval = setInterval(receiveMessages, 3000);
 	}
